@@ -48,15 +48,86 @@ export function scanProject(projectRoot: string): ScanResult {
     (d) => !coveredByHarvest.has(depKey(d.ecosystem, d.name)),
   );
 
+  const { unknown: curated, suppressed } = classifyUnknown(unknown, detected);
+
   return {
     projectType,
     detected,
     resolved,
-    unknown,
+    unknown: curated,
     harvestedManifests: manifests,
     harvestErrors: errors,
+    suppressed,
   };
 }
+
+/**
+ * Keep the unknown list actionable: a real project drags in hundreds of
+ * transitive/dev packages. Suppress (but count) everything the developer
+ * did not directly choose or that is a known non-collecting utility.
+ */
+function classifyUnknown(
+  unknown: DetectedDependency[],
+  detected: DetectedDependency[],
+): { unknown: DetectedDependency[]; suppressed: ScanResult["suppressed"] } {
+  const suppressed = { dev: 0, transitive: 0, shards: 0, utilities: 0 };
+  const detectedNames = new Set(detected.map((d) => d.name.toLowerCase()));
+
+  const curated: DetectedDependency[] = [];
+  const seen = new Set<string>();
+  for (const dep of unknown) {
+    // Pod subspecs (DKImagePickerController/Core) roll up to their parent.
+    const name = dep.ecosystem === "pod" ? dep.name.split("/")[0] : dep.name;
+
+    if (isPlatformShard(name, detectedNames)) {
+      suppressed.shards++;
+    } else if (dep.scope === "dev") {
+      suppressed.dev++;
+    } else if (dep.scope === "transitive") {
+      suppressed.transitive++;
+    } else if (UTILITY_PACKAGES.has(name)) {
+      suppressed.utilities++;
+    } else if (!seen.has(`${dep.ecosystem}::${name.toLowerCase()}`)) {
+      seen.add(`${dep.ecosystem}::${name.toLowerCase()}`);
+      curated.push(name === dep.name ? dep : { ...dep, name });
+    }
+    // duplicate rolled-up subspecs are silently deduped
+  }
+  return { unknown: curated, suppressed };
+}
+
+// foo_android / foo_darwin / foo_platform_interface … are implementation
+// shards of a federated plugin; the base package is the reviewable unit.
+const SHARD_SUFFIXES = [
+  "android", "ios", "darwin", "macos", "linux", "windows", "web",
+  "apple", "foundation", "avfoundation", "platform_interface",
+];
+
+function isPlatformShard(name: string, detectedNames: Set<string>): boolean {
+  for (const suffix of SHARD_SUFFIXES) {
+    if (name.endsWith(`_${suffix}`)) {
+      const base = name.slice(0, -(suffix.length + 1));
+      if (detectedNames.has(base.toLowerCase())) return true;
+    }
+  }
+  return false;
+}
+
+// Infrastructure the ecosystem drags in that collects nothing for a vendor.
+// They still ship their own privacy manifests, which harvest reads anyway.
+const UTILITY_PACKAGES = new Set([
+  "nanopb", "PromisesObjC", "PromisesSwift", "GoogleUtilities",
+  "GoogleDataTransport", "GoogleToolboxForMac", "GTMSessionFetcher",
+  "FirebaseCore", "FirebaseCoreInternal", "FirebaseCoreExtension",
+  "FirebaseInstallations", "FirebaseABTesting", "FirebaseSessions",
+  "FirebaseRemoteConfigInterop", "FirebaseSharedSwift", "RecaptchaInterop",
+  "SDWebImage", "SwiftyGif", "DKImagePickerController", "DKPhotoGallery",
+  "FMDB", "libwebp", "OrderedSet", "Toast", "ReachabilitySwift", "Protobuf",
+  "abseil", "BoringSSL-GRPC", "gRPC-Core", "gRPC-C++", "leveldb-library",
+  // Flutter framework / asset packages (pub) — not third-party SDKs.
+  "flutter", "flutter_localizations", "flutter_test", "flutter_driver",
+  "flutter_web_plugins", "sky_engine", "integration_test", "cupertino_icons",
+]);
 
 /**
  * Attach each attributed manifest to the SDK that ships it:

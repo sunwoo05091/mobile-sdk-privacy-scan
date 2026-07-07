@@ -3,6 +3,7 @@ import { effectiveAppleData } from "./appleData.js";
 import type { ScanResult } from "./types.js";
 import type { DriftReport } from "./drift.js";
 import type { RequiredReasonSuggestion } from "./requiredReasons.js";
+import type { CapabilityHint } from "./capabilities.js";
 
 export function printScanSummary(result: ScanResult): void {
   const types =
@@ -62,7 +63,11 @@ export function printScanSummary(result: ScanResult): void {
 
   if (result.unknown.length) {
     console.log(
-      pc.bold(pc.yellow("\nUnrecognized dependencies — review these by hand:")),
+      pc.bold(
+        pc.yellow(
+          `\nUnrecognized direct dependencies — review these by hand (${result.unknown.length}):`,
+        ),
+      ),
     );
     for (const dep of result.unknown.slice(0, 25)) {
       console.log(`  ${pc.yellow("?")} ${dep.name} ${pc.dim(`(${dep.ecosystem})`)}`);
@@ -70,6 +75,18 @@ export function printScanSummary(result: ScanResult): void {
     if (result.unknown.length > 25) {
       console.log(pc.dim(`  … and ${result.unknown.length - 25} more`));
     }
+  }
+
+  const s = result.suppressed;
+  const suppressedTotal = s.dev + s.transitive + s.shards + s.utilities;
+  if (suppressedTotal > 0) {
+    console.log(
+      pc.dim(
+        `  suppressed ${suppressedTotal} noise packages: ${s.transitive} transitive, ` +
+          `${s.dev} dev-only, ${s.shards} platform shards, ${s.utilities} known utilities ` +
+          `(SDKs among them are still matched via the KB and shipped manifests)`,
+      ),
+    );
   }
 }
 
@@ -91,6 +108,79 @@ export function printRequiredReasons(
       `  ${pc.cyan("•")} ${s.package} ${pc.dim(`(${s.note})`)}\n    ${status}`,
     );
   }
+}
+
+export function printCapabilities(hints: CapabilityHint[]): void {
+  if (!hints.length) return;
+  console.log(
+    pc.bold("\nYour app's own data collection (app features, not SDKs):"),
+  );
+  for (const h of hints) {
+    console.log(
+      `  ${pc.magenta("•")} ${h.package} → ${pc.bold(h.collects)}`,
+    );
+  }
+  console.log(
+    pc.dim(
+      "  SDK scanning cannot declare these for you. If the app really collects them,\n" +
+        "  add them to PrivacyInfo.xcprivacy AND the Play Data Safety form yourself.",
+    ),
+  );
+}
+
+/** Security / review feedback derived from what the scan actually found. */
+export function printInsights(result: ScanResult): void {
+  const lines: string[] = [];
+
+  const trackers = result.resolved.filter((r) => effectiveAppleData(r).tracking);
+  if (trackers.length) {
+    lines.push(
+      `${pc.red("TRACKING")} ${trackers.map((r) => r.entry.name).join(", ")} ` +
+        `declare cross-app tracking: iOS requires the ATT prompt ` +
+        `(NSUserTrackingUsageDescription) before any tracking, and their tracking ` +
+        `domains are blocked until the user consents.`,
+    );
+  }
+
+  const silent = result.resolved.filter((r) => {
+    const eff = effectiveAppleData(r);
+    return eff.provenance === "manifest" && eff.apple.length === 0 && !eff.tracking;
+  });
+  if (silent.length) {
+    lines.push(
+      `${pc.yellow("CONSERVATIVE")} ${silent.map((r) => r.entry.name).join(", ")} ` +
+        `ship a manifest that declares NO data collection. Vendors often under-declare ` +
+        `("depends on app configuration") — review what your configuration actually sends.`,
+    );
+  }
+
+  const seeded = result.resolved.filter(
+    (r) => effectiveAppleData(r).provenance === "kb",
+  );
+  if (seeded.length) {
+    lines.push(
+      `${pc.yellow("UNVERIFIED")} ${seeded.map((r) => r.entry.name).join(", ")}: ` +
+        `no shipped manifest was readable here — data comes from our knowledge base. ` +
+        `Re-scan after \`pod install\` to read the SDK's own declaration.`,
+    );
+  }
+
+  if (result.harvestErrors.length) {
+    lines.push(
+      `${pc.red("MALFORMED")} ${result.harvestErrors.length} dependency manifest(s) ` +
+        `could not be parsed — those SDKs' declarations are effectively missing.`,
+    );
+  }
+
+  if (!lines.length) return;
+  console.log(pc.bold("\nReview notes:"));
+  for (const l of lines) console.log(`  ${l}`);
+}
+
+export function printNextSteps(steps: string[]): void {
+  if (!steps.length) return;
+  console.log(pc.bold(pc.cyan("\nNext steps:")));
+  steps.forEach((step, i) => console.log(`  ${i + 1}. ${step}`));
 }
 
 export function printDrift(drift: DriftReport): void {

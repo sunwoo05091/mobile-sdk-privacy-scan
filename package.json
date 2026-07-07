@@ -16,7 +16,8 @@
   "files": [
     "dist",
     "src/kb/data.json",
-    "src/kb/requiredReasons.json"
+    "src/kb/requiredReasons.json",
+    "src/kb/capabilities.json"
   ],
   "scripts": {
     "build": "tsc",

@@ -42,6 +42,16 @@ test("scanning the Flutter fixture writes both drafts and exits 0", (t) => {
 
   const md = readFileSync(join(out, "play-data-safety.md"), "utf8");
   assert.match(md, /\| Category \| Data type \|/);
+
+  // Noise suppression: transitive/dev/shard packages are counted, not listed.
+  assert.match(res.stdout, /suppressed/i);
+  assert.doesNotMatch(res.stdout, /\? collection /, "transitive noise must not be listed");
+
+  // App-own collection hints + actionable ending.
+  assert.match(res.stdout, /geolocator/);
+  assert.match(res.stdout, /own data collection/i);
+  assert.match(res.stdout, /Next steps/i);
+  assert.match(res.stdout, /No app privacy manifest found/i);
 });
 
 test("--compare against an incomplete manifest reports drift and exits 1", (t) => {

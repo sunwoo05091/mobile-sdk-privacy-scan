@@ -1,0 +1,28 @@
+{
+  "_meta": {
+    "note": "Capability plugins mean the APP itself collects this data through its own features. SDK scanning cannot declare it for you — if the app actually collects it, add it to PrivacyInfo.xcprivacy AND the Play Data Safety form."
+  },
+  "packages": [
+    { "ecosystem": "pub", "name": "geolocator", "collects": "Location (precise)" },
+    { "ecosystem": "pub", "name": "location", "collects": "Location (precise)" },
+    { "ecosystem": "pub", "name": "camera", "collects": "Photos or videos (camera)" },
+    { "ecosystem": "pub", "name": "image_picker", "collects": "Photos or videos (library/camera)" },
+    { "ecosystem": "pub", "name": "record", "collects": "Audio (microphone)" },
+    { "ecosystem": "pub", "name": "flutter_sound", "collects": "Audio (microphone)" },
+    { "ecosystem": "pub", "name": "speech_to_text", "collects": "Audio (microphone)" },
+    { "ecosystem": "pub", "name": "contacts_service", "collects": "Contacts" },
+    { "ecosystem": "pub", "name": "flutter_contacts", "collects": "Contacts" },
+    { "ecosystem": "pub", "name": "health", "collects": "Health data" },
+    { "ecosystem": "npm", "name": "react-native-image-picker", "collects": "Photos or videos (library/camera)" },
+    { "ecosystem": "npm", "name": "react-native-vision-camera", "collects": "Photos or videos (camera)" },
+    { "ecosystem": "npm", "name": "react-native-geolocation-service", "collects": "Location (precise)" },
+    { "ecosystem": "npm", "name": "@react-native-community/geolocation", "collects": "Location (precise)" },
+    { "ecosystem": "npm", "name": "react-native-contacts", "collects": "Contacts" },
+    { "ecosystem": "npm", "name": "react-native-audio-recorder-player", "collects": "Audio (microphone)" },
+    { "ecosystem": "npm", "name": "expo-location", "collects": "Location (precise)" },
+    { "ecosystem": "npm", "name": "expo-camera", "collects": "Photos or videos (camera)" },
+    { "ecosystem": "npm", "name": "expo-image-picker", "collects": "Photos or videos (library/camera)" },
+    { "ecosystem": "npm", "name": "expo-av", "collects": "Audio (microphone)" },
+    { "ecosystem": "npm", "name": "expo-contacts", "collects": "Contacts" }
+  ]
+}

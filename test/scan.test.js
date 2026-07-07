@@ -10,8 +10,17 @@ test("scanProject on the Flutter fixture", () => {
   const resolvedIds = result.resolved.map((r) => r.entry.id).sort();
   assert.deepEqual(resolvedIds, ["firebase-analytics", "google-admob", "sentry"]);
 
+  // Noise classification: only unmatched DIRECT MAIN deps surface for review.
+  // collection (transitive), build_runner (dev) and geolocator_apple
+  // (platform shard of geolocator) are counted, not listed.
   const unknownNames = result.unknown.map((d) => d.name).sort();
-  assert.deepEqual(unknownNames, ["collection", "http"]);
+  assert.deepEqual(unknownNames, ["geolocator", "http"]);
+  assert.deepEqual(result.suppressed, {
+    dev: 1,
+    transitive: 1,
+    shards: 1,
+    utilities: 0,
+  });
 });
 
 test("scanProject on the RN fixture resolves each SDK once across layers", () => {

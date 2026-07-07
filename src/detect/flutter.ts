@@ -35,6 +35,7 @@ export function detectFlutter(projectRoot: string): DetectedDependency[] {
       ecosystem: "pub",
       version: info.version,
       direct,
+      scope: dep === "direct dev" ? "dev" : direct ? "main" : "transitive",
       source: "pubspec.lock",
     });
   }

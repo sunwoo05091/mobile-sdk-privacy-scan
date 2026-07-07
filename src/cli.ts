@@ -1,6 +1,6 @@
 #!/usr/bin/env node
-import { writeFileSync, mkdirSync } from "node:fs";
-import { join, resolve } from "node:path";
+import { existsSync, readdirSync, writeFileSync, mkdirSync } from "node:fs";
+import { join, relative, resolve } from "node:path";
 import { Command } from "commander";
 import pc from "picocolors";
 import { scanProject } from "./detect/index.js";
@@ -11,7 +11,15 @@ import {
 } from "./generate/playDataSafety.js";
 import { detectDrift } from "./drift.js";
 import { suggestRequiredReasons } from "./requiredReasons.js";
-import { printScanSummary, printDrift, printRequiredReasons } from "./report.js";
+import { detectCapabilities } from "./capabilities.js";
+import {
+  printScanSummary,
+  printDrift,
+  printRequiredReasons,
+  printCapabilities,
+  printInsights,
+  printNextSteps,
+} from "./report.js";
 import { kbMeta } from "./kb/index.js";
 
 const program = new Command();
@@ -40,6 +48,10 @@ program
     const requiredReasons = suggestRequiredReasons(result);
     printRequiredReasons(requiredReasons);
 
+    const capabilities = detectCapabilities(result);
+    printCapabilities(capabilities);
+    printInsights(result);
+
     const outDir = resolve(root, opts.out);
     mkdirSync(outDir, { recursive: true });
 
@@ -58,13 +70,21 @@ program
     if (opts.json) {
       writeFileSync(
         join(outDir, "scan.json"),
-        JSON.stringify({ result, playRows: rows, requiredReasons }, null, 2),
+        JSON.stringify(
+          { result, playRows: rows, requiredReasons, capabilities },
+          null,
+          2,
+        ),
       );
     }
 
     console.log(
       pc.bold(`\nDrafts written to ${pc.cyan(opts.out + "/")}`) +
         `\n  • PrivacyInfo.xcprivacy\n  • play-data-safety.md`,
+    );
+
+    printNextSteps(
+      buildNextSteps(root, opts, result, requiredReasons, capabilities),
     );
 
     if (opts.compare) {
@@ -88,6 +108,74 @@ program
 
     finish(result, 0);
   });
+
+/** Turn scan findings into a short, ordered to-do list for the developer. */
+function buildNextSteps(
+  root: string,
+  opts: { out: string; compare?: string },
+  result: { projectType: string[]; harvestedManifests: unknown[] },
+  requiredReasons: { covered: boolean }[],
+  capabilities: unknown[],
+): string[] {
+  const steps: string[] = [];
+
+  const appManifest = findAppManifest(root);
+  if (!appManifest) {
+    steps.push(
+      `No app privacy manifest found — add ${opts.out}/PrivacyInfo.xcprivacy ` +
+        `to your Xcode app target as a starting point.`,
+    );
+  } else if (!opts.compare) {
+    steps.push(
+      `Existing manifest found (${relative(root, appManifest)}) — re-run with ` +
+        `--compare ${relative(root, appManifest)} to gate drift in CI.`,
+    );
+  }
+
+  if (requiredReasons.some((s) => !s.covered)) {
+    steps.push(
+      "Resolve the ⚠ required-reason warnings above — missing declarations " +
+        "trigger ITMS-91053 at upload.",
+    );
+  }
+
+  if (capabilities.length) {
+    steps.push(
+      "Declare the app-feature collection listed above (location/camera/…) " +
+        "in both stores' forms if your app really collects it.",
+    );
+  }
+
+  if (
+    result.projectType.length > 0 &&
+    result.harvestedManifests.length === 0 &&
+    !existsSync(join(root, "ios", "Pods"))
+  ) {
+    steps.push(
+      "ios/Pods is missing — run `pod install` and re-scan so SDK-shipped " +
+        "privacy manifests can be read directly.",
+    );
+  }
+
+  return steps;
+}
+
+/** The app's own PrivacyInfo.xcprivacy, e.g. ios/Runner/PrivacyInfo.xcprivacy. */
+function findAppManifest(root: string): string | undefined {
+  const iosDir = join(root, "ios");
+  let entries: string[];
+  try {
+    entries = readdirSync(iosDir);
+  } catch {
+    return undefined;
+  }
+  for (const name of entries) {
+    if (name === "Pods" || name.startsWith(".")) continue;
+    const candidate = join(iosDir, name, "PrivacyInfo.xcprivacy");
+    if (existsSync(candidate)) return candidate;
+  }
+  return undefined;
+}
 
 function finish(
   result: { unknown: unknown[] },

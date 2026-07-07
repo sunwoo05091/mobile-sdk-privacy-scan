@@ -9,8 +9,11 @@ test("detectFlutter parses every package in pubspec.lock", () => {
   const deps = detectFlutter(FLUTTER_FIXTURE);
   const names = deps.map((d) => d.name).sort();
   assert.deepEqual(names, [
+    "build_runner",
     "collection",
     "firebase_analytics",
+    "geolocator",
+    "geolocator_apple",
     "google_mobile_ads",
     "http",
     "sentry_flutter",
@@ -21,14 +24,19 @@ test("detectFlutter parses every package in pubspec.lock", () => {
   }
 });
 
-test("detectFlutter reads version and direct/transitive flags", () => {
+test("detectFlutter reads version, direct flag, and dependency scope", () => {
   const deps = detectFlutter(FLUTTER_FIXTURE);
   const firebase = deps.find((d) => d.name === "firebase_analytics");
   assert.equal(firebase.version, "10.8.0");
   assert.equal(firebase.direct, true);
+  assert.equal(firebase.scope, "main");
 
   const transitive = deps.find((d) => d.name === "collection");
   assert.equal(transitive.direct, false);
+  assert.equal(transitive.scope, "transitive");
+
+  const dev = deps.find((d) => d.name === "build_runner");
+  assert.equal(dev.scope, "dev");
 });
 
 test("detectFlutter returns [] when there is no pubspec.lock", () => {

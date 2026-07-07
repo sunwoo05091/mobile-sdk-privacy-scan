@@ -10,6 +10,8 @@ export interface DetectedDependency {
   version?: string;
   /** true = declared directly by the app, false = pulled in transitively. */
   direct: boolean;
+  /** Dependency scope where the ecosystem distinguishes it (pub does). */
+  scope?: "main" | "dev" | "transitive";
   /** Where we found it, for reporting. */
   source: string;
 }
@@ -85,4 +87,13 @@ export interface ScanResult {
   harvestedManifests: HarvestedManifest[];
   /** Manifest files we found but could not parse. */
   harvestErrors: string[];
+  /** Noise we filtered out of `unknown` (counted so nothing is hidden silently). */
+  suppressed: {
+    dev: number;
+    transitive: number;
+    /** Platform implementation shards of a federated plugin (foo_android …). */
+    shards: number;
+    /** Known infrastructure/utility packages with no vendor data collection. */
+    utilities: number;
+  };
 }
