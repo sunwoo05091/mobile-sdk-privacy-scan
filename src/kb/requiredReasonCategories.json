@@ -1,0 +1,60 @@
+{
+  "_meta": {
+    "note": "Required-reason API categories and Apple's approved reason codes (summarized — verify against Apple's docs before declaring).",
+    "docs": "https://developer.apple.com/documentation/bundleresources/privacy_manifest_files/describing_use_of_required_reason_api"
+  },
+  "itms": {
+    "ITMS-91053": "Missing API declaration: your app (or code compiled into it) calls a required-reason API, but no privacy manifest in the bundle declares an approved reason for that category.",
+    "ITMS-91061": "Missing privacy manifest: a third-party SDK on Apple's list ships in your app without its own PrivacyInfo.xcprivacy. Update the SDK to a version that includes one.",
+    "ITMS-91056": "Invalid privacy manifest: a PrivacyInfo.xcprivacy in your app has invalid keys or values — usually a malformed NSPrivacyAccessedAPITypes entry."
+  },
+  "categories": {
+    "NSPrivacyAccessedAPICategoryUserDefaults": {
+      "label": "UserDefaults",
+      "trigger": "Reading or writing NSUserDefaults / UserDefaults (Flutter shared_preferences, RN AsyncStorage and many settings libraries do this under the hood).",
+      "reasons": {
+        "CA92.1": "Read/write info accessible only to the app itself (the common case)",
+        "1C8F.1": "Read/write info shared within your own app group",
+        "C56D.1": "Third-party SDK wrapper around UserDefaults (SDK's own manifest)",
+        "AC6B.1": "Read managed-configuration keys set by MDM"
+      }
+    },
+    "NSPrivacyAccessedAPICategoryFileTimestamp": {
+      "label": "File timestamps",
+      "trigger": "Reading file creation/modification dates (stat, attributesOfItem — file managers, caches, react-native-fs, expo-file-system).",
+      "reasons": {
+        "C617.1": "Timestamps of files inside the app's own container (the common case)",
+        "3B52.1": "Timestamps of files the user explicitly granted access to",
+        "0A2A.1": "Third-party SDK wrapper (SDK's own manifest)",
+        "DDA9.1": "Display timestamps to the user"
+      }
+    },
+    "NSPrivacyAccessedAPICategorySystemBootTime": {
+      "label": "System boot time / uptime",
+      "trigger": "systemUptime, mach_absolute_time — often used for performance timing.",
+      "reasons": {
+        "35F9.1": "Measure time elapsed inside the app (the common case)",
+        "8FFB.1": "Calculate absolute event timestamps for on-device processing",
+        "3D61.1": "Include in an opt-in bug report"
+      }
+    },
+    "NSPrivacyAccessedAPICategoryDiskSpace": {
+      "label": "Available disk space",
+      "trigger": "Querying free/total disk capacity (download managers, cache managers, react-native-device-info).",
+      "reasons": {
+        "85F4.1": "Display disk space to the user",
+        "E174.1": "Check space before writing files (the common case)",
+        "7D9E.1": "Include in an opt-in bug report",
+        "B728.1": "Health research app (opt-in study)"
+      }
+    },
+    "NSPrivacyAccessedAPICategoryActiveKeyboards": {
+      "label": "Active keyboards",
+      "trigger": "Listing installed keyboards (activeInputModes).",
+      "reasons": {
+        "3EC4.1": "App is itself a custom keyboard app",
+        "54BD.1": "Present the correct customized UI (on-device processing only)"
+      }
+    }
+  }
+}

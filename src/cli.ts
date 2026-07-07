@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { existsSync, readdirSync, writeFileSync, mkdirSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { join, relative, resolve } from "node:path";
 import { Command } from "commander";
 import pc from "picocolors";
@@ -20,6 +20,7 @@ import { generatePlayCsv } from "./generate/playCsv.js";
 import { generateAscAnswers } from "./generate/ascAnswers.js";
 import { mergeAppleTypes } from "./appleData.js";
 import { detectDrift } from "./drift.js";
+import { explain } from "./explain.js";
 import { suggestRequiredReasons } from "./requiredReasons.js";
 import {
   capabilityAppleTypes,
@@ -35,6 +36,7 @@ import {
   printCapabilities,
   printInsights,
   printBaselineDelta,
+  printExplanation,
   printNextSteps,
   printPermissionWarnings,
   printTrustBoundary,
@@ -49,7 +51,7 @@ program
     "Scan a React Native or Flutter project for third-party SDKs and generate " +
       "Apple privacy manifest + Google Play Data Safety drafts. Runs fully locally.",
   )
-  .version("0.2.0")
+  .version("0.3.0")
   .argument("[projectDir]", "path to the app project", ".")
   .option("-o, --out <dir>", "output directory for generated drafts", "privacy-out")
   .option(
@@ -341,5 +343,22 @@ function finish(
   printTrustBoundary();
   process.exit(code);
 }
+
+program
+  .command("explain [text...]")
+  .description(
+    "paste an App Review rejection mail (ITMS-91053 …) — explains the codes " +
+      "and, with --project, which dependency caused it and how to fix it",
+  )
+  .option("-p, --project <dir>", "project to cross-reference for culprits")
+  .action((textParts: string[], opts: { project?: string }) => {
+    let text = (textParts ?? []).join(" ");
+    if (!text && !process.stdin.isTTY) {
+      text = readFileSync(0, "utf8"); // piped mail: pbpaste | sdk-privacy-scan explain
+    }
+    const scan = opts.project ? scanProject(resolve(opts.project)) : undefined;
+    printExplanation(explain(text, scan), Boolean(opts.project));
+    process.exit(0);
+  });
 
 program.parseAsync();

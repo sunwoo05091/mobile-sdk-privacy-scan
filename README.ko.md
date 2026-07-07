@@ -129,12 +129,13 @@ npx sdk-privacy-scan [dir]                     # 스캔, ./privacy-out에 초안
   --compare <PrivacyInfo.xcprivacy>            # 드리프트 게이트: 미신고 수집 시 exit 1
   --update-baseline                            # .privacy-baseline.json 작성 (커밋하세요)
   --json                                       # 기계용 scan.json
+
+npx sdk-privacy-scan explain "<리젝 메일 본문>" -p .   # ITMS-91053 등 해독
+  # 문제 API 카테고리, 내 프로젝트의 원인 패키지, 수정 방법까지 제시
 ```
 
 ## 로드맵
 
-- 심사 리젝 메일 `explain` 커맨드 (안정적인 `NSPrivacyAccessedAPICategory…`
-  코드 기반, 메일 문구 파싱 안 함)
 - KB 50개+ 지속 확장, 소스 기반 required-reason 탐지
 - 원격 KB 갱신 옵션(opt-in) — 오프라인 우선은 불변
 

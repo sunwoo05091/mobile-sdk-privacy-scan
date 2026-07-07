@@ -302,6 +302,68 @@ export function printTrustBoundary(): void {
   );
 }
 
+export function printExplanation(
+  e: import("./explain.js").Explanation,
+  hasProject: boolean,
+): void {
+  if (e.empty) {
+    console.log(
+      pc.yellow(
+        "No stable codes found in that text. Paste the full rejection mail — " +
+          "the useful parts look like ITMS-91053 and NSPrivacyAccessedAPICategory…",
+      ),
+    );
+    return;
+  }
+
+  for (const { code, meaning } of e.itms) {
+    console.log(`${pc.bold(pc.red(code))} — ${meaning}\n`);
+  }
+
+  for (const c of e.categories) {
+    console.log(pc.bold(`${pc.cyan(c.category)} (${c.label})`));
+    console.log(`  Triggered by: ${pc.dim(c.trigger)}`);
+    if (c.culprits.length) {
+      console.log(pc.bold("  In YOUR project this likely comes from:"));
+      for (const culprit of c.culprits) {
+        console.log(
+          culprit.covered
+            ? `    ${pc.green("✓")} ${culprit.package} — its own manifest declares this; ` +
+                `if the error persists, YOUR app code also uses the API: declare it app-side.`
+            : `    ${pc.red("✗")} ${culprit.package} — no shipped manifest covers it. Fix: update ` +
+                `the package, or declare ${c.category} (${culprit.reasons.join(", ")}) in your PrivacyInfo.xcprivacy.`,
+        );
+      }
+    } else if (hasProject) {
+      console.log(
+        pc.yellow(
+          "  No known package in this project maps to it — your own native/app " +
+            "code (or an SDK we don't know) calls the API. Declare the reason app-side.",
+        ),
+      );
+    }
+    console.log(pc.bold("  Approved reasons:"));
+    for (const [code, desc] of Object.entries(c.reasons)) {
+      console.log(`    ${pc.green(code)} ${pc.dim(desc)}`);
+    }
+    console.log();
+  }
+
+  if (e.collectedTypes.length) {
+    console.log(
+      pc.bold("Collected data types mentioned: ") + e.collectedTypes.join(", "),
+    );
+    console.log(
+      pc.dim(
+        "  These belong in NSPrivacyCollectedDataTypes. Run a scan with " +
+          "--compare against your manifest to see exactly what's missing.\n",
+      ),
+    );
+  }
+
+  console.log(pc.dim(`Reason definitions: ${e.docsUrl}`));
+}
+
 export function printNextSteps(steps: string[]): void {
   if (!steps.length) return;
   console.log(pc.bold(pc.cyan("\nNext steps:")));

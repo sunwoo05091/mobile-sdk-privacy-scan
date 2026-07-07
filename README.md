@@ -136,12 +136,13 @@ npx sdk-privacy-scan [dir]                     # scan, write drafts to ./privacy
   --compare <PrivacyInfo.xcprivacy>            # drift gate: exit 1 on undeclared collection
   --update-baseline                            # write .privacy-baseline.json (commit it)
   --json                                       # machine-readable scan.json
+
+npx sdk-privacy-scan explain "<rejection mail>" -p .   # decode ITMS-91053 etc.
+  # names the API category, the culprit package in YOUR project, and the fix
 ```
 
 ## Roadmap
 
-- `explain` command for App Review rejection mails (keyed on stable
-  `NSPrivacyAccessedAPICategory…` codes, never mail wording)
 - Grow the KB past 50 entries; required-reason detection from source
 - Optional remote KB refresh (opt-in) — offline-first stays the default
 
