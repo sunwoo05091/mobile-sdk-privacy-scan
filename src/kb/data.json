@@ -2510,6 +2510,742 @@
       ],
       "source": "Apple data: PrivacyInfo.xcprivacy from naveridlogin-sdk-ios 4.2.3. Play data: curated — verify against the Play SDK Index.",
       "lastVerified": "2026-07"
+    },
+    {
+      "id": "braintree",
+      "name": "Braintree",
+      "aliases": {
+        "pub": [
+          "flutter_braintree"
+        ],
+        "npm": [],
+        "pod": [
+          "Braintree"
+        ]
+      },
+      "tracking": false,
+      "trackingDomains": [],
+      "apple": [
+        {
+          "type": "NSPrivacyCollectedDataTypeCoarseLocation",
+          "linked": true,
+          "tracking": false,
+          "purposes": [
+            "NSPrivacyCollectedDataTypePurposeAppFunctionality"
+          ]
+        },
+        {
+          "type": "NSPrivacyCollectedDataTypeCrashData",
+          "linked": false,
+          "tracking": false,
+          "purposes": [
+            "NSPrivacyCollectedDataTypePurposeAnalytics"
+          ]
+        },
+        {
+          "type": "NSPrivacyCollectedDataTypeDeviceID",
+          "linked": false,
+          "tracking": false,
+          "purposes": [
+            "NSPrivacyCollectedDataTypePurposeAnalytics",
+            "NSPrivacyCollectedDataTypePurposeAppFunctionality"
+          ]
+        },
+        {
+          "type": "NSPrivacyCollectedDataTypeEmailAddress",
+          "linked": false,
+          "tracking": false,
+          "purposes": [
+            "NSPrivacyCollectedDataTypePurposeAppFunctionality"
+          ]
+        },
+        {
+          "type": "NSPrivacyCollectedDataTypeName",
+          "linked": false,
+          "tracking": false,
+          "purposes": [
+            "NSPrivacyCollectedDataTypePurposeAppFunctionality"
+          ]
+        },
+        {
+          "type": "NSPrivacyCollectedDataTypePaymentInfo",
+          "linked": false,
+          "tracking": false,
+          "purposes": [
+            "NSPrivacyCollectedDataTypePurposeAppFunctionality"
+          ]
+        },
+        {
+          "type": "NSPrivacyCollectedDataTypePerformanceData",
+          "linked": true,
+          "tracking": false,
+          "purposes": [
+            "NSPrivacyCollectedDataTypePurposeAppFunctionality"
+          ]
+        },
+        {
+          "type": "NSPrivacyCollectedDataTypePhoneNumber",
+          "linked": false,
+          "tracking": false,
+          "purposes": [
+            "NSPrivacyCollectedDataTypePurposeAppFunctionality"
+          ]
+        },
+        {
+          "type": "NSPrivacyCollectedDataTypePhysicalAddress",
+          "linked": false,
+          "tracking": false,
+          "purposes": [
+            "NSPrivacyCollectedDataTypePurposeAppFunctionality"
+          ]
+        },
+        {
+          "type": "NSPrivacyCollectedDataTypePreciseLocation",
+          "linked": true,
+          "tracking": false,
+          "purposes": [
+            "NSPrivacyCollectedDataTypePurposeAnalytics",
+            "NSPrivacyCollectedDataTypePurposeAppFunctionality"
+          ]
+        },
+        {
+          "type": "NSPrivacyCollectedDataTypeProductInteraction",
+          "linked": false,
+          "tracking": false,
+          "purposes": [
+            "NSPrivacyCollectedDataTypePurposeAnalytics"
+          ]
+        },
+        {
+          "type": "NSPrivacyCollectedDataTypeUserID",
+          "linked": false,
+          "tracking": false,
+          "purposes": [
+            "NSPrivacyCollectedDataTypePurposeAnalytics"
+          ]
+        }
+      ],
+      "play": [
+        {
+          "category": "Financial info",
+          "type": "User payment info",
+          "collected": true,
+          "shared": false,
+          "purposes": [
+            "App functionality"
+          ]
+        }
+      ],
+      "source": "Apple data: PrivacyInfo.xcprivacy from Braintree 7.8.0. Play data: curated — verify against the Play SDK Index.",
+      "lastVerified": "2026-07"
+    },
+    {
+      "id": "tiktok-business",
+      "name": "TikTok Business SDK",
+      "aliases": {
+        "pub": [],
+        "npm": [],
+        "pod": [
+          "TikTokBusinessSDK"
+        ]
+      },
+      "tracking": false,
+      "trackingDomains": [],
+      "apple": [],
+      "play": [
+        {
+          "category": "Device or other IDs",
+          "type": "Device or other IDs",
+          "collected": true,
+          "shared": true,
+          "purposes": [
+            "Advertising or marketing"
+          ]
+        },
+        {
+          "category": "App activity",
+          "type": "App interactions",
+          "collected": true,
+          "shared": true,
+          "purposes": [
+            "Advertising or marketing",
+            "Analytics"
+          ]
+        }
+      ],
+      "source": "Apple data: PrivacyInfo.xcprivacy from TikTokBusinessSDK 1.6.1. Play data: curated — verify against the Play SDK Index.",
+      "lastVerified": "2026-07"
+    },
+    {
+      "id": "vungle",
+      "name": "Vungle (Liftoff Monetize)",
+      "aliases": {
+        "pub": [],
+        "npm": [],
+        "pod": [
+          "VungleAds"
+        ]
+      },
+      "tracking": false,
+      "trackingDomains": [],
+      "apple": [],
+      "play": [
+        {
+          "category": "Device or other IDs",
+          "type": "Device or other IDs",
+          "collected": true,
+          "shared": true,
+          "purposes": [
+            "Advertising or marketing"
+          ]
+        }
+      ],
+      "source": "Apple data: PrivacyInfo.xcprivacy from VungleAds 7.7.4. Play data: curated — verify against the Play SDK Index.",
+      "lastVerified": "2026-07"
+    },
+    {
+      "id": "smartlook",
+      "name": "Smartlook",
+      "aliases": {
+        "pub": [
+          "flutter_smartlook"
+        ],
+        "npm": [],
+        "pod": [
+          "Smartlook",
+          "SmartlookAnalytics"
+        ]
+      },
+      "tracking": false,
+      "trackingDomains": [],
+      "apple": [],
+      "play": [
+        {
+          "category": "App activity",
+          "type": "App interactions",
+          "collected": true,
+          "shared": false,
+          "purposes": [
+            "Analytics"
+          ]
+        },
+        {
+          "category": "Device or other IDs",
+          "type": "Device or other IDs",
+          "collected": true,
+          "shared": false,
+          "purposes": [
+            "Analytics"
+          ]
+        }
+      ],
+      "source": "SKELETON: Apple side pending tools/kb-build.mjs harvest; Play data curated — verify against Play SDK Index"
+    },
+    {
+      "id": "fullstory",
+      "name": "FullStory",
+      "aliases": {
+        "pub": [],
+        "npm": [
+          "@fullstory/react-native"
+        ],
+        "pod": [
+          "FullStory"
+        ]
+      },
+      "tracking": false,
+      "trackingDomains": [],
+      "apple": [
+        {
+          "type": "NSPrivacyCollectedDataTypeCrashData",
+          "linked": false,
+          "tracking": false,
+          "purposes": [
+            "NSPrivacyCollectedDataTypePurposeAppFunctionality"
+          ]
+        },
+        {
+          "type": "NSPrivacyCollectedDataTypeOtherDiagnosticData",
+          "linked": false,
+          "tracking": false,
+          "purposes": [
+            "NSPrivacyCollectedDataTypePurposeAppFunctionality"
+          ]
+        },
+        {
+          "type": "NSPrivacyCollectedDataTypeOtherUsageData",
+          "linked": true,
+          "tracking": false,
+          "purposes": [
+            "NSPrivacyCollectedDataTypePurposeAnalytics"
+          ]
+        },
+        {
+          "type": "NSPrivacyCollectedDataTypePerformanceData",
+          "linked": false,
+          "tracking": false,
+          "purposes": [
+            "NSPrivacyCollectedDataTypePurposeAppFunctionality"
+          ]
+        },
+        {
+          "type": "NSPrivacyCollectedDataTypeProductInteraction",
+          "linked": true,
+          "tracking": false,
+          "purposes": [
+            "NSPrivacyCollectedDataTypePurposeAnalytics"
+          ]
+        }
+      ],
+      "play": [
+        {
+          "category": "App activity",
+          "type": "App interactions",
+          "collected": true,
+          "shared": false,
+          "purposes": [
+            "Analytics"
+          ]
+        },
+        {
+          "category": "Device or other IDs",
+          "type": "Device or other IDs",
+          "collected": true,
+          "shared": false,
+          "purposes": [
+            "Analytics"
+          ]
+        }
+      ],
+      "source": "Apple data: PrivacyInfo.xcprivacy from FullStory 1.72.1. Play data: curated — verify against the Play SDK Index.",
+      "lastVerified": "2026-07"
+    },
+    {
+      "id": "launchdarkly",
+      "name": "LaunchDarkly",
+      "aliases": {
+        "pub": [
+          "launchdarkly_flutter_client_sdk"
+        ],
+        "npm": [
+          "launchdarkly-react-native-client-sdk"
+        ],
+        "pod": [
+          "LaunchDarkly"
+        ]
+      },
+      "tracking": false,
+      "trackingDomains": [],
+      "apple": [
+        {
+          "type": "NSPrivacyCollectedDataTypeDeviceID",
+          "linked": true,
+          "tracking": false,
+          "purposes": [
+            "NSPrivacyCollectedDataTypePurposeProductPersonalization",
+            "NSPrivacyCollectedDataTypePurposeAppFunctionality",
+            "NSPrivacyCollectedDataTypePurposeAnalytics"
+          ]
+        },
+        {
+          "type": "NSPrivacyCollectedDataTypeOtherDiagnosticData",
+          "linked": false,
+          "tracking": false,
+          "purposes": [
+            "NSPrivacyCollectedDataTypePurposeAnalytics"
+          ]
+        },
+        {
+          "type": "NSPrivacyCollectedDataTypeUserID",
+          "linked": true,
+          "tracking": false,
+          "purposes": [
+            "NSPrivacyCollectedDataTypePurposeProductPersonalization",
+            "NSPrivacyCollectedDataTypePurposeAppFunctionality",
+            "NSPrivacyCollectedDataTypePurposeAnalytics"
+          ]
+        }
+      ],
+      "play": [
+        {
+          "category": "Device or other IDs",
+          "type": "Device or other IDs",
+          "collected": true,
+          "shared": false,
+          "purposes": [
+            "App functionality"
+          ]
+        }
+      ],
+      "source": "Apple data: PrivacyInfo.xcprivacy from LaunchDarkly 11.2.0. Play data: curated — verify against the Play SDK Index.",
+      "lastVerified": "2026-07"
+    },
+    {
+      "id": "adapty",
+      "name": "Adapty",
+      "aliases": {
+        "pub": [
+          "adapty_flutter"
+        ],
+        "npm": [
+          "react-native-adapty"
+        ],
+        "pod": [
+          "Adapty"
+        ]
+      },
+      "tracking": false,
+      "trackingDomains": [],
+      "apple": [
+        {
+          "type": "NSPrivacyCollectedDataTypePurchaseHistory",
+          "linked": false,
+          "tracking": false,
+          "purposes": [
+            "NSPrivacyCollectedDataTypePurposeAppFunctionality"
+          ]
+        }
+      ],
+      "play": [
+        {
+          "category": "Purchases",
+          "type": "Purchase history",
+          "collected": true,
+          "shared": false,
+          "purposes": [
+            "App functionality",
+            "Analytics"
+          ]
+        },
+        {
+          "category": "Device or other IDs",
+          "type": "Device or other IDs",
+          "collected": true,
+          "shared": false,
+          "purposes": [
+            "App functionality"
+          ]
+        }
+      ],
+      "source": "Apple data: PrivacyInfo.xcprivacy from Adapty 3.17.2. Play data: curated — verify against the Play SDK Index.",
+      "lastVerified": "2026-07"
+    },
+    {
+      "id": "qonversion",
+      "name": "Qonversion",
+      "aliases": {
+        "pub": [
+          "qonversion_flutter"
+        ],
+        "npm": [
+          "react-native-qonversion"
+        ],
+        "pod": [
+          "Qonversion"
+        ]
+      },
+      "tracking": false,
+      "trackingDomains": [],
+      "apple": [
+        {
+          "type": "NSPrivacyCollectedDataTypePurchaseHistory",
+          "linked": false,
+          "tracking": false,
+          "purposes": [
+            "NSPrivacyCollectedDataTypePurposeAppFunctionality"
+          ]
+        }
+      ],
+      "play": [
+        {
+          "category": "Purchases",
+          "type": "Purchase history",
+          "collected": true,
+          "shared": false,
+          "purposes": [
+            "App functionality",
+            "Analytics"
+          ]
+        },
+        {
+          "category": "Device or other IDs",
+          "type": "Device or other IDs",
+          "collected": true,
+          "shared": false,
+          "purposes": [
+            "App functionality"
+          ]
+        }
+      ],
+      "source": "Apple data: PrivacyInfo.xcprivacy from Qonversion 6.12.0. Play data: curated — verify against the Play SDK Index.",
+      "lastVerified": "2026-07"
+    },
+    {
+      "id": "superwall",
+      "name": "Superwall",
+      "aliases": {
+        "pub": [
+          "superwallkit_flutter"
+        ],
+        "npm": [
+          "@superwall/react-native-superwall"
+        ],
+        "pod": [
+          "SuperwallKit"
+        ]
+      },
+      "tracking": false,
+      "trackingDomains": [],
+      "apple": [
+        {
+          "type": "NSPrivacyCollectedDataTypePurchaseHistory",
+          "linked": false,
+          "tracking": false,
+          "purposes": [
+            "NSPrivacyCollectedDataTypePurposeAppFunctionality"
+          ]
+        }
+      ],
+      "play": [
+        {
+          "category": "Purchases",
+          "type": "Purchase history",
+          "collected": true,
+          "shared": false,
+          "purposes": [
+            "App functionality",
+            "Analytics"
+          ]
+        },
+        {
+          "category": "App activity",
+          "type": "App interactions",
+          "collected": true,
+          "shared": false,
+          "purposes": [
+            "Analytics"
+          ]
+        }
+      ],
+      "source": "Apple data: PrivacyInfo.xcprivacy from SuperwallKit 4.16.1. Play data: curated — verify against the Play SDK Index.",
+      "lastVerified": "2026-07"
+    },
+    {
+      "id": "chartboost",
+      "name": "Chartboost",
+      "aliases": {
+        "pub": [],
+        "npm": [],
+        "pod": [
+          "ChartboostSDK"
+        ]
+      },
+      "tracking": true,
+      "trackingDomains": [
+        "tracking-da.monetization-sdk.chartboost.com",
+        "tracking-webview.monetization-sdk.chartboost.com",
+        "tracking.da.chartboost.com"
+      ],
+      "apple": [
+        {
+          "type": "NSPrivacyCollectedDataTypeAdvertisingData",
+          "linked": true,
+          "tracking": false,
+          "purposes": [
+            "NSPrivacyCollectedDataTypePurposeDeveloperAdvertising",
+            "NSPrivacyCollectedDataTypePurposeAnalytics",
+            "NSPrivacyCollectedDataTypePurposeAppFunctionality",
+            "NSPrivacyCollectedDataTypePurposeThirdPartyAdvertising"
+          ]
+        },
+        {
+          "type": "NSPrivacyCollectedDataTypeCoarseLocation",
+          "linked": true,
+          "tracking": false,
+          "purposes": [
+            "NSPrivacyCollectedDataTypePurposeAnalytics",
+            "NSPrivacyCollectedDataTypePurposeThirdPartyAdvertising"
+          ]
+        },
+        {
+          "type": "NSPrivacyCollectedDataTypeCustomerSupport",
+          "linked": false,
+          "tracking": false,
+          "purposes": [
+            "NSPrivacyCollectedDataTypePurposeAppFunctionality"
+          ]
+        },
+        {
+          "type": "NSPrivacyCollectedDataTypeDeviceID",
+          "linked": true,
+          "tracking": true,
+          "purposes": [
+            "NSPrivacyCollectedDataTypePurposeAnalytics",
+            "NSPrivacyCollectedDataTypePurposeAppFunctionality",
+            "NSPrivacyCollectedDataTypePurposeThirdPartyAdvertising"
+          ]
+        },
+        {
+          "type": "NSPrivacyCollectedDataTypeOtherDataTypes",
+          "linked": true,
+          "tracking": false,
+          "purposes": [
+            "NSPrivacyCollectedDataTypePurposeAnalytics",
+            "NSPrivacyCollectedDataTypePurposeAppFunctionality",
+            "NSPrivacyCollectedDataTypePurposeThirdPartyAdvertising"
+          ]
+        },
+        {
+          "type": "NSPrivacyCollectedDataTypeProductInteraction",
+          "linked": true,
+          "tracking": false,
+          "purposes": [
+            "NSPrivacyCollectedDataTypePurposeDeveloperAdvertising",
+            "NSPrivacyCollectedDataTypePurposeAnalytics",
+            "NSPrivacyCollectedDataTypePurposeThirdPartyAdvertising",
+            "NSPrivacyCollectedDataTypePurposeAppFunctionality"
+          ]
+        },
+        {
+          "type": "NSPrivacyCollectedDataTypeUserID",
+          "linked": true,
+          "tracking": false,
+          "purposes": [
+            "NSPrivacyCollectedDataTypePurposeAnalytics",
+            "NSPrivacyCollectedDataTypePurposeAppFunctionality",
+            "NSPrivacyCollectedDataTypePurposeThirdPartyAdvertising"
+          ]
+        }
+      ],
+      "play": [
+        {
+          "category": "Device or other IDs",
+          "type": "Device or other IDs",
+          "collected": true,
+          "shared": true,
+          "purposes": [
+            "Advertising or marketing"
+          ]
+        }
+      ],
+      "source": "Apple data: PrivacyInfo.xcprivacy from ChartboostSDK 9.12.0. Play data: curated — verify against the Play SDK Index.",
+      "lastVerified": "2026-07"
+    },
+    {
+      "id": "inmobi",
+      "name": "InMobi",
+      "aliases": {
+        "pub": [],
+        "npm": [],
+        "pod": [
+          "InMobiSDK"
+        ]
+      },
+      "tracking": false,
+      "trackingDomains": [],
+      "apple": [],
+      "play": [
+        {
+          "category": "Device or other IDs",
+          "type": "Device or other IDs",
+          "collected": true,
+          "shared": true,
+          "purposes": [
+            "Advertising or marketing"
+          ]
+        }
+      ],
+      "source": "Apple data: PrivacyInfo.xcprivacy from InMobiSDK 11.3.0. Play data: curated — verify against the Play SDK Index.",
+      "lastVerified": "2026-07"
+    },
+    {
+      "id": "tenjin",
+      "name": "Tenjin",
+      "aliases": {
+        "pub": [
+          "tenjin_sdk"
+        ],
+        "npm": [],
+        "pod": [
+          "TenjinSDK"
+        ]
+      },
+      "tracking": true,
+      "trackingDomains": [
+        "track.tenjin.com"
+      ],
+      "apple": [
+        {
+          "type": "NSPrivacyCollectedDataTypeAdvertisingData",
+          "linked": true,
+          "tracking": false,
+          "purposes": [
+            "NSPrivacyCollectedDataTypePurposeAnalytics",
+            "NSPrivacyCollectedDataTypePurposeAppFunctionality"
+          ]
+        },
+        {
+          "type": "NSPrivacyCollectedDataTypeDeviceID",
+          "linked": true,
+          "tracking": false,
+          "purposes": [
+            "NSPrivacyCollectedDataTypePurposeAnalytics",
+            "NSPrivacyCollectedDataTypePurposeAppFunctionality"
+          ]
+        }
+      ],
+      "play": [
+        {
+          "category": "Device or other IDs",
+          "type": "Device or other IDs",
+          "collected": true,
+          "shared": true,
+          "purposes": [
+            "Advertising or marketing"
+          ]
+        },
+        {
+          "category": "App activity",
+          "type": "App interactions",
+          "collected": true,
+          "shared": true,
+          "purposes": [
+            "Analytics"
+          ]
+        }
+      ],
+      "source": "Apple data: PrivacyInfo.xcprivacy from TenjinSDK 1.17.2. Play data: curated — verify against the Play SDK Index.",
+      "lastVerified": "2026-07"
+    },
+    {
+      "id": "pusher",
+      "name": "Pusher Channels",
+      "aliases": {
+        "pub": [
+          "pusher_channels_flutter"
+        ],
+        "npm": [
+          "@pusher/pusher-websocket-react-native"
+        ],
+        "pod": [
+          "PusherSwift"
+        ]
+      },
+      "tracking": false,
+      "trackingDomains": [],
+      "apple": [],
+      "play": [
+        {
+          "category": "Device or other IDs",
+          "type": "Device or other IDs",
+          "collected": true,
+          "shared": false,
+          "purposes": [
+            "App functionality"
+          ]
+        }
+      ],
+      "source": "SKELETON: Apple side pending tools/kb-build.mjs harvest; Play data curated — verify against Play SDK Index"
     }
   ]
 }

@@ -128,6 +128,21 @@ test("malformed manifests are collected as errors, not silently dropped", (t) =>
   assert.deepEqual(manifests.map((m) => m.path), [good]);
 });
 
+test("collected-type entries with an empty type string are skipped", (t) => {
+  // Seen in the wild: TikTokBusinessSDK 1.6.1 ships <string></string>.
+  const root = tempDir(t);
+  plant(
+    root,
+    "ios/Pods/BrokenSDK",
+    VALID_MANIFEST.replace(
+      "<string>NSPrivacyCollectedDataTypeDeviceID</string>",
+      "<string></string>",
+    ),
+  );
+  const [m] = harvestPrivacyManifests(root).manifests;
+  assert.deepEqual(m.apple, []);
+});
+
 test("scheme-prefixed tracking domains are normalized to bare domains", (t) => {
   const root = tempDir(t);
   plant(

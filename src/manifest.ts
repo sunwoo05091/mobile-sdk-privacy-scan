@@ -24,7 +24,12 @@ export function parsePrivacyManifest(xml: string): ParsedPrivacyManifest {
   for (const raw of rawTypes) {
     if (typeof raw !== "object" || raw === null) continue;
     const t = raw as Record<string, unknown>;
-    if (typeof t.NSPrivacyCollectedDataType !== "string") continue;
+    // Skip malformed rows: TikTokBusinessSDK ships an entry whose type is "".
+    if (
+      typeof t.NSPrivacyCollectedDataType !== "string" ||
+      t.NSPrivacyCollectedDataType.trim() === ""
+    )
+      continue;
     apple.push({
       type: t.NSPrivacyCollectedDataType,
       linked: Boolean(t.NSPrivacyCollectedDataTypeLinked),
