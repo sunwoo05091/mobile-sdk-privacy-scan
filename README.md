@@ -118,6 +118,14 @@ empty `apple`) and run the tool with `--write`.
 
 ## Roadmap
 
+- Play Data Safety **CSV export** (the real work: mapping our types onto
+  Google's question taxonomy) and an **App Store Connect answer sheet** — a
+  separate deliverable from the bundle manifest: ASC's nutrition label has no
+  import/API and is filled in via web questionnaire only
+- **Baseline diff**: `--baseline .privacy-baseline.json` (committed file, not
+  scan.json) to report only the privacy delta per release + a GitHub Action
+- `explain` command for App Review rejection mails, keyed on stable category
+  codes (`NSPrivacyAccessedAPICategory…`), never on mail wording
 - Keep growing the KB past 50 entries (Apple's "required manifest" list is the target set)
 - Grow the required-reason package mapping; detect API use from source as a fallback
 - Optional remote KB refresh (opt-in), keeping offline-first as the default

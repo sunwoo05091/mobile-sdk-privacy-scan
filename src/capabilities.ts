@@ -21,6 +21,8 @@ interface CapabilityRule {
   collects: string;
   appleTypes: string[];
   play: PlayRef[];
+  /** Info.plist keys of which at least ONE must exist when this package is used. */
+  iosUsageKeys?: string[];
 }
 
 export interface CapabilityHint {
@@ -151,32 +153,89 @@ export function detectCapabilities(
   return [...merged.values()];
 }
 
-/** Keys present in the app target's ios/<App>/Info.plist. */
-function readIosPermissionKeys(projectRoot: string): string[] {
+/** Concatenated text of the app target's ios/<App>/Info.plist file(s). */
+function appInfoPlistText(projectRoot: string): string | undefined {
   const iosDir = join(projectRoot, "ios");
   let entries: string[];
   try {
     entries = readdirSync(iosDir);
   } catch {
-    return [];
+    return undefined;
   }
-  const found = new Set<string>();
+  const chunks: string[] = [];
   for (const name of entries) {
     if (name === "Pods" || name.startsWith(".")) continue;
     const plistPath = join(iosDir, name, "Info.plist");
     if (!existsSync(plistPath)) continue;
-    let text: string;
     try {
-      text = readFileSync(plistPath, "utf8");
+      chunks.push(readFileSync(plistPath, "utf8"));
     } catch {
-      continue;
-    }
-    // Key scan is enough — values are human-readable strings.
-    for (const key of Object.keys(IOS_PERMISSION_MAP)) {
-      if (text.includes(`<key>${key}</key>`)) found.add(key);
+      /* unreadable — skip */
     }
   }
-  return [...found];
+  return chunks.length ? chunks.join("\n") : undefined;
+}
+
+/** Keys present in the app target's ios/<App>/Info.plist. */
+function readIosPermissionKeys(projectRoot: string): string[] {
+  const text = appInfoPlistText(projectRoot);
+  if (text === undefined) return [];
+  // Key scan is enough — values are human-readable strings.
+  return Object.keys(IOS_PERMISSION_MAP).filter((key) =>
+    text.includes(`<key>${key}</key>`),
+  );
+}
+
+export interface PermissionWarning {
+  /** The Info.plist key to add (first acceptable alternative). */
+  missingKey: string;
+  /** What requires it. */
+  because: string[];
+}
+
+/**
+ * Reverse check: a capability package (or tracking SDK) is present but the
+ * matching Info.plist usage string is missing — runtime crash and App Review
+ * rejection material. Silent when no app Info.plist exists at all (the
+ * coverage report already screams about that).
+ */
+export function checkIosPermissionStrings(
+  scan: { detected: DetectedDependency[] },
+  projectRoot: string,
+  trackingDetected: boolean,
+): PermissionWarning[] {
+  const text = appInfoPlistText(projectRoot);
+  if (text === undefined) return [];
+  const has = (key: string) => text.includes(`<key>${key}</key>`);
+
+  const byKey = new Map<string, PermissionWarning>();
+  const add = (missingKey: string, because: string) => {
+    const existing = byKey.get(missingKey);
+    if (existing) existing.because.push(because);
+    else byKey.set(missingKey, { missingKey, because: [because] });
+  };
+
+  for (const rule of rules) {
+    if (!rule.iosUsageKeys?.length) continue;
+    const dep = scan.detected.find(
+      (d) =>
+        d.ecosystem === rule.ecosystem &&
+        d.name.toLowerCase() === rule.name.toLowerCase(),
+    );
+    if (!dep) continue;
+    if (!rule.iosUsageKeys.some(has)) {
+      add(rule.iosUsageKeys[0], `${dep.name} (${rule.collects})`);
+    }
+  }
+
+  if (trackingDetected && !has("NSUserTrackingUsageDescription")) {
+    add(
+      "NSUserTrackingUsageDescription",
+      "tracking SDKs detected — the ATT prompt is mandatory before any tracking",
+    );
+  }
+
+  return [...byKey.values()];
 }
 
 function readAndroidPermissions(projectRoot: string): string[] {

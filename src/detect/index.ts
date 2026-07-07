@@ -1,10 +1,16 @@
-import { relative } from "node:path";
+import { existsSync } from "node:fs";
+import { join, relative } from "node:path";
 import { detectFlutter, isFlutterProject } from "./flutter.js";
-import { detectReactNative, isReactNativeProject } from "./reactNative.js";
+import {
+  detectReactNative,
+  isExpoManaged,
+  isReactNativeProject,
+} from "./reactNative.js";
 import { detectPods, detectGradle } from "./native.js";
 import { harvestPrivacyManifests } from "./harvest.js";
 import { lookup } from "../kb/index.js";
 import type {
+  CoverageEntry,
   DetectedDependency,
   HarvestedManifest,
   KbEntry,
@@ -57,8 +63,61 @@ export function scanProject(projectRoot: string): ScanResult {
     unknown: curated,
     harvestedManifests: manifests,
     harvestErrors: errors,
+    coverage: computeCoverage(projectRoot, projectType, manifests.length),
     suppressed,
   };
+}
+
+/**
+ * A compliance tool must never be silently blind. Report per layer whether
+ * it could actually be scanned — Expo managed apps, missing lockfiles and
+ * uninstalled Pods otherwise produce confident-looking but partial results.
+ */
+function computeCoverage(
+  projectRoot: string,
+  projectType: ScanResult["projectType"],
+  harvestedCount: number,
+): CoverageEntry[] {
+  if (projectType.length === 0) return [];
+  const coverage: CoverageEntry[] = [];
+  const expo = isExpoManaged(projectRoot);
+
+  if (projectType.includes("flutter")) {
+    coverage.push({
+      layer: "Flutter packages (pubspec.lock)",
+      ok: existsSync(join(projectRoot, "pubspec.lock")),
+      hint: "run `flutter pub get` to create pubspec.lock",
+    });
+  }
+
+  const hasPodfileLock =
+    existsSync(join(projectRoot, "ios", "Podfile.lock")) ||
+    existsSync(join(projectRoot, "Podfile.lock"));
+  coverage.push({
+    layer: "iOS native pods (Podfile.lock)",
+    ok: hasPodfileLock,
+    hint: expo
+      ? "Expo managed workflow: run `npx expo prebuild` first — native SDKs are INVISIBLE to this scan until the ios/ project exists"
+      : "run `pod install` (or commit ios/Podfile.lock)",
+  });
+
+  coverage.push({
+    layer: "Android dependencies (build.gradle)",
+    ok:
+      existsSync(join(projectRoot, "android", "app", "build.gradle")) ||
+      existsSync(join(projectRoot, "android", "build.gradle")),
+    hint: expo
+      ? "Expo managed workflow: run `npx expo prebuild` first — the android/ project does not exist yet"
+      : "android/ project not found",
+  });
+
+  coverage.push({
+    layer: "SDK-shipped privacy manifests",
+    ok: harvestedCount > 0 || existsSync(join(projectRoot, "ios", "Pods")),
+    hint: "run `pod install`, then re-scan to read each SDK's own declaration",
+  });
+
+  return coverage;
 }
 
 /**

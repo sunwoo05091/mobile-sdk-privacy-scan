@@ -25,6 +25,19 @@ export function detectReactNative(projectRoot: string): DetectedDependency[] {
   }));
 }
 
+/** Expo managed workflow: expo dep but no committed ios/ project. */
+export function isExpoManaged(projectRoot: string): boolean {
+  if (existsSync(join(projectRoot, "ios"))) return false;
+  const pkgPath = join(projectRoot, "package.json");
+  if (!existsSync(pkgPath)) return false;
+  try {
+    const pkg = JSON.parse(readFileSync(pkgPath, "utf8"));
+    return Boolean({ ...pkg.dependencies, ...pkg.devDependencies }["expo"]);
+  } catch {
+    return false;
+  }
+}
+
 export function isReactNativeProject(projectRoot: string): boolean {
   const pkgPath = join(projectRoot, "package.json");
   if (!existsSync(pkgPath)) return false;

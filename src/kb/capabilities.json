@@ -3,26 +3,382 @@
     "note": "Capability plugins mean the APP itself collects this data through its own features. Draft entries generated from these MUST be reviewed: set Linked=true when the data is tied to user identity (accounts, login, identity verification), and fix purposes."
   },
   "packages": [
-    { "ecosystem": "pub", "name": "geolocator", "collects": "Location (precise)", "appleTypes": ["NSPrivacyCollectedDataTypePreciseLocation"], "play": [{ "category": "Location", "type": "Precise location" }] },
-    { "ecosystem": "pub", "name": "location", "collects": "Location (precise)", "appleTypes": ["NSPrivacyCollectedDataTypePreciseLocation"], "play": [{ "category": "Location", "type": "Precise location" }] },
-    { "ecosystem": "pub", "name": "camera", "collects": "Photos or videos (camera)", "appleTypes": ["NSPrivacyCollectedDataTypePhotosorVideos"], "play": [{ "category": "Photos and videos", "type": "Photos" }, { "category": "Photos and videos", "type": "Videos" }] },
-    { "ecosystem": "pub", "name": "image_picker", "collects": "Photos or videos (library/camera)", "appleTypes": ["NSPrivacyCollectedDataTypePhotosorVideos"], "play": [{ "category": "Photos and videos", "type": "Photos" }] },
-    { "ecosystem": "pub", "name": "record", "collects": "Audio (microphone)", "appleTypes": ["NSPrivacyCollectedDataTypeAudioData"], "play": [{ "category": "Audio", "type": "Voice or sound recordings" }] },
-    { "ecosystem": "pub", "name": "flutter_sound", "collects": "Audio (microphone)", "appleTypes": ["NSPrivacyCollectedDataTypeAudioData"], "play": [{ "category": "Audio", "type": "Voice or sound recordings" }] },
-    { "ecosystem": "pub", "name": "speech_to_text", "collects": "Audio (microphone)", "appleTypes": ["NSPrivacyCollectedDataTypeAudioData"], "play": [{ "category": "Audio", "type": "Voice or sound recordings" }] },
-    { "ecosystem": "pub", "name": "contacts_service", "collects": "Contacts", "appleTypes": ["NSPrivacyCollectedDataTypeContacts"], "play": [{ "category": "Contacts", "type": "Contacts" }] },
-    { "ecosystem": "pub", "name": "flutter_contacts", "collects": "Contacts", "appleTypes": ["NSPrivacyCollectedDataTypeContacts"], "play": [{ "category": "Contacts", "type": "Contacts" }] },
-    { "ecosystem": "pub", "name": "health", "collects": "Health data", "appleTypes": ["NSPrivacyCollectedDataTypeHealth"], "play": [{ "category": "Health and fitness", "type": "Health info" }] },
-    { "ecosystem": "npm", "name": "react-native-image-picker", "collects": "Photos or videos (library/camera)", "appleTypes": ["NSPrivacyCollectedDataTypePhotosorVideos"], "play": [{ "category": "Photos and videos", "type": "Photos" }] },
-    { "ecosystem": "npm", "name": "react-native-vision-camera", "collects": "Photos or videos (camera)", "appleTypes": ["NSPrivacyCollectedDataTypePhotosorVideos"], "play": [{ "category": "Photos and videos", "type": "Photos" }, { "category": "Photos and videos", "type": "Videos" }] },
-    { "ecosystem": "npm", "name": "react-native-geolocation-service", "collects": "Location (precise)", "appleTypes": ["NSPrivacyCollectedDataTypePreciseLocation"], "play": [{ "category": "Location", "type": "Precise location" }] },
-    { "ecosystem": "npm", "name": "@react-native-community/geolocation", "collects": "Location (precise)", "appleTypes": ["NSPrivacyCollectedDataTypePreciseLocation"], "play": [{ "category": "Location", "type": "Precise location" }] },
-    { "ecosystem": "npm", "name": "react-native-contacts", "collects": "Contacts", "appleTypes": ["NSPrivacyCollectedDataTypeContacts"], "play": [{ "category": "Contacts", "type": "Contacts" }] },
-    { "ecosystem": "npm", "name": "react-native-audio-recorder-player", "collects": "Audio (microphone)", "appleTypes": ["NSPrivacyCollectedDataTypeAudioData"], "play": [{ "category": "Audio", "type": "Voice or sound recordings" }] },
-    { "ecosystem": "npm", "name": "expo-location", "collects": "Location (precise)", "appleTypes": ["NSPrivacyCollectedDataTypePreciseLocation"], "play": [{ "category": "Location", "type": "Precise location" }] },
-    { "ecosystem": "npm", "name": "expo-camera", "collects": "Photos or videos (camera)", "appleTypes": ["NSPrivacyCollectedDataTypePhotosorVideos"], "play": [{ "category": "Photos and videos", "type": "Photos" }, { "category": "Photos and videos", "type": "Videos" }] },
-    { "ecosystem": "npm", "name": "expo-image-picker", "collects": "Photos or videos (library/camera)", "appleTypes": ["NSPrivacyCollectedDataTypePhotosorVideos"], "play": [{ "category": "Photos and videos", "type": "Photos" }] },
-    { "ecosystem": "npm", "name": "expo-av", "collects": "Audio (microphone)", "appleTypes": ["NSPrivacyCollectedDataTypeAudioData"], "play": [{ "category": "Audio", "type": "Voice or sound recordings" }] },
-    { "ecosystem": "npm", "name": "expo-contacts", "collects": "Contacts", "appleTypes": ["NSPrivacyCollectedDataTypeContacts"], "play": [{ "category": "Contacts", "type": "Contacts" }] }
+    {
+      "ecosystem": "pub",
+      "name": "geolocator",
+      "collects": "Location (precise)",
+      "appleTypes": [
+        "NSPrivacyCollectedDataTypePreciseLocation"
+      ],
+      "play": [
+        {
+          "category": "Location",
+          "type": "Precise location"
+        }
+      ],
+      "iosUsageKeys": [
+        "NSLocationWhenInUseUsageDescription",
+        "NSLocationAlwaysAndWhenInUseUsageDescription"
+      ]
+    },
+    {
+      "ecosystem": "pub",
+      "name": "location",
+      "collects": "Location (precise)",
+      "appleTypes": [
+        "NSPrivacyCollectedDataTypePreciseLocation"
+      ],
+      "play": [
+        {
+          "category": "Location",
+          "type": "Precise location"
+        }
+      ],
+      "iosUsageKeys": [
+        "NSLocationWhenInUseUsageDescription",
+        "NSLocationAlwaysAndWhenInUseUsageDescription"
+      ]
+    },
+    {
+      "ecosystem": "pub",
+      "name": "camera",
+      "collects": "Photos or videos (camera)",
+      "appleTypes": [
+        "NSPrivacyCollectedDataTypePhotosorVideos"
+      ],
+      "play": [
+        {
+          "category": "Photos and videos",
+          "type": "Photos"
+        },
+        {
+          "category": "Photos and videos",
+          "type": "Videos"
+        }
+      ],
+      "iosUsageKeys": [
+        "NSCameraUsageDescription"
+      ]
+    },
+    {
+      "ecosystem": "pub",
+      "name": "image_picker",
+      "collects": "Photos or videos (library/camera)",
+      "appleTypes": [
+        "NSPrivacyCollectedDataTypePhotosorVideos"
+      ],
+      "play": [
+        {
+          "category": "Photos and videos",
+          "type": "Photos"
+        }
+      ],
+      "iosUsageKeys": [
+        "NSPhotoLibraryUsageDescription",
+        "NSCameraUsageDescription"
+      ]
+    },
+    {
+      "ecosystem": "pub",
+      "name": "record",
+      "collects": "Audio (microphone)",
+      "appleTypes": [
+        "NSPrivacyCollectedDataTypeAudioData"
+      ],
+      "play": [
+        {
+          "category": "Audio",
+          "type": "Voice or sound recordings"
+        }
+      ],
+      "iosUsageKeys": [
+        "NSMicrophoneUsageDescription"
+      ]
+    },
+    {
+      "ecosystem": "pub",
+      "name": "flutter_sound",
+      "collects": "Audio (microphone)",
+      "appleTypes": [
+        "NSPrivacyCollectedDataTypeAudioData"
+      ],
+      "play": [
+        {
+          "category": "Audio",
+          "type": "Voice or sound recordings"
+        }
+      ],
+      "iosUsageKeys": [
+        "NSMicrophoneUsageDescription"
+      ]
+    },
+    {
+      "ecosystem": "pub",
+      "name": "speech_to_text",
+      "collects": "Audio (microphone)",
+      "appleTypes": [
+        "NSPrivacyCollectedDataTypeAudioData"
+      ],
+      "play": [
+        {
+          "category": "Audio",
+          "type": "Voice or sound recordings"
+        }
+      ],
+      "iosUsageKeys": [
+        "NSMicrophoneUsageDescription"
+      ]
+    },
+    {
+      "ecosystem": "pub",
+      "name": "contacts_service",
+      "collects": "Contacts",
+      "appleTypes": [
+        "NSPrivacyCollectedDataTypeContacts"
+      ],
+      "play": [
+        {
+          "category": "Contacts",
+          "type": "Contacts"
+        }
+      ],
+      "iosUsageKeys": [
+        "NSContactsUsageDescription"
+      ]
+    },
+    {
+      "ecosystem": "pub",
+      "name": "flutter_contacts",
+      "collects": "Contacts",
+      "appleTypes": [
+        "NSPrivacyCollectedDataTypeContacts"
+      ],
+      "play": [
+        {
+          "category": "Contacts",
+          "type": "Contacts"
+        }
+      ],
+      "iosUsageKeys": [
+        "NSContactsUsageDescription"
+      ]
+    },
+    {
+      "ecosystem": "pub",
+      "name": "health",
+      "collects": "Health data",
+      "appleTypes": [
+        "NSPrivacyCollectedDataTypeHealth"
+      ],
+      "play": [
+        {
+          "category": "Health and fitness",
+          "type": "Health info"
+        }
+      ],
+      "iosUsageKeys": [
+        "NSHealthShareUsageDescription"
+      ]
+    },
+    {
+      "ecosystem": "npm",
+      "name": "react-native-image-picker",
+      "collects": "Photos or videos (library/camera)",
+      "appleTypes": [
+        "NSPrivacyCollectedDataTypePhotosorVideos"
+      ],
+      "play": [
+        {
+          "category": "Photos and videos",
+          "type": "Photos"
+        }
+      ],
+      "iosUsageKeys": [
+        "NSPhotoLibraryUsageDescription",
+        "NSCameraUsageDescription"
+      ]
+    },
+    {
+      "ecosystem": "npm",
+      "name": "react-native-vision-camera",
+      "collects": "Photos or videos (camera)",
+      "appleTypes": [
+        "NSPrivacyCollectedDataTypePhotosorVideos"
+      ],
+      "play": [
+        {
+          "category": "Photos and videos",
+          "type": "Photos"
+        },
+        {
+          "category": "Photos and videos",
+          "type": "Videos"
+        }
+      ],
+      "iosUsageKeys": [
+        "NSCameraUsageDescription"
+      ]
+    },
+    {
+      "ecosystem": "npm",
+      "name": "react-native-geolocation-service",
+      "collects": "Location (precise)",
+      "appleTypes": [
+        "NSPrivacyCollectedDataTypePreciseLocation"
+      ],
+      "play": [
+        {
+          "category": "Location",
+          "type": "Precise location"
+        }
+      ],
+      "iosUsageKeys": [
+        "NSLocationWhenInUseUsageDescription",
+        "NSLocationAlwaysAndWhenInUseUsageDescription"
+      ]
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@react-native-community/geolocation",
+      "collects": "Location (precise)",
+      "appleTypes": [
+        "NSPrivacyCollectedDataTypePreciseLocation"
+      ],
+      "play": [
+        {
+          "category": "Location",
+          "type": "Precise location"
+        }
+      ],
+      "iosUsageKeys": [
+        "NSLocationWhenInUseUsageDescription",
+        "NSLocationAlwaysAndWhenInUseUsageDescription"
+      ]
+    },
+    {
+      "ecosystem": "npm",
+      "name": "react-native-contacts",
+      "collects": "Contacts",
+      "appleTypes": [
+        "NSPrivacyCollectedDataTypeContacts"
+      ],
+      "play": [
+        {
+          "category": "Contacts",
+          "type": "Contacts"
+        }
+      ],
+      "iosUsageKeys": [
+        "NSContactsUsageDescription"
+      ]
+    },
+    {
+      "ecosystem": "npm",
+      "name": "react-native-audio-recorder-player",
+      "collects": "Audio (microphone)",
+      "appleTypes": [
+        "NSPrivacyCollectedDataTypeAudioData"
+      ],
+      "play": [
+        {
+          "category": "Audio",
+          "type": "Voice or sound recordings"
+        }
+      ],
+      "iosUsageKeys": [
+        "NSMicrophoneUsageDescription"
+      ]
+    },
+    {
+      "ecosystem": "npm",
+      "name": "expo-location",
+      "collects": "Location (precise)",
+      "appleTypes": [
+        "NSPrivacyCollectedDataTypePreciseLocation"
+      ],
+      "play": [
+        {
+          "category": "Location",
+          "type": "Precise location"
+        }
+      ],
+      "iosUsageKeys": [
+        "NSLocationWhenInUseUsageDescription",
+        "NSLocationAlwaysAndWhenInUseUsageDescription"
+      ]
+    },
+    {
+      "ecosystem": "npm",
+      "name": "expo-camera",
+      "collects": "Photos or videos (camera)",
+      "appleTypes": [
+        "NSPrivacyCollectedDataTypePhotosorVideos"
+      ],
+      "play": [
+        {
+          "category": "Photos and videos",
+          "type": "Photos"
+        },
+        {
+          "category": "Photos and videos",
+          "type": "Videos"
+        }
+      ],
+      "iosUsageKeys": [
+        "NSCameraUsageDescription"
+      ]
+    },
+    {
+      "ecosystem": "npm",
+      "name": "expo-image-picker",
+      "collects": "Photos or videos (library/camera)",
+      "appleTypes": [
+        "NSPrivacyCollectedDataTypePhotosorVideos"
+      ],
+      "play": [
+        {
+          "category": "Photos and videos",
+          "type": "Photos"
+        }
+      ],
+      "iosUsageKeys": [
+        "NSPhotoLibraryUsageDescription",
+        "NSCameraUsageDescription"
+      ]
+    },
+    {
+      "ecosystem": "npm",
+      "name": "expo-av",
+      "collects": "Audio (microphone)",
+      "appleTypes": [
+        "NSPrivacyCollectedDataTypeAudioData"
+      ],
+      "play": [
+        {
+          "category": "Audio",
+          "type": "Voice or sound recordings"
+        }
+      ],
+      "iosUsageKeys": [
+        "NSMicrophoneUsageDescription"
+      ]
+    },
+    {
+      "ecosystem": "npm",
+      "name": "expo-contacts",
+      "collects": "Contacts",
+      "appleTypes": [
+        "NSPrivacyCollectedDataTypeContacts"
+      ],
+      "play": [
+        {
+          "category": "Contacts",
+          "type": "Contacts"
+        }
+      ],
+      "iosUsageKeys": [
+        "NSContactsUsageDescription"
+      ]
+    }
   ]
 }

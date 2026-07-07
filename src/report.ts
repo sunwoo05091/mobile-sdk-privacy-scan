@@ -3,7 +3,7 @@ import { effectiveAppleData } from "./appleData.js";
 import type { ScanResult } from "./types.js";
 import type { DriftReport } from "./drift.js";
 import type { RequiredReasonSuggestion } from "./requiredReasons.js";
-import type { CapabilityHint } from "./capabilities.js";
+import type { CapabilityHint, PermissionWarning } from "./capabilities.js";
 import type { UnusedDependency } from "./unused.js";
 
 export function printScanSummary(result: ScanResult): void {
@@ -17,6 +17,30 @@ export function printScanSummary(result: ScanResult): void {
       `| Known SDKs: ${pc.bold(pc.green(String(result.resolved.length)))}  ` +
       `| Unrecognized: ${pc.bold(pc.yellow(String(result.unknown.length)))}`,
   );
+
+  // Never be silently blind: say which layers could actually be scanned.
+  if (result.coverage.length) {
+    const blind = result.coverage.filter((c) => !c.ok);
+    console.log(pc.bold("\nCoverage:"));
+    for (const c of result.coverage) {
+      if (c.ok) {
+        console.log(`  ${pc.green("✓")} ${pc.dim(c.layer)}`);
+      } else {
+        console.log(
+          `  ${pc.red("✗")} ${c.layer} ${pc.red(pc.bold("— NOT SCANNED"))}` +
+            (c.hint ? pc.dim(`: ${c.hint}`) : ""),
+        );
+      }
+    }
+    if (blind.length) {
+      console.log(
+        pc.red(
+          `  ⚠ Results are PARTIAL — ${blind.length} layer(s) invisible to this scan. ` +
+            "SDKs living there are missing from everything below.",
+        ),
+      );
+    }
+  }
 
   if (result.resolved.length) {
     console.log(pc.bold("\nRecognized SDKs (data-collecting):"));
@@ -185,6 +209,20 @@ export function printInsights(result: ScanResult): void {
   if (!lines.length) return;
   console.log(pc.bold("\nReview notes:"));
   for (const l of lines) console.log(`  ${l}`);
+}
+
+export function printPermissionWarnings(warnings: PermissionWarning[]): void {
+  if (!warnings.length) return;
+  console.log(
+    pc.bold(pc.red("\nMissing iOS permission strings (crash / rejection risk):")),
+  );
+  for (const w of warnings) {
+    console.log(
+      `  ${pc.red("✗")} ${pc.bold(w.missingKey)} ${pc.dim(
+        `required by ${w.because.join("; ")}`,
+      )}`,
+    );
+  }
 }
 
 export function printUnused(unused: UnusedDependency[]): void {

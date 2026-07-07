@@ -27,6 +27,11 @@ test("scanning the Flutter fixture writes both drafts and exits 0", (t) => {
   assert.equal(res.status, 0, res.stdout + res.stderr);
   assert.match(res.stdout, /Project type: .*flutter/);
 
+  // Coverage is stated loudly: this fixture has no android/ project.
+  assert.match(res.stdout, /Coverage:/);
+  assert.match(res.stdout, /Android dependencies.*NOT SCANNED/);
+  assert.match(res.stdout, /Results are PARTIAL/);
+
   const manifest = plist.parse(
     readFileSync(join(out, "PrivacyInfo.xcprivacy"), "utf8"),
   );

@@ -12,7 +12,12 @@ import {
 } from "./generate/playDataSafety.js";
 import { detectDrift } from "./drift.js";
 import { suggestRequiredReasons } from "./requiredReasons.js";
-import { capabilityAppleTypes, detectCapabilities } from "./capabilities.js";
+import {
+  capabilityAppleTypes,
+  checkIosPermissionStrings,
+  detectCapabilities,
+} from "./capabilities.js";
+import { effectiveAppleData } from "./appleData.js";
 import { findUnusedDependencies } from "./unused.js";
 import {
   printScanSummary,
@@ -21,6 +26,7 @@ import {
   printCapabilities,
   printInsights,
   printNextSteps,
+  printPermissionWarnings,
   printTrustBoundary,
   printUnused,
 } from "./report.js";
@@ -53,6 +59,16 @@ program
 
     const capabilities = detectCapabilities(result, root);
     printCapabilities(capabilities);
+
+    const trackingDetected = result.resolved.some(
+      (r) => effectiveAppleData(r).tracking,
+    );
+    const permissionWarnings = checkIosPermissionStrings(
+      result,
+      root,
+      trackingDetected,
+    );
+    printPermissionWarnings(permissionWarnings);
 
     const unused = findUnusedDependencies(root, result);
     printUnused(unused);
@@ -93,7 +109,14 @@ program
       writeFileSync(
         join(outDir, "scan.json"),
         JSON.stringify(
-          { result, playRows: rows, requiredReasons, capabilities, unused },
+          {
+            result,
+            playRows: rows,
+            requiredReasons,
+            capabilities,
+            permissionWarnings,
+            unused,
+          },
           null,
           2,
         ),
@@ -106,7 +129,10 @@ program
     );
 
     printNextSteps(
-      buildNextSteps(root, opts, result, requiredReasons, capabilities, unused),
+      buildNextSteps(
+        root, opts, result, requiredReasons, capabilities, unused,
+        permissionWarnings,
+      ),
     );
 
     if (opts.compare) {
@@ -143,6 +169,7 @@ function buildNextSteps(
   requiredReasons: { covered: boolean }[],
   capabilities: unknown[],
   unused: { package: string; knownSdk: boolean }[] = [],
+  permissionWarnings: { missingKey: string }[] = [],
 ): string[] {
   const steps: string[] = [];
 
@@ -163,6 +190,14 @@ function buildNextSteps(
     steps.push(
       "Resolve the ⚠ required-reason warnings above — missing declarations " +
         "trigger ITMS-91053 at upload.",
+    );
+  }
+
+  if (permissionWarnings.length) {
+    steps.push(
+      `Add the missing Info.plist permission strings ` +
+        `(${permissionWarnings.map((w) => w.missingKey).join(", ")}) — ` +
+        `apps crash at runtime and App Review rejects without them.`,
     );
   }
 

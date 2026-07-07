@@ -54,6 +54,14 @@ export interface KbEntry {
   configNote?: string;
 }
 
+/** One detection layer's scan status. */
+export interface CoverageEntry {
+  layer: string;
+  ok: boolean;
+  /** How to make this layer scannable (shown when ok=false). */
+  hint?: string;
+}
+
 /** A parsed PrivacyInfo.xcprivacy that an SDK ships inside its own package. */
 export interface HarvestedManifest {
   /** Absolute path of the file on disk. */
@@ -92,6 +100,11 @@ export interface ScanResult {
   harvestedManifests: HarvestedManifest[];
   /** Manifest files we found but could not parse. */
   harvestErrors: string[];
+  /**
+   * Which detection layers could actually be scanned. A compliance tool must
+   * never be silently blind: missing layers are reported loudly.
+   */
+  coverage: CoverageEntry[];
   /** Noise we filtered out of `unknown` (counted so nothing is hidden silently). */
   suppressed: {
     dev: number;
