@@ -118,13 +118,15 @@ export function printCapabilities(hints: CapabilityHint[]): void {
   );
   for (const h of hints) {
     console.log(
-      `  ${pc.magenta("•")} ${h.package} → ${pc.bold(h.collects)}`,
+      `  ${pc.magenta("•")} ${pc.bold(h.collects)} ${pc.dim(
+        `← ${h.evidence.join(", ")}`,
+      )}`,
     );
   }
   console.log(
     pc.dim(
-      "  SDK scanning cannot declare these for you. If the app really collects them,\n" +
-        "  add them to PrivacyInfo.xcprivacy AND the Play Data Safety form yourself.",
+      "  Added to both drafts with Linked=false + AppFunctionality — REVIEW them:\n" +
+        "  set Linked=true if tied to user identity, and fix purposes/shared.",
     ),
   );
 }

@@ -94,6 +94,21 @@ test("drift judges against harvested data when an SDK ships its own manifest", a
   assert.ok(!("trackingMismatch" in drift), "harvested tracking=false matches declared");
 });
 
+test("app-side extra types count as detected for drift", (t) => {
+  const LOC = "NSPrivacyCollectedDataTypePreciseLocation";
+  const dir = tempDir(t);
+
+  // Declared: nothing. Detected: capability-derived location -> missing.
+  const empty = writeManifest(dir, { types: [], tracking: false });
+  const drift = detectDrift(empty, [], [{ type: LOC }]);
+  assert.deepEqual(drift.missing, [LOC]);
+
+  // Declared: location. Same detection -> clean.
+  const declared = writeManifest(dir, { types: [LOC], tracking: false });
+  const drift2 = detectDrift(declared, [], [{ type: LOC }]);
+  assert.deepEqual(drift2, { missing: [], extra: [] });
+});
+
 test("a manifest with no NSPrivacyCollectedDataTypes key at all", (t) => {
   const dir = tempDir(t);
   const path = join(dir, "PrivacyInfo.xcprivacy");

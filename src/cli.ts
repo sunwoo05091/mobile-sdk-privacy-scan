@@ -7,11 +7,12 @@ import { scanProject } from "./detect/index.js";
 import { generateAppleManifest } from "./generate/appleManifest.js";
 import {
   buildPlayRows,
+  capabilityPlayRows,
   generatePlayMarkdown,
 } from "./generate/playDataSafety.js";
 import { detectDrift } from "./drift.js";
 import { suggestRequiredReasons } from "./requiredReasons.js";
-import { detectCapabilities } from "./capabilities.js";
+import { capabilityAppleTypes, detectCapabilities } from "./capabilities.js";
 import { findUnusedDependencies } from "./unused.js";
 import {
   printScanSummary,
@@ -50,20 +51,36 @@ program
     const requiredReasons = suggestRequiredReasons(result);
     printRequiredReasons(requiredReasons);
 
-    const capabilities = detectCapabilities(result);
+    const capabilities = detectCapabilities(result, root);
     printCapabilities(capabilities);
 
     const unused = findUnusedDependencies(root, result);
     printUnused(unused);
     printInsights(result);
 
+    // The draft must not contradict our own warnings: fill uncovered
+    // required-reason suggestions and app-feature collection into it.
+    const uncoveredApis = requiredReasons
+      .filter((s) => !s.covered)
+      .map((s) => ({ category: s.category, reasons: s.reasons }));
+    const appCollected = capabilityAppleTypes(capabilities);
+
     const outDir = resolve(root, opts.out);
     mkdirSync(outDir, { recursive: true });
 
-    const applePlist = generateAppleManifest(result.resolved);
+    const applePlist = generateAppleManifest(result.resolved, {
+      accessedApis: uncoveredApis,
+      appCollected,
+    });
     writeFileSync(join(outDir, "PrivacyInfo.xcprivacy"), applePlist);
 
-    const rows = buildPlayRows(result.resolved);
+    const rows = [
+      ...buildPlayRows(result.resolved),
+      ...capabilityPlayRows(capabilities),
+    ].sort(
+      (a, b) =>
+        a.category.localeCompare(b.category) || a.type.localeCompare(b.type),
+    );
     const manualCheck = result.resolved
       .filter((r) => r.entry.play.length === 0)
       .map((r) => r.entry.name);
@@ -93,7 +110,11 @@ program
     );
 
     if (opts.compare) {
-      const drift = detectDrift(resolve(root, opts.compare), result.resolved);
+      const drift = detectDrift(
+        resolve(root, opts.compare),
+        result.resolved,
+        appCollected,
+      );
       printDrift(drift);
       // Rejection-grade drift: undeclared data types, or NSPrivacyTracking=false
       // while detected SDKs declare tracking. (Over-declaration only warns.)
@@ -147,8 +168,17 @@ function buildNextSteps(
 
   if (capabilities.length) {
     steps.push(
-      "Declare the app-feature collection listed above (location/camera/…) " +
-        "in both stores' forms if your app really collects it.",
+      "Review the app-feature entries added to both drafts: set Linked=true " +
+        "where data ties to user identity, fix purposes, and mark Shared if " +
+        "sent to third parties.",
+    );
+  }
+
+  if (result.projectType.length > 0) {
+    steps.push(
+      "Data collected through your own backend (accounts, login, identity " +
+        "verification — names, phone numbers, national IDs) is invisible to " +
+        "scanning: add it to both forms yourself.",
     );
   }
 

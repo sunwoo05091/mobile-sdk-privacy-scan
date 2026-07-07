@@ -1,23 +1,34 @@
-// Capability plugins (camera, location, microphone, contacts…) signal that
-// the APP collects data through its own features. We can point at it — only
-// the developer can declare it.
-import { readFileSync } from "node:fs";
+// App-own data collection hints, from three independent signals:
+//   1. capability packages (geolocator, camera, …)
+//   2. iOS Info.plist usage-description keys (catches packages we don't know)
+//   3. AndroidManifest.xml permissions
+// These feed draft entries that the developer MUST review (Linked/purposes).
+import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 import type { DetectedDependency } from "./types.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
+interface PlayRef {
+  category: string;
+  type: string;
+}
+
 interface CapabilityRule {
   ecosystem: string;
   name: string;
   collects: string;
+  appleTypes: string[];
+  play: PlayRef[];
 }
 
 export interface CapabilityHint {
-  package: string;
-  ecosystem: string;
   collects: string;
+  appleTypes: string[];
+  play: PlayRef[];
+  /** What produced this hint, e.g. "package geolocator" or "Info.plist NSCameraUsageDescription". */
+  evidence: string[];
 }
 
 function loadRules(): CapabilityRule[] {
@@ -38,10 +49,80 @@ function loadRules(): CapabilityRule[] {
 
 const rules = loadRules();
 
-export function detectCapabilities(scan: {
-  detected: DetectedDependency[];
-}): CapabilityHint[] {
-  const out: CapabilityHint[] = [];
+// iOS usage-description keys → the same collection shapes.
+const IOS_PERMISSION_MAP: Record<string, Omit<CapabilityHint, "evidence">> = {
+  NSLocationWhenInUseUsageDescription: LOC(),
+  NSLocationAlwaysAndWhenInUseUsageDescription: LOC(),
+  NSLocationAlwaysUsageDescription: LOC(),
+  NSCameraUsageDescription: {
+    collects: "Photos or videos (camera)",
+    appleTypes: ["NSPrivacyCollectedDataTypePhotosorVideos"],
+    play: [
+      { category: "Photos and videos", type: "Photos" },
+      { category: "Photos and videos", type: "Videos" },
+    ],
+  },
+  NSPhotoLibraryUsageDescription: {
+    collects: "Photos or videos (library)",
+    appleTypes: ["NSPrivacyCollectedDataTypePhotosorVideos"],
+    play: [{ category: "Photos and videos", type: "Photos" }],
+  },
+  NSPhotoLibraryAddUsageDescription: {
+    collects: "Photos or videos (library)",
+    appleTypes: ["NSPrivacyCollectedDataTypePhotosorVideos"],
+    play: [{ category: "Photos and videos", type: "Photos" }],
+  },
+  NSMicrophoneUsageDescription: {
+    collects: "Audio (microphone)",
+    appleTypes: ["NSPrivacyCollectedDataTypeAudioData"],
+    play: [{ category: "Audio", type: "Voice or sound recordings" }],
+  },
+  NSContactsUsageDescription: {
+    collects: "Contacts",
+    appleTypes: ["NSPrivacyCollectedDataTypeContacts"],
+    play: [{ category: "Contacts", type: "Contacts" }],
+  },
+  NSHealthShareUsageDescription: {
+    collects: "Health data",
+    appleTypes: ["NSPrivacyCollectedDataTypeHealth"],
+    play: [{ category: "Health and fitness", type: "Health info" }],
+  },
+};
+
+const ANDROID_PERMISSION_MAP: Record<string, Omit<CapabilityHint, "evidence">> = {
+  "android.permission.ACCESS_FINE_LOCATION": LOC(),
+  "android.permission.ACCESS_COARSE_LOCATION": {
+    collects: "Location (approximate)",
+    appleTypes: ["NSPrivacyCollectedDataTypeCoarseLocation"],
+    play: [{ category: "Location", type: "Approximate location" }],
+  },
+  "android.permission.CAMERA": IOS_PERMISSION_MAP.NSCameraUsageDescription,
+  "android.permission.RECORD_AUDIO": IOS_PERMISSION_MAP.NSMicrophoneUsageDescription,
+  "android.permission.READ_CONTACTS": IOS_PERMISSION_MAP.NSContactsUsageDescription,
+};
+
+function LOC(): Omit<CapabilityHint, "evidence"> {
+  return {
+    collects: "Location (precise)",
+    appleTypes: ["NSPrivacyCollectedDataTypePreciseLocation"],
+    play: [{ category: "Location", type: "Precise location" }],
+  };
+}
+
+export function detectCapabilities(
+  scan: { detected: DetectedDependency[] },
+  projectRoot?: string,
+): CapabilityHint[] {
+  // Merge by collection shape so "geolocator" + NSLocation… + FINE_LOCATION
+  // become ONE hint with three pieces of evidence.
+  const merged = new Map<string, CapabilityHint>();
+  const add = (shape: Omit<CapabilityHint, "evidence">, evidence: string) => {
+    const key = [...shape.appleTypes].sort().join("|") + "::" + shape.collects;
+    const existing = merged.get(key);
+    if (existing) existing.evidence.push(evidence);
+    else merged.set(key, { ...shape, evidence: [evidence] });
+  };
+
   for (const rule of rules) {
     const dep = scan.detected.find(
       (d) =>
@@ -49,12 +130,79 @@ export function detectCapabilities(scan: {
         d.name.toLowerCase() === rule.name.toLowerCase(),
     );
     if (dep) {
-      out.push({
-        package: dep.name,
-        ecosystem: dep.ecosystem,
-        collects: rule.collects,
-      });
+      add(
+        { collects: rule.collects, appleTypes: rule.appleTypes, play: rule.play },
+        `package ${dep.name}`,
+      );
     }
   }
-  return out;
+
+  if (projectRoot) {
+    for (const key of readIosPermissionKeys(projectRoot)) {
+      const shape = IOS_PERMISSION_MAP[key];
+      if (shape) add(shape, `Info.plist ${key}`);
+    }
+    for (const perm of readAndroidPermissions(projectRoot)) {
+      const shape = ANDROID_PERMISSION_MAP[perm];
+      if (shape) add(shape, `AndroidManifest ${perm.replace("android.permission.", "")}`);
+    }
+  }
+
+  return [...merged.values()];
+}
+
+/** Keys present in the app target's ios/<App>/Info.plist. */
+function readIosPermissionKeys(projectRoot: string): string[] {
+  const iosDir = join(projectRoot, "ios");
+  let entries: string[];
+  try {
+    entries = readdirSync(iosDir);
+  } catch {
+    return [];
+  }
+  const found = new Set<string>();
+  for (const name of entries) {
+    if (name === "Pods" || name.startsWith(".")) continue;
+    const plistPath = join(iosDir, name, "Info.plist");
+    if (!existsSync(plistPath)) continue;
+    let text: string;
+    try {
+      text = readFileSync(plistPath, "utf8");
+    } catch {
+      continue;
+    }
+    // Key scan is enough — values are human-readable strings.
+    for (const key of Object.keys(IOS_PERMISSION_MAP)) {
+      if (text.includes(`<key>${key}</key>`)) found.add(key);
+    }
+  }
+  return [...found];
+}
+
+function readAndroidPermissions(projectRoot: string): string[] {
+  const manifestPath = join(
+    projectRoot, "android", "app", "src", "main", "AndroidManifest.xml",
+  );
+  let text: string;
+  try {
+    text = readFileSync(manifestPath, "utf8");
+  } catch {
+    return [];
+  }
+  const found = new Set<string>();
+  const re = /uses-permission[^>]*android:name="([^"]+)"/g;
+  let m: RegExpExecArray | null;
+  while ((m = re.exec(text)) !== null) found.add(m[1]);
+  return [...found];
+}
+
+/** Deduped Apple collected-type entries to seed the app's draft manifest. */
+export function capabilityAppleTypes(hints: CapabilityHint[]) {
+  const types = new Set(hints.flatMap((h) => h.appleTypes));
+  return [...types].sort().map((type) => ({
+    type,
+    linked: false, // REVIEW: set true when tied to user identity
+    tracking: false,
+    purposes: ["NSPrivacyCollectedDataTypePurposeAppFunctionality"],
+  }));
 }

@@ -18,6 +18,8 @@ export interface DriftReport {
 export function detectDrift(
   existingManifestPath: string,
   resolved: ResolvedSdk[],
+  /** App-side collected types the scanner derived (capability hints). */
+  extraDetected: { type: string }[] = [],
 ): DriftReport {
   const parsed = plist.parse(
     readFileSync(existingManifestPath, "utf8"),
@@ -38,6 +40,7 @@ export function detectDrift(
     if (eff.tracking) detectedTracking = true;
     for (const t of eff.apple) detectedTypes.add(t.type);
   }
+  for (const t of extraDetected) detectedTypes.add(t.type);
 
   const missing = [...detectedTypes].filter((t) => !declaredTypes.has(t)).sort();
   const extra = [...declaredTypes].filter((t) => !detectedTypes.has(t)).sort();

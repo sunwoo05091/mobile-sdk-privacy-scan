@@ -30,6 +30,33 @@ export function buildPlayRows(resolved: ResolvedSdk[]): PlayRow[] {
   );
 }
 
+/** Rows for data the APP collects through its own features (capability hints). */
+export function capabilityPlayRows(
+  hints: { play: { category: string; type: string }[]; evidence: string[] }[],
+): PlayRow[] {
+  const merged = new Map<string, PlayRow>();
+  for (const h of hints) {
+    for (const p of h.play) {
+      const key = `${p.category}|${p.type}`;
+      const existing = merged.get(key);
+      const from = `your app (${h.evidence.join(", ")}) — VERIFY`;
+      if (existing) {
+        if (!existing.from.includes(from)) existing.from.push(from);
+      } else {
+        merged.set(key, {
+          category: p.category,
+          type: p.type,
+          collected: true,
+          shared: false, // REVIEW: set true if sent to third parties
+          purposes: ["App functionality"],
+          from: [from],
+        });
+      }
+    }
+  }
+  return [...merged.values()];
+}
+
 export function generatePlayMarkdown(
   rows: PlayRow[],
   /** SDKs (harvested-only) we have no Play data for — the user must check. */

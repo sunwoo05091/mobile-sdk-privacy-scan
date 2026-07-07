@@ -105,3 +105,33 @@ test("the empty NSPrivacyAccessedAPITypes carries a warning comment and stays pa
   // Comments must not break consumers.
   assert.deepEqual(plist.parse(xml).NSPrivacyAccessedAPITypes, []);
 });
+
+test("uncovered required-reason suggestions are filled into the draft", () => {
+  const xml = generateAppleManifest([], {
+    accessedApis: [
+      { category: "NSPrivacyAccessedAPICategoryUserDefaults", reasons: ["CA92.1"] },
+    ],
+  });
+  const doc = plist.parse(xml);
+  assert.deepEqual(doc.NSPrivacyAccessedAPITypes, [
+    {
+      NSPrivacyAccessedAPIType: "NSPrivacyAccessedAPICategoryUserDefaults",
+      NSPrivacyAccessedAPITypeReasons: ["CA92.1"],
+    },
+  ]);
+  assert.match(xml, /VERIFY each reason/i);
+});
+
+test("app-feature collection is filled into the draft with a review comment", () => {
+  const LOC = "NSPrivacyCollectedDataTypePreciseLocation";
+  const xml = generateAppleManifest([resolvedSdk({})], {
+    appCollected: [
+      { type: LOC, linked: false, tracking: false, purposes: ["NSPrivacyCollectedDataTypePurposeAppFunctionality"] },
+    ],
+  });
+  const doc = plist.parse(xml);
+  const types = doc.NSPrivacyCollectedDataTypes.map((t) => t.NSPrivacyCollectedDataType);
+  assert.ok(types.includes(LOC));
+  assert.match(xml, /REVIEW REQUIRED/);
+  assert.match(xml, /Linked/);
+});

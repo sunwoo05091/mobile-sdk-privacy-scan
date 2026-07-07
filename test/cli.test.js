@@ -52,6 +52,17 @@ test("scanning the Flutter fixture writes both drafts and exits 0", (t) => {
   assert.match(res.stdout, /own data collection/i);
   assert.match(res.stdout, /Next steps/i);
   assert.match(res.stdout, /No app privacy manifest found/i);
+
+  // App-feature collection lands IN the draft (location via package+plist,
+  // camera via Info.plist only), marked for review.
+  const xml = readFileSync(join(out, "PrivacyInfo.xcprivacy"), "utf8");
+  assert.ok(types.includes("NSPrivacyCollectedDataTypePreciseLocation"));
+  const camTypes = plist
+    .parse(xml)
+    .NSPrivacyCollectedDataTypes.map((t) => t.NSPrivacyCollectedDataType);
+  assert.ok(camTypes.includes("NSPrivacyCollectedDataTypePhotosorVideos"));
+  assert.match(xml, /REVIEW REQUIRED/);
+  assert.match(md, /your app \(.*geolocator.*\) — VERIFY/);
 });
 
 test("--compare against an incomplete manifest reports drift and exits 1", (t) => {
@@ -129,6 +140,19 @@ test("harvested manifests drive the aggregate for the RN fixture", (t) => {
 
   // The warning comment about the app's own required-reason APIs survives.
   assert.match(xml, /ITMS-91053/);
+
+  // Uncovered required-reason suggestion (react-native-fs) is filled in;
+  // async-storage is covered by its own shipped manifest so UserDefaults
+  // must NOT be declared app-side.
+  const apis = doc.NSPrivacyAccessedAPITypes.map((a) => a.NSPrivacyAccessedAPIType);
+  assert.deepEqual(apis, ["NSPrivacyAccessedAPICategoryFileTimestamp"]);
+  assert.deepEqual(
+    doc.NSPrivacyAccessedAPITypes[0].NSPrivacyAccessedAPITypeReasons,
+    ["C617.1"],
+  );
+
+  // AndroidManifest RECORD_AUDIO -> app-side AudioData entry in the draft.
+  assert.ok(types.includes("NSPrivacyCollectedDataTypeAudioData"));
 
   // AcmeAnalytics (harvested-only) lands in the Play draft's manual-check section.
   const md = readFileSync(join(out, "play-data-safety.md"), "utf8");
