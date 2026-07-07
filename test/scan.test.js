@@ -19,14 +19,14 @@ test("scanProject on the RN fixture resolves each SDK once across layers", () =>
   assert.deepEqual(result.projectType, ["react-native"]);
 
   // firebase-analytics appears in npm AND pod layers; appsflyer in npm AND pod.
-  // Each must resolve to exactly one entry. Mixpanel is not in the KB but
+  // Each must resolve to exactly one entry. AcmeAnalytics is not in the KB but
   // ships its own PrivacyInfo.xcprivacy → synthetic harvested entry.
   const resolvedIds = result.resolved.map((r) => r.entry.id).sort();
   assert.deepEqual(resolvedIds, [
     "appsflyer",
     "facebook-sdk",
     "firebase-analytics",
-    "harvested:Mixpanel",
+    "harvested:AcmeAnalytics",
   ]);
 });
 
@@ -44,12 +44,12 @@ test("harvested manifests attach to the KB-resolved SDK that owns them", () => {
 
 test("a synthetic harvested-only SDK carries the manifest and no Play data", () => {
   const result = scanProject(RN_FIXTURE);
-  const mp = result.resolved.find((r) => r.entry.id === "harvested:Mixpanel");
-  assert.equal(mp.entry.name, "Mixpanel");
+  const mp = result.resolved.find((r) => r.entry.id === "harvested:AcmeAnalytics");
+  assert.equal(mp.entry.name, "AcmeAnalytics");
   assert.deepEqual(mp.entry.play, []);
   assert.match(mp.entry.source, /harvested from/);
   assert.equal(mp.harvested?.length, 1);
-  assert.equal(mp.dependency.name, "Mixpanel");
+  assert.equal(mp.dependency.name, "AcmeAnalytics");
 });
 
 test("scanProject filters framework noise out of unknown, keeps real deps", () => {
@@ -59,7 +59,7 @@ test("scanProject filters framework noise out of unknown, keeps real deps", () =
   assert.ok(unknownNames.includes("axios"));
   assert.ok(!unknownNames.includes("react-native"), "the framework itself is not an SDK");
   assert.ok(
-    !unknownNames.includes("Mixpanel"),
+    !unknownNames.includes("AcmeAnalytics"),
     "a dep covered by its own harvested manifest is no longer unknown",
   );
 
@@ -78,8 +78,22 @@ test("scanProject on a directory that is neither Flutter nor RN", () => {
   assert.deepEqual(result.harvestErrors, []);
 });
 
-test("the Flutter fixture has no dependency folders on disk → no harvest", () => {
+test("Flutter iOS layer: pods dedupe against pub, .symlinks manifests attach", () => {
   const result = scanProject(FLUTTER_FIXTURE);
-  assert.deepEqual(result.harvestedManifests, []);
+
+  // ios/Podfile.lock pods (Firebase/Analytics, Sentry) resolve to the same
+  // KB entries as their pub packages — still exactly three resolved SDKs.
+  const resolvedIds = result.resolved.map((r) => r.entry.id).sort();
+  assert.deepEqual(resolvedIds, ["firebase-analytics", "google-admob", "sentry"]);
+
+  // The sentry_flutter plugin manifest under ios/.symlinks is harvested,
+  // attributed to pub, and attached to the sentry entry.
+  assert.equal(result.harvestedManifests.length, 1);
+  const sentry = result.resolved.find((r) => r.entry.id === "sentry");
+  assert.equal(sentry.harvested?.length, 1);
+  assert.deepEqual(sentry.harvested[0].owner, {
+    ecosystem: "pub",
+    name: "sentry_flutter",
+  });
   assert.deepEqual(result.harvestErrors, []);
 });

@@ -1,0 +1,7 @@
+PODS:
+  - Flutter (1.0.0)
+  - Firebase/Analytics (12.15.0):
+    - FirebaseAnalytics (~> 12.15.0)
+  - Sentry (9.19.1)
+DEPENDENCIES:
+  - Flutter (from `Flutter`)

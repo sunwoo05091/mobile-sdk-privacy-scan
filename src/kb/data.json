@@ -625,6 +625,552 @@
       ],
       "source": "Apple data: PrivacyInfo.xcprivacy from OneSignalXCFramework 5.5.3, OneSignal 5.5.3. Play data: curated — verify against the Play SDK Index.",
       "lastVerified": "2026-07"
+    },
+    {
+      "id": "mixpanel",
+      "name": "Mixpanel",
+      "aliases": {
+        "pub": [
+          "mixpanel_flutter"
+        ],
+        "npm": [
+          "mixpanel-react-native"
+        ],
+        "pod": [
+          "Mixpanel"
+        ]
+      },
+      "tracking": false,
+      "trackingDomains": [],
+      "apple": [],
+      "play": [
+        {
+          "category": "Device or other IDs",
+          "type": "Device or other IDs",
+          "collected": true,
+          "shared": false,
+          "purposes": [
+            "Analytics"
+          ]
+        },
+        {
+          "category": "App activity",
+          "type": "App interactions",
+          "collected": true,
+          "shared": false,
+          "purposes": [
+            "Analytics"
+          ]
+        }
+      ],
+      "source": "Apple data: PrivacyInfo.xcprivacy from Mixpanel 5.0.8. Play data: curated — verify against the Play SDK Index.",
+      "lastVerified": "2026-07"
+    },
+    {
+      "id": "amplitude",
+      "name": "Amplitude",
+      "aliases": {
+        "pub": [
+          "amplitude_flutter"
+        ],
+        "npm": [
+          "@amplitude/analytics-react-native"
+        ],
+        "pod": [
+          "AmplitudeSwift",
+          "Amplitude"
+        ]
+      },
+      "tracking": false,
+      "trackingDomains": [],
+      "apple": [
+        {
+          "type": "NSPrivacyCollectedDataTypeCoarseLocation",
+          "linked": true,
+          "tracking": false,
+          "purposes": [
+            "NSPrivacyCollectedDataTypePurposeAnalytics"
+          ]
+        },
+        {
+          "type": "NSPrivacyCollectedDataTypeDeviceID",
+          "linked": true,
+          "tracking": false,
+          "purposes": [
+            "NSPrivacyCollectedDataTypePurposeAnalytics"
+          ]
+        },
+        {
+          "type": "NSPrivacyCollectedDataTypeProductInteraction",
+          "linked": true,
+          "tracking": false,
+          "purposes": [
+            "NSPrivacyCollectedDataTypePurposeAnalytics"
+          ]
+        }
+      ],
+      "play": [
+        {
+          "category": "Device or other IDs",
+          "type": "Device or other IDs",
+          "collected": true,
+          "shared": false,
+          "purposes": [
+            "Analytics"
+          ]
+        },
+        {
+          "category": "App activity",
+          "type": "App interactions",
+          "collected": true,
+          "shared": false,
+          "purposes": [
+            "Analytics"
+          ]
+        }
+      ],
+      "source": "Apple data: PrivacyInfo.xcprivacy from AmplitudeSwift 1.18.5, Amplitude 8.22.2. Play data: curated — verify against the Play SDK Index.",
+      "lastVerified": "2026-07"
+    },
+    {
+      "id": "revenuecat",
+      "name": "RevenueCat",
+      "aliases": {
+        "pub": [
+          "purchases_flutter"
+        ],
+        "npm": [
+          "react-native-purchases"
+        ],
+        "pod": [
+          "RevenueCat",
+          "PurchasesHybridCommon"
+        ]
+      },
+      "tracking": false,
+      "trackingDomains": [],
+      "apple": [
+        {
+          "type": "NSPrivacyCollectedDataTypePurchaseHistory",
+          "linked": false,
+          "tracking": false,
+          "purposes": [
+            "NSPrivacyCollectedDataTypePurposeAppFunctionality"
+          ]
+        }
+      ],
+      "play": [
+        {
+          "category": "Purchases",
+          "type": "Purchase history",
+          "collected": true,
+          "shared": false,
+          "purposes": [
+            "App functionality",
+            "Analytics"
+          ]
+        },
+        {
+          "category": "Device or other IDs",
+          "type": "Device or other IDs",
+          "collected": true,
+          "shared": false,
+          "purposes": [
+            "App functionality"
+          ]
+        }
+      ],
+      "source": "Apple data: PrivacyInfo.xcprivacy from RevenueCat 5.80.2, PurchasesHybridCommon 18.19.0. Play data: curated — verify against the Play SDK Index.",
+      "lastVerified": "2026-07"
+    },
+    {
+      "id": "branch",
+      "name": "Branch",
+      "aliases": {
+        "pub": [
+          "flutter_branch_sdk"
+        ],
+        "npm": [
+          "react-native-branch"
+        ],
+        "pod": [
+          "BranchSDK"
+        ]
+      },
+      "tracking": true,
+      "trackingDomains": [
+        "api-safetrack-eu.branch.io",
+        "api-safetrack.branch.io"
+      ],
+      "apple": [
+        {
+          "type": "NSPrivacyCollectedDataTypeDeviceID",
+          "linked": true,
+          "tracking": true,
+          "purposes": [
+            "NSPrivacyCollectedDataTypePurposeThirdPartyAdvertising",
+            "NSPrivacyCollectedDataTypePurposeDeveloperAdvertising",
+            "NSPrivacyCollectedDataTypePurposeAnalytics"
+          ]
+        },
+        {
+          "type": "NSPrivacyCollectedDataTypeOtherDataTypes",
+          "linked": false,
+          "tracking": false,
+          "purposes": [
+            "NSPrivacyCollectedDataTypePurposeAppFunctionality"
+          ]
+        },
+        {
+          "type": "NSPrivacyCollectedDataTypePerformanceData",
+          "linked": false,
+          "tracking": false,
+          "purposes": [
+            "NSPrivacyCollectedDataTypePurposeAppFunctionality"
+          ]
+        }
+      ],
+      "play": [
+        {
+          "category": "Device or other IDs",
+          "type": "Device or other IDs",
+          "collected": true,
+          "shared": true,
+          "purposes": [
+            "Analytics",
+            "Advertising or marketing"
+          ]
+        },
+        {
+          "category": "App activity",
+          "type": "App interactions",
+          "collected": true,
+          "shared": true,
+          "purposes": [
+            "Analytics"
+          ]
+        }
+      ],
+      "source": "Apple data: PrivacyInfo.xcprivacy from BranchSDK 3.14.1. Play data: curated — verify against the Play SDK Index.",
+      "lastVerified": "2026-07"
+    },
+    {
+      "id": "intercom",
+      "name": "Intercom",
+      "aliases": {
+        "pub": [
+          "intercom_flutter"
+        ],
+        "npm": [
+          "@intercom/intercom-react-native"
+        ],
+        "pod": [
+          "Intercom"
+        ]
+      },
+      "tracking": false,
+      "trackingDomains": [],
+      "apple": [
+        {
+          "type": "NSPrivacyCollectedDataTypeEmailAddress",
+          "linked": true,
+          "tracking": false,
+          "purposes": [
+            "NSPrivacyCollectedDataTypePurposeAppFunctionality"
+          ]
+        },
+        {
+          "type": "NSPrivacyCollectedDataTypeOtherDiagnosticData",
+          "linked": false,
+          "tracking": false,
+          "purposes": [
+            "NSPrivacyCollectedDataTypePurposeAppFunctionality"
+          ]
+        },
+        {
+          "type": "NSPrivacyCollectedDataTypePerformanceData",
+          "linked": false,
+          "tracking": false,
+          "purposes": [
+            "NSPrivacyCollectedDataTypePurposeAppFunctionality"
+          ]
+        },
+        {
+          "type": "NSPrivacyCollectedDataTypePhotosorVideos",
+          "linked": true,
+          "tracking": false,
+          "purposes": [
+            "NSPrivacyCollectedDataTypePurposeAppFunctionality"
+          ]
+        },
+        {
+          "type": "NSPrivacyCollectedDataTypeUserID",
+          "linked": true,
+          "tracking": false,
+          "purposes": [
+            "NSPrivacyCollectedDataTypePurposeAppFunctionality"
+          ]
+        }
+      ],
+      "play": [
+        {
+          "category": "Personal info",
+          "type": "Name",
+          "collected": true,
+          "shared": false,
+          "purposes": [
+            "App functionality"
+          ]
+        },
+        {
+          "category": "Personal info",
+          "type": "Email address",
+          "collected": true,
+          "shared": false,
+          "purposes": [
+            "App functionality"
+          ]
+        },
+        {
+          "category": "App activity",
+          "type": "App interactions",
+          "collected": true,
+          "shared": false,
+          "purposes": [
+            "Analytics"
+          ]
+        }
+      ],
+      "source": "Apple data: PrivacyInfo.xcprivacy from Intercom 19.6.5. Play data: curated — verify against the Play SDK Index.",
+      "lastVerified": "2026-07"
+    },
+    {
+      "id": "firebase-messaging",
+      "name": "Firebase Cloud Messaging",
+      "aliases": {
+        "pub": [
+          "firebase_messaging"
+        ],
+        "npm": [
+          "@react-native-firebase/messaging"
+        ],
+        "pod": [
+          "FirebaseMessaging"
+        ]
+      },
+      "tracking": false,
+      "trackingDomains": [],
+      "apple": [
+        {
+          "type": "NSPrivacyCollectedDataTypeDeviceID",
+          "linked": false,
+          "tracking": false,
+          "purposes": [
+            "NSPrivacyCollectedDataTypePurposeAppFunctionality"
+          ]
+        },
+        {
+          "type": "NSPrivacyCollectedDataTypeOtherDataTypes",
+          "linked": false,
+          "tracking": false,
+          "purposes": [
+            "NSPrivacyCollectedDataTypePurposeAnalytics"
+          ]
+        },
+        {
+          "type": "NSPrivacyCollectedDataTypeOtherDiagnosticData",
+          "linked": false,
+          "tracking": false,
+          "purposes": [
+            "NSPrivacyCollectedDataTypePurposeAppFunctionality"
+          ]
+        }
+      ],
+      "play": [
+        {
+          "category": "Device or other IDs",
+          "type": "Device or other IDs",
+          "collected": true,
+          "shared": false,
+          "purposes": [
+            "App functionality"
+          ]
+        }
+      ],
+      "source": "Apple data: PrivacyInfo.xcprivacy from FirebaseMessaging 12.15.0. Play data: curated — verify against the Play SDK Index.",
+      "lastVerified": "2026-07"
+    },
+    {
+      "id": "braze",
+      "name": "Braze",
+      "aliases": {
+        "pub": [
+          "braze_plugin"
+        ],
+        "npm": [
+          "@braze/react-native-sdk"
+        ],
+        "pod": [
+          "BrazeKit"
+        ]
+      },
+      "tracking": false,
+      "trackingDomains": [],
+      "apple": [
+        {
+          "type": "NSPrivacyCollectedDataTypeDeviceID",
+          "linked": true,
+          "tracking": false,
+          "purposes": [
+            "NSPrivacyCollectedDataTypePurposeProductPersonalization",
+            "NSPrivacyCollectedDataTypePurposeAnalytics",
+            "NSPrivacyCollectedDataTypePurposeAppFunctionality"
+          ]
+        },
+        {
+          "type": "NSPrivacyCollectedDataTypeProductInteraction",
+          "linked": true,
+          "tracking": false,
+          "purposes": [
+            "NSPrivacyCollectedDataTypePurposeProductPersonalization",
+            "NSPrivacyCollectedDataTypePurposeAnalytics",
+            "NSPrivacyCollectedDataTypePurposeAppFunctionality"
+          ]
+        },
+        {
+          "type": "NSPrivacyCollectedDataTypeUserID",
+          "linked": true,
+          "tracking": false,
+          "purposes": [
+            "NSPrivacyCollectedDataTypePurposeProductPersonalization",
+            "NSPrivacyCollectedDataTypePurposeAnalytics",
+            "NSPrivacyCollectedDataTypePurposeAppFunctionality"
+          ]
+        }
+      ],
+      "play": [
+        {
+          "category": "Device or other IDs",
+          "type": "Device or other IDs",
+          "collected": true,
+          "shared": false,
+          "purposes": [
+            "Analytics",
+            "Advertising or marketing"
+          ]
+        },
+        {
+          "category": "App activity",
+          "type": "App interactions",
+          "collected": true,
+          "shared": false,
+          "purposes": [
+            "Analytics"
+          ]
+        }
+      ],
+      "source": "Apple data: PrivacyInfo.xcprivacy from BrazeKit 17.0.0. Play data: curated — verify against the Play SDK Index.",
+      "lastVerified": "2026-07"
+    },
+    {
+      "id": "google-signin",
+      "name": "Google Sign-In",
+      "aliases": {
+        "pub": [
+          "google_sign_in",
+          "google_sign_in_ios"
+        ],
+        "npm": [
+          "@react-native-google-signin/google-signin"
+        ],
+        "pod": [
+          "GoogleSignIn"
+        ]
+      },
+      "tracking": false,
+      "trackingDomains": [],
+      "apple": [
+        {
+          "type": "NSPrivacyCollectedDataTypeCoarseLocation",
+          "linked": true,
+          "tracking": false,
+          "purposes": [
+            "NSPrivacyCollectedDataTypePurposeAppFunctionality"
+          ]
+        },
+        {
+          "type": "NSPrivacyCollectedDataTypeDeviceID",
+          "linked": true,
+          "tracking": false,
+          "purposes": [
+            "NSPrivacyCollectedDataTypePurposeAnalytics"
+          ]
+        },
+        {
+          "type": "NSPrivacyCollectedDataTypeEmailAddress",
+          "linked": true,
+          "tracking": false,
+          "purposes": [
+            "NSPrivacyCollectedDataTypePurposeAppFunctionality"
+          ]
+        },
+        {
+          "type": "NSPrivacyCollectedDataTypeName",
+          "linked": true,
+          "tracking": false,
+          "purposes": [
+            "NSPrivacyCollectedDataTypePurposeAppFunctionality"
+          ]
+        },
+        {
+          "type": "NSPrivacyCollectedDataTypeOtherDataTypes",
+          "linked": true,
+          "tracking": false,
+          "purposes": [
+            "NSPrivacyCollectedDataTypePurposeAppFunctionality",
+            "NSPrivacyCollectedDataTypePurposeAnalytics"
+          ]
+        },
+        {
+          "type": "NSPrivacyCollectedDataTypeOtherUsageData",
+          "linked": true,
+          "tracking": false,
+          "purposes": [
+            "NSPrivacyCollectedDataTypePurposeAnalytics"
+          ]
+        },
+        {
+          "type": "NSPrivacyCollectedDataTypePhoneNumber",
+          "linked": true,
+          "tracking": false,
+          "purposes": [
+            "NSPrivacyCollectedDataTypePurposeAppFunctionality"
+          ]
+        },
+        {
+          "type": "NSPrivacyCollectedDataTypeUserID",
+          "linked": true,
+          "tracking": false,
+          "purposes": [
+            "NSPrivacyCollectedDataTypePurposeAppFunctionality",
+            "NSPrivacyCollectedDataTypePurposeAnalytics"
+          ]
+        }
+      ],
+      "play": [
+        {
+          "category": "Personal info",
+          "type": "Email address",
+          "collected": true,
+          "shared": false,
+          "purposes": [
+            "App functionality",
+            "Account management"
+          ]
+        }
+      ],
+      "source": "Apple data: PrivacyInfo.xcprivacy from GoogleSignIn 9.2.0. Play data: curated — verify against the Play SDK Index.",
+      "lastVerified": "2026-07"
     }
   ]
 }

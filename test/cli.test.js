@@ -3,7 +3,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import plist from "plist";
 import {
@@ -66,6 +66,23 @@ test("--compare against the manifest we just generated exits 0 (self-consistency
   assert.match(res.stdout, /No drift detected/);
 });
 
+test("declaring tracking=false while SDKs track fails the gate", (t) => {
+  const out = tempDir(t);
+  runCli([RN_FIXTURE, "--out", out]);
+
+  // Take the fully correct generated manifest and flip only NSPrivacyTracking.
+  const generated = join(out, "PrivacyInfo.xcprivacy");
+  const doc = plist.parse(readFileSync(generated, "utf8"));
+  assert.equal(doc.NSPrivacyTracking, true, "precondition: RN fixture tracks");
+  doc.NSPrivacyTracking = false;
+  const lying = join(out, "under-declared.xcprivacy");
+  writeFileSync(lying, plist.build(doc));
+
+  const res = runCli([RN_FIXTURE, "--out", out, "--compare", lying]);
+  assert.equal(res.status, 1, "tracking under-declaration is rejection-grade");
+  assert.match(res.stdout, /TRACKING declared=false detected=true/);
+});
+
 test("--json writes a machine-readable scan.json", (t) => {
   const out = tempDir(t);
   const res = runCli([RN_FIXTURE, "--out", out, "--json"]);
@@ -77,7 +94,7 @@ test("--json writes a machine-readable scan.json", (t) => {
     "appsflyer",
     "facebook-sdk",
     "firebase-analytics",
-    "harvested:Mixpanel",
+    "harvested:AcmeAnalytics",
   ]);
   assert.ok(Array.isArray(scan.playRows) && scan.playRows.length > 0);
 });
@@ -103,10 +120,10 @@ test("harvested manifests drive the aggregate for the RN fixture", (t) => {
   // The warning comment about the app's own required-reason APIs survives.
   assert.match(xml, /ITMS-91053/);
 
-  // Mixpanel (harvested-only) lands in the Play draft's manual-check section.
+  // AcmeAnalytics (harvested-only) lands in the Play draft's manual-check section.
   const md = readFileSync(join(out, "play-data-safety.md"), "utf8");
   assert.match(md, /[Cc]heck manually/);
-  assert.match(md, /Mixpanel/);
+  assert.match(md, /AcmeAnalytics/);
 });
 
 test("output stays inside --out: fixtures are never polluted", (t) => {

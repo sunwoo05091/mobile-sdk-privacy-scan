@@ -1,6 +1,7 @@
 import { relative } from "node:path";
 import { detectFlutter, isFlutterProject } from "./flutter.js";
 import { detectReactNative, isReactNativeProject } from "./reactNative.js";
+import { detectPods, detectGradle } from "./native.js";
 import { harvestPrivacyManifests } from "./harvest.js";
 import { lookup } from "../kb/index.js";
 import type {
@@ -19,6 +20,9 @@ export function scanProject(projectRoot: string): ScanResult {
   const detected: DetectedDependency[] = [
     ...detectFlutter(projectRoot),
     ...detectReactNative(projectRoot),
+    // Native layers exist in both Flutter and RN projects.
+    ...detectPods(projectRoot),
+    ...detectGradle(projectRoot),
   ];
 
   const resolved: ResolvedSdk[] = [];

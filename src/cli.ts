@@ -66,10 +66,16 @@ program
     if (opts.compare) {
       const drift = detectDrift(resolve(root, opts.compare), result.resolved);
       printDrift(drift);
-      if (drift.missing.length > 0) {
+      // Rejection-grade drift: undeclared data types, or NSPrivacyTracking=false
+      // while detected SDKs declare tracking. (Over-declaration only warns.)
+      const underDeclaredTracking =
+        drift.trackingMismatch !== undefined &&
+        drift.trackingMismatch.detected &&
+        !drift.trackingMismatch.declared;
+      if (drift.missing.length > 0 || underDeclaredTracking) {
         console.log(
           pc.red(
-            "\n✗ Undeclared data types found — this would likely be rejected. (exit 1)",
+            "\n✗ Undeclared collection found — this would likely be rejected. (exit 1)",
           ),
         );
         finish(result, 1);

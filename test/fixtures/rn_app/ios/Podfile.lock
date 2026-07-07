@@ -4,6 +4,6 @@ PODS:
   - FirebaseAnalytics (10.29.0)
   - AppsFlyerFramework (6.15.1)
   - FBSDKCoreKit (17.0.0)
-  - Mixpanel (5.0.8)
+  - AcmeAnalytics (1.0.0)
 DEPENDENCIES:
   - Firebase/Analytics
