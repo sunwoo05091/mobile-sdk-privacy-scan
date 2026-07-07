@@ -250,6 +250,36 @@ export function printUnused(unused: UnusedDependency[]): void {
   );
 }
 
+export function printBaselineDelta(
+  delta: import("./baseline.js").BaselineDelta,
+): void {
+  const changes: string[] = [];
+  if (delta.addedSdks.length) changes.push(`${pc.red("+")} SDKs: ${delta.addedSdks.join(", ")}`);
+  if (delta.removedSdks.length) changes.push(`${pc.green("-")} SDKs: ${delta.removedSdks.join(", ")}`);
+  if (delta.addedTypes.length) changes.push(`${pc.red("+")} data types: ${delta.addedTypes.join(", ")}`);
+  if (delta.removedTypes.length) changes.push(`${pc.green("-")} data types: ${delta.removedTypes.join(", ")}`);
+  if (delta.trackingTurnedOn) changes.push(pc.red("+ tracking turned ON"));
+  if (delta.trackingTurnedOff) changes.push(pc.green("- tracking turned off"));
+  if (delta.newUncoveredReasons.length) {
+    changes.push(`${pc.red("+")} uncovered required-reason APIs: ${delta.newUncoveredReasons.join(", ")}`);
+  }
+
+  console.log(pc.bold("\nPrivacy delta vs committed baseline (.privacy-baseline.json):"));
+  if (!changes.length) {
+    console.log(pc.green("  ✓ no change in privacy posture"));
+    return;
+  }
+  for (const c of changes) console.log(`  ${c}`);
+  if (delta.expanded) {
+    console.log(
+      pc.red(
+        "  ⚠ Collection EXPANDED. Update your store declarations, then re-baseline\n" +
+          "    with --update-baseline to acknowledge. (exit 1)",
+      ),
+    );
+  }
+}
+
 /** The explicit trust boundary: what this scan proves vs what only you can decide. */
 export function printTrustBoundary(): void {
   console.log(pc.bold("\nTrust boundary — read this before submitting:"));

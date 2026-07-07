@@ -1,0 +1,30 @@
+name: "sdk-privacy-scan"
+description: >-
+  Scan a React Native / Flutter project for third-party SDKs, generate
+  Apple/Google privacy declaration drafts, and fail CI when the app's
+  privacy posture expands past the committed .privacy-baseline.json.
+author: "sunwoo05091"
+branding:
+  icon: "shield"
+  color: "blue"
+
+inputs:
+  path:
+    description: "Project directory to scan"
+    required: false
+    default: "."
+  args:
+    description: "Extra CLI arguments (e.g. --compare ios/Runner/PrivacyInfo.xcprivacy)"
+    required: false
+    default: ""
+  version:
+    description: "sdk-privacy-scan version to run"
+    required: false
+    default: "latest"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Run sdk-privacy-scan
+      shell: bash
+      run: npx -y "sdk-privacy-scan@${{ inputs.version }}" "${{ inputs.path }}" --out "${{ runner.temp }}/privacy-out" ${{ inputs.args }}

@@ -10,6 +10,12 @@ import {
   capabilityPlayRows,
   generatePlayMarkdown,
 } from "./generate/playDataSafety.js";
+import {
+  buildBaseline,
+  diffBaseline,
+  readBaseline,
+  writeBaseline,
+} from "./baseline.js";
 import { generatePlayCsv } from "./generate/playCsv.js";
 import { generateAscAnswers } from "./generate/ascAnswers.js";
 import { mergeAppleTypes } from "./appleData.js";
@@ -28,6 +34,7 @@ import {
   printRequiredReasons,
   printCapabilities,
   printInsights,
+  printBaselineDelta,
   printNextSteps,
   printPermissionWarnings,
   printTrustBoundary,
@@ -50,6 +57,11 @@ program
     "existing PrivacyInfo.xcprivacy to check for drift",
   )
   .option("--json", "also write a machine-readable scan.json", false)
+  .option(
+    "--update-baseline",
+    "write .privacy-baseline.json (commit it): acknowledges the current privacy posture",
+    false,
+  )
   .action((projectDir: string, opts) => {
     const root = resolve(projectDir);
     console.log(pc.dim(`Scanning ${root} …`));
@@ -176,6 +188,30 @@ program
       ),
     );
 
+    // Committed baseline: lockfile semantics for the app's privacy posture.
+    const baselinePath = join(root, ".privacy-baseline.json");
+    const currentBaseline = buildBaseline(
+      result.resolved,
+      appCollected,
+      requiredReasons,
+    );
+    let baselineExpanded = false;
+    if (opts.updateBaseline) {
+      writeBaseline(baselinePath, currentBaseline);
+      console.log(
+        pc.bold(pc.green("\nBaseline written: ")) +
+          pc.cyan(".privacy-baseline.json") +
+          pc.dim(" — commit it; future scans fail CI when collection expands."),
+      );
+    } else {
+      const previous = readBaseline(baselinePath);
+      if (previous) {
+        const delta = diffBaseline(previous, currentBaseline);
+        printBaselineDelta(delta);
+        baselineExpanded = delta.expanded;
+      }
+    }
+
     if (opts.compare) {
       const drift = detectDrift(
         resolve(root, opts.compare),
@@ -199,7 +235,7 @@ program
       }
     }
 
-    finish(result, 0);
+    finish(result, baselineExpanded ? 1 : 0);
   });
 
 /** Turn scan findings into a short, ordered to-do list for the developer. */

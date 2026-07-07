@@ -2,7 +2,7 @@
   "name": "sdk-privacy-scan",
   "version": "0.2.0",
   "description": "Scan React Native & Flutter projects for third-party SDKs and generate Apple privacy manifest + Google Play Data Safety drafts, with drift detection. Runs fully locally.",
-  "license": "Apache-2.0",
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/sunwoo05091/mobile-sdk-privacy-scan.git"

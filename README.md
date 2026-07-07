@@ -1,135 +1,151 @@
 # sdk-privacy-scan
 
-Scan a **React Native** or **Flutter** project for third-party SDKs and generate
-**Apple privacy manifest** (`PrivacyInfo.xcprivacy`) and **Google Play Data Safety**
-drafts — then check them for drift. Runs **fully locally**: no upload, no backend.
+**English** • [한국어](./README.ko.md)
 
-Like Prism, it's a plain CLI you run and it works immediately:
+[![npm](https://img.shields.io/npm/v/sdk-privacy-scan)](https://www.npmjs.com/package/sdk-privacy-scan)
+[![CI](https://github.com/sunwoo05091/mobile-sdk-privacy-scan/actions/workflows/ci.yml/badge.svg)](https://github.com/sunwoo05091/mobile-sdk-privacy-scan/actions/workflows/ci.yml)
+[![license: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
+[![node](https://img.shields.io/node/v/sdk-privacy-scan)](package.json)
 
-```bash
-npx sdk-privacy-scan            # scan the current directory
-npx sdk-privacy-scan ./my-app   # scan a specific project
-```
-
-## What it does
-
-1. **Detects** dependencies across every layer of an app:
-   - Flutter: `pubspec.lock`
-   - React Native: `package.json` + `ios/Podfile.lock` + `android/**/build.gradle`
-2. **Harvests** any `PrivacyInfo.xcprivacy` that SDKs already ship inside their
-   packages on disk, parses it, and attributes it to the owning dependency.
-   The SDK's own declaration is the best source of truth — it **replaces** the
-   knowledge-base entry for that SDK (read it, don't guess). SDKs that ship a
-   manifest but aren't in the KB still contribute to the Apple aggregate.
-3. **Resolves** each remaining dependency against a bundled knowledge base that
-   maps an SDK to the data it collects, across pub / npm / pod names.
-4. **Generates** a merged `PrivacyInfo.xcprivacy` and a `play-data-safety.md` draft.
-5. **Detects drift**: `--compare` your existing manifest to flag data types that
-   SDKs collect but you never declared, and tracking under-declaration
-   (the things that get apps rejected).
-6. **Flags required-reason APIs** (ITMS-91053): known packages that touch
-   UserDefaults / file timestamps / disk space are cross-checked against the
-   manifests they ship — you get a ✓ or a "declare this yourself" warning.
-
-## Usage
+**App-store privacy declarations, generated from your lockfiles.**
+One scan of a React Native / Flutter project → Apple `PrivacyInfo.xcprivacy`,
+App Store Connect answers, and an importable Google Play Data Safety CSV —
+plus a CI gate that fails when your privacy posture silently expands.
+Runs **fully locally**: no upload, no backend, no account.
 
 ```bash
-# generate drafts into ./privacy-out
 npx sdk-privacy-scan ./my-app
-
-# CI gate: fail (exit 1) if your manifest is missing declarations
-npx sdk-privacy-scan ./my-app --compare ios/MyApp/PrivacyInfo.xcprivacy
-
-# also emit machine-readable scan.json
-npx sdk-privacy-scan ./my-app --json
 ```
 
-## Architecture
+![demo](.github/assets/demo.svg)
 
-```
-src/
-  cli.ts                 CLI entry (the npx bin)
-  types.ts               shared types
-  appleData.ts           precedence: harvested manifest beats KB entry
-  detect/
-    flutter.ts           pubspec.lock parser
-    reactNative.ts       package.json + Podfile.lock + gradle parser
-    harvest.ts           find + parse PrivacyInfo.xcprivacy shipped by deps
-    index.ts             orchestrate + resolve against the KB
-  kb/
-    data.json            bundled knowledge base (ships in the package)
-    index.ts             loader + alias index
-  generate/
-    appleManifest.ts     -> PrivacyInfo.xcprivacy
-    playDataSafety.ts    -> play-data-safety.md
-  drift.ts               compare declared vs detected
-  report.ts              terminal output
-```
+---
 
-The knowledge base (`src/kb/data.json`) is the heart of the project — and its moat.
-It ships inside the package so the tool works offline. Extend it via pull requests.
+## Why
 
-## What this tool guarantees — and what it can't
+Apple and Google both make you declare what every third-party SDK in your app
+collects. In practice that means reading dozens of vendor docs by hand — and a
+missed declaration is one of the most common App Review rejections
+(`ITMS-91053`). This tool automates the mechanical part and points at exactly
+the judgment calls only you can make.
 
-No scanner can make privacy declarations 100% correct, because the final
-answers depend on runtime configuration and business intent. The tool states
-this boundary explicitly at the end of every scan:
-
-| Tier | What it covers | Trust |
+| | By hand | sdk-privacy-scan |
 | --- | --- | --- |
-| ✓ verified | `[manifest]` entries — read from the SDK's own shipped `PrivacyInfo.xcprivacy` | As truthful as the vendor made it (we surface broken/empty declarations) |
-| ~ curated | `[KB seed]` entries and all Play Data Safety rows | Our research — verify against vendor docs and the Play SDK Index |
-| ✗ yours | Linked-to-identity, purposes, tracking intent, ads configuration, backend-collected data (accounts, IDs) | Undecidable by any scanner — the drafts mark these `REVIEW`/`VERIFY` and the CLI tells you exactly what to check |
+| Find every SDK across pub / npm / pods / gradle | hours | one scan |
+| What each SDK collects | vendor docs, guesswork | the SDK's **own shipped manifest**, read directly |
+| Apple manifest + ASC answers + Play CSV | copy-paste | generated, with evidence per answer |
+| Catching regressions in PRs | nobody does | committed baseline + exit 1 |
 
-SDKs whose collection "depends on app configuration" (AdMob, Mixpanel,
-AppLovin, …) get a `CONFIG` review note naming the specific setting that
-changes your answers (e.g. personalized ads ⇒ tracking + ATT prompt).
+## How it works
 
-## The knowledge base
+```
+lockfiles ─▶ detect ─▶ harvest ─▶ resolve ─▶ generate ─▶ gate
+```
 
-`src/kb/data.json` has two kinds of data with different provenance:
+1. **Detect** dependencies in every layer: `pubspec.lock`, `package.json`,
+   `ios/Podfile.lock`, `android/**/build.gradle` — and report **coverage**
+   loudly when a layer can't be scanned (Expo managed, missing lockfiles).
+2. **Harvest** the `PrivacyInfo.xcprivacy` files SDKs ship inside their own
+   packages, parse them, attribute them to the owning dependency. The SDK's
+   own declaration **replaces** our knowledge-base entry — read, don't guess.
+3. **Resolve** everything else against a bundled, auto-verified knowledge base
+   (50 SDKs; the Apple side of 47 of them is harvested from real artifacts).
+4. **Generate** four deliverables (below), pre-filling everything provable and
+   marking every judgment call `REVIEW`.
+5. **Gate** CI: manifest drift (`--compare`) and privacy-posture expansion
+   (`.privacy-baseline.json`) exit 1.
 
-- **Apple side** (`apple`, `tracking`, `trackingDomains`): auto-harvested from
-  each SDK's own shipped `PrivacyInfo.xcprivacy` by `tools/kb-build.mjs`.
-  Each entry's `source` names the exact pod + version it came from and
-  `lastVerified` says when. Entries whose artifacts ship no manifest (e.g.
-  Firebase Analytics 12.x binaries) keep curated seed data and say so.
-- **Play side** (`play`): curated by hand and **must be verified** against the
-  [Google Play SDK Index](https://play.google.com/sdks) — Google has no
-  machine-readable equivalent of privacy manifests.
+## What you get
 
-Data collection varies by SDK version and by how each app configures the SDK.
+| File | Goes to |
+| --- | --- |
+| `PrivacyInfo.xcprivacy` | your Xcode app target (bundle manifest) |
+| `app-store-connect-answers.md` | ASC → App Privacy web questionnaire (it has no import/API) |
+| `play-data-safety.csv` | Play Console → App content → Data safety → **Import from CSV** |
+| `play-data-safety.md` | humans reviewing the above |
+
+## Beyond the drafts
+
+- **Required-reason APIs (`ITMS-91053`)** — packages that touch UserDefaults /
+  file timestamps / disk space are cross-checked against the manifests they
+  ship: ✓ covered, or the exact category + reason code you must declare.
+- **Your app's own collection** — triangulated from capability packages,
+  `Info.plist` usage keys, and `AndroidManifest` permissions (catches packages
+  we've never heard of).
+- **Missing permission strings** — `record` without
+  `NSMicrophoneUsageDescription`, tracking SDKs without the ATT prompt:
+  crash/rejection warnings before App Review finds them.
+- **Possibly-unused dependencies** — a declared-but-never-imported SDK still
+  ships in your binary and inflates your privacy label for nothing.
+- **Review notes** — `TRACKING` (ATT required), `CONFIG` (AdMob/Mixpanel-style
+  "depends on your setup", with the exact setting to check), `UNVERIFIED`,
+  `MALFORMED`.
+
+## CI: lock your privacy posture
+
+```bash
+npx sdk-privacy-scan . --update-baseline   # acknowledge current posture, commit the file
+```
+
+Commit `.privacy-baseline.json`. From then on, any PR that adds an SDK, a data
+type, tracking, or an uncovered required-reason API **fails CI (exit 1)** until
+the team updates the store declarations and re-baselines — lockfile semantics
+for privacy.
+
+```yaml
+# .github/workflows/privacy.yml
+- uses: sunwoo05091/mobile-sdk-privacy-scan@main
+  with:
+    path: .
+    args: --compare ios/Runner/PrivacyInfo.xcprivacy
+```
+
+## Trust boundary
+
+No scanner can make privacy declarations 100% correct — the tool says so
+explicitly at the end of every scan:
+
+| Tier | Covers | Trust |
+| --- | --- | --- |
+| ✓ verified | `[manifest]` entries — the SDK's own shipped declaration | as truthful as the vendor made it (broken/empty ones are flagged) |
+| ~ curated | `[KB seed]` entries, all Play rows | our research — verify against vendor docs / Play SDK Index |
+| ✗ yours | linked-to-identity, purposes, tracking intent, backend data | undecidable by any scanner — marked `REVIEW`/`VERIFY` |
+
 Generated files are **drafts to review — not legal advice, not a compliance
 guarantee.**
 
-### Maintaining the KB (maintainers only)
+## The knowledge base
+
+`src/kb/data.json` — 50 SDKs. The Apple side is **auto-harvested from each
+SDK's real distribution artifact** by `tools/kb-build.mjs` (CocoaPods trunk →
+podspec → download → read the shipped manifest), stamped with pod version and
+date. The Play side is curated and must be verified against the
+[Play SDK Index](https://play.google.com/sdks). To add an SDK: add a skeleton
+entry (id, name, aliases, curated Play rows) and run:
 
 ```bash
-node tools/kb-build.mjs                # verify: diff KB vs shipped manifests, exit 1 on drift
-node tools/kb-build.mjs --write        # apply harvested data + stamp lastVerified
-node tools/kb-build.mjs --ids sentry   # limit to specific entry ids
+node tools/kb-build.mjs                # verify: diff KB vs shipped manifests
+node tools/kb-build.mjs --write        # apply + stamp lastVerified
 ```
 
-The tool downloads pod artifacts from CocoaPods (network!), extracts them into
-`tools/.cache/`, and reads the privacy manifests they ship. The scanner itself
-never touches the network — only the refreshed `data.json` ships in the package.
-To add an SDK: add a skeleton entry (id, name, aliases, curated `play` rows,
-empty `apple`) and run the tool with `--write`.
+## CLI reference
+
+```bash
+npx sdk-privacy-scan [dir]                     # scan, write drafts to ./privacy-out
+  -o, --out <dir>                              # output directory
+  --compare <PrivacyInfo.xcprivacy>            # drift gate: exit 1 on undeclared collection
+  --update-baseline                            # write .privacy-baseline.json (commit it)
+  --json                                       # machine-readable scan.json
+```
 
 ## Roadmap
 
-- Play Data Safety **CSV export** (the real work: mapping our types onto
-  Google's question taxonomy) and an **App Store Connect answer sheet** — a
-  separate deliverable from the bundle manifest: ASC's nutrition label has no
-  import/API and is filled in via web questionnaire only
-- **Baseline diff**: `--baseline .privacy-baseline.json` (committed file, not
-  scan.json) to report only the privacy delta per release + a GitHub Action
-- `explain` command for App Review rejection mails, keyed on stable category
-  codes (`NSPrivacyAccessedAPICategory…`), never on mail wording
-- Keep growing the KB past 50 entries (Apple's "required manifest" list is the target set)
-- Grow the required-reason package mapping; detect API use from source as a fallback
-- Optional remote KB refresh (opt-in), keeping offline-first as the default
+- `explain` command for App Review rejection mails (keyed on stable
+  `NSPrivacyAccessedAPICategory…` codes, never mail wording)
+- Grow the KB past 50 entries; required-reason detection from source
+- Optional remote KB refresh (opt-in) — offline-first stays the default
 
 ## License
 
-Apache-2.0
+[MIT](./LICENSE) — the Play CSV template is derived from
+[fastlane-plugin-google_data_safety](https://github.com/owenbean400/fastlane-plugin-google_data_safety) (MIT).
