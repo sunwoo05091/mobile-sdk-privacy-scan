@@ -181,7 +181,7 @@ program
     }
 
     console.log(
-      pc.bold("\n" + tf("Drafts written to {dir}", { dir: pc.cyan(opts.out + "/") })) +
+      pc.bold("\n" + tf("Drafts written to {dir}", { dir: pc.cyan(outDir + "/") })) +
         `\n  • PrivacyInfo.xcprivacy           ${t("(add to your Xcode app target)")}` +
         `\n  • app-store-connect-answers.md   ${t("(ASC App Privacy questionnaire — web form only)")}` +
         `\n  • play-data-safety.csv           ${t("(Play Console → Data safety → Import from CSV)")}` +
@@ -259,7 +259,7 @@ function buildNextSteps(
   if (!appManifest) {
     steps.push(
       tf("No app privacy manifest found — add {file} to your Xcode app target as a starting point.", {
-        file: `${opts.out}/PrivacyInfo.xcprivacy`,
+        file: join(resolve(root, opts.out), "PrivacyInfo.xcprivacy"),
       }),
     );
   } else if (!opts.compare) {
