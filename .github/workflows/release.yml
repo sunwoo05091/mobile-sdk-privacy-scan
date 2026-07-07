@@ -1,0 +1,37 @@
+name: Release
+
+# Publishes to npm via Trusted Publishing (OIDC) — no tokens, no OTP dance.
+# One-time setup on npmjs.com (package → Settings → Trusted Publisher):
+#   GitHub Actions / sunwoo05091/mobile-sdk-privacy-scan / release.yml
+# Then releasing is just:
+#   npm version minor && git push --follow-tags
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: read
+  id-token: write # OIDC token for npm Trusted Publishing + provenance
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          registry-url: https://registry.npmjs.org
+      - name: Update npm (Trusted Publishing needs a recent client)
+        run: npm install -g npm@latest
+      - run: npm ci
+      - run: npm test
+      - name: Guard - tag must match package.json version
+        run: |
+          PKG="v$(node -p "require('./package.json').version")"
+          if [ "$PKG" != "${GITHUB_REF_NAME}" ]; then
+            echo "::error::tag ${GITHUB_REF_NAME} != package.json ${PKG}"
+            exit 1
+          fi
+      - run: npm publish --provenance --access public
