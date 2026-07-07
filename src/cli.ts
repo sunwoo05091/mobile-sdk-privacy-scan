@@ -10,7 +10,8 @@ import {
   generatePlayMarkdown,
 } from "./generate/playDataSafety.js";
 import { detectDrift } from "./drift.js";
-import { printScanSummary, printDrift } from "./report.js";
+import { suggestRequiredReasons } from "./requiredReasons.js";
+import { printScanSummary, printDrift, printRequiredReasons } from "./report.js";
 import { kbMeta } from "./kb/index.js";
 
 const program = new Command();
@@ -36,6 +37,9 @@ program
     const result = scanProject(root);
     printScanSummary(result);
 
+    const requiredReasons = suggestRequiredReasons(result);
+    printRequiredReasons(requiredReasons);
+
     const outDir = resolve(root, opts.out);
     mkdirSync(outDir, { recursive: true });
 
@@ -54,7 +58,7 @@ program
     if (opts.json) {
       writeFileSync(
         join(outDir, "scan.json"),
-        JSON.stringify({ result, playRows: rows }, null, 2),
+        JSON.stringify({ result, playRows: rows, requiredReasons }, null, 2),
       );
     }
 

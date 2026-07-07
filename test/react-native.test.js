@@ -11,10 +11,12 @@ test("detectReactNative reads the npm layer from package.json", () => {
   const npm = detectReactNative(RN_FIXTURE);
   const names = npm.map((d) => d.name).sort();
   assert.deepEqual(names, [
+    "@react-native-async-storage/async-storage",
     "@react-native-firebase/analytics",
     "axios",
     "react-native",
     "react-native-appsflyer",
+    "react-native-fs",
   ]);
   const firebase = npm.find((d) => d.name === "@react-native-firebase/analytics");
   assert.equal(firebase.version, "20.4.0", "range prefix (^/~) is stripped");

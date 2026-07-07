@@ -25,7 +25,11 @@ npx sdk-privacy-scan ./my-app   # scan a specific project
    maps an SDK to the data it collects, across pub / npm / pod names.
 4. **Generates** a merged `PrivacyInfo.xcprivacy` and a `play-data-safety.md` draft.
 5. **Detects drift**: `--compare` your existing manifest to flag data types that
-   SDKs collect but you never declared (the thing that gets apps rejected).
+   SDKs collect but you never declared, and tracking under-declaration
+   (the things that get apps rejected).
+6. **Flags required-reason APIs** (ITMS-91053): known packages that touch
+   UserDefaults / file timestamps / disk space are cross-checked against the
+   manifests they ship — you get a ✓ or a "declare this yourself" warning.
 
 ## Usage
 
@@ -98,8 +102,8 @@ empty `apple`) and run the tool with `--write`.
 
 ## Roadmap
 
-- Grow the KB to the top ~50 SDKs (Apple's "required manifest" list is the target set)
-- `NSPrivacyAccessedAPITypes` (required-reason API) detection from source
+- Keep growing the KB past 50 entries (Apple's "required manifest" list is the target set)
+- Grow the required-reason package mapping; detect API use from source as a fallback
 - Optional remote KB refresh (opt-in), keeping offline-first as the default
 
 ## License

@@ -29,6 +29,7 @@ export function harvestedManifest(overrides = {}) {
     tracking: false,
     trackingDomains: [],
     apple: [],
+    accessedApiCategories: [],
     ...overrides,
   };
 }

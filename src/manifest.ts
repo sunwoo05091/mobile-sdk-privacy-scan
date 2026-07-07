@@ -7,6 +7,8 @@ export interface ParsedPrivacyManifest {
   tracking: boolean;
   trackingDomains: string[];
   apple: AppleCollectedType[];
+  /** Categories from NSPrivacyAccessedAPITypes (the SDK's own API use). */
+  accessedApiCategories: string[];
 }
 
 /** @throws when the document is not a plist dict. Missing keys get defaults. */
@@ -42,7 +44,18 @@ export function parsePrivacyManifest(xml: string): ParsedPrivacyManifest {
     });
   }
 
+  const accessedApiCategories = new Set<string>();
+  const rawApis = Array.isArray(dict.NSPrivacyAccessedAPITypes)
+    ? dict.NSPrivacyAccessedAPITypes
+    : [];
+  for (const raw of rawApis) {
+    if (typeof raw !== "object" || raw === null) continue;
+    const a = (raw as Record<string, unknown>).NSPrivacyAccessedAPIType;
+    if (typeof a === "string" && a.trim() !== "") accessedApiCategories.add(a);
+  }
+
   return {
+    accessedApiCategories: [...accessedApiCategories],
     tracking: Boolean(dict.NSPrivacyTracking),
     trackingDomains: Array.isArray(dict.NSPrivacyTrackingDomains)
       ? dict.NSPrivacyTrackingDomains.filter(

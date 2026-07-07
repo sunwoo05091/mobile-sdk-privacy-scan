@@ -1,0 +1,55 @@
+{
+  "_meta": {
+    "note": "Suggestions only. A reason code must match how YOUR app actually uses the API — verify against Apple's required-reason API list before declaring."
+  },
+  "packages": [
+    {
+      "ecosystem": "pub",
+      "name": "shared_preferences",
+      "category": "NSPrivacyAccessedAPICategoryUserDefaults",
+      "reasons": ["CA92.1"],
+      "coveredBy": ["shared_preferences_foundation"],
+      "note": "Stores preferences in NSUserDefaults"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@react-native-async-storage/async-storage",
+      "category": "NSPrivacyAccessedAPICategoryUserDefaults",
+      "reasons": ["CA92.1"],
+      "coveredBy": [],
+      "note": "Persistent key-value storage on iOS"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "react-native-default-preference",
+      "category": "NSPrivacyAccessedAPICategoryUserDefaults",
+      "reasons": ["CA92.1"],
+      "coveredBy": [],
+      "note": "Direct NSUserDefaults access"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "react-native-fs",
+      "category": "NSPrivacyAccessedAPICategoryFileTimestamp",
+      "reasons": ["C617.1"],
+      "coveredBy": [],
+      "note": "stat() exposes file timestamps inside the app container"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "expo-file-system",
+      "category": "NSPrivacyAccessedAPICategoryFileTimestamp",
+      "reasons": ["C617.1"],
+      "coveredBy": [],
+      "note": "File info API exposes modification times"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "react-native-device-info",
+      "category": "NSPrivacyAccessedAPICategoryDiskSpace",
+      "reasons": ["E174.1"],
+      "coveredBy": [],
+      "note": "getTotalDiskCapacity/getFreeDiskStorage read disk space"
+    }
+  ]
+}

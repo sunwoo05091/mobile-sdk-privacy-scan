@@ -89,6 +89,11 @@ function attachHarvested(
       continue;
     }
 
+    // A manifest that declares no collection (e.g. async-storage: accessed
+    // APIs only) has nothing to contribute to the aggregate — don't invent
+    // a data-collecting SDK out of it.
+    if (!m.apple.length && !m.tracking && !m.trackingDomains.length) continue;
+
     const key = depKey(m.owner.ecosystem, m.owner.name);
     const dep = byDepKey.get(key);
     if (!dep) continue;

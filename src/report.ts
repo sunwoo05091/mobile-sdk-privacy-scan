@@ -2,6 +2,7 @@ import pc from "picocolors";
 import { effectiveAppleData } from "./appleData.js";
 import type { ScanResult } from "./types.js";
 import type { DriftReport } from "./drift.js";
+import type { RequiredReasonSuggestion } from "./requiredReasons.js";
 
 export function printScanSummary(result: ScanResult): void {
   const types =
@@ -69,6 +70,26 @@ export function printScanSummary(result: ScanResult): void {
     if (result.unknown.length > 25) {
       console.log(pc.dim(`  … and ${result.unknown.length - 25} more`));
     }
+  }
+}
+
+export function printRequiredReasons(
+  suggestions: RequiredReasonSuggestion[],
+): void {
+  if (!suggestions.length) return;
+  console.log(
+    pc.bold("\nRequired-reason APIs (ITMS-91053) used by your dependencies:"),
+  );
+  for (const s of suggestions) {
+    const status = s.covered
+      ? pc.green("✓ covered by the package's own manifest")
+      : pc.yellow(
+          `⚠ no shipped manifest declares it — update the package, or declare ` +
+            `${s.category} (${s.reasons.join(", ")}) in YOUR PrivacyInfo.xcprivacy`,
+        );
+    console.log(
+      `  ${pc.cyan("•")} ${s.package} ${pc.dim(`(${s.note})`)}\n    ${status}`,
+    );
   }
 }
 

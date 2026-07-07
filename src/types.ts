@@ -56,6 +56,12 @@ export interface HarvestedManifest {
   tracking: boolean;
   trackingDomains: string[];
   apple: AppleCollectedType[];
+  /**
+   * NSPrivacyAccessedAPITypes category names the SDK declares for itself.
+   * Used ONLY to check required-reason coverage — never merged into the
+   * app's aggregate manifest (each SDK declares its own API use).
+   */
+  accessedApiCategories: string[];
 }
 
 /** A dependency we matched to a KB entry. */
