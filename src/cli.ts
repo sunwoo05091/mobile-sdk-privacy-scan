@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import { existsSync, readdirSync, readFileSync, writeFileSync, mkdirSync } from "node:fs";
-import { join, relative, resolve } from "node:path";
+import { dirname, join, relative, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 import { Command } from "commander";
 import pc from "picocolors";
 import { scanProject } from "./detect/index.js";
@@ -44,6 +45,10 @@ import {
   printUnused,
 } from "./report.js";
 
+const VERSION: string = JSON.parse(
+  readFileSync(join(dirname(fileURLToPath(import.meta.url)), "..", "package.json"), "utf8"),
+).version;
+
 const program = new Command();
 
 program
@@ -52,7 +57,7 @@ program
     "Scan a React Native or Flutter project for third-party SDKs and generate " +
       "Apple privacy manifest + Google Play Data Safety drafts. Runs fully locally.",
   )
-  .version("0.4.0")
+  .version(VERSION)
   .argument("[projectDir]", "path to the app project", ".")
   .option("-o, --out <dir>", "output directory for generated drafts", "privacy-out")
   .option(
