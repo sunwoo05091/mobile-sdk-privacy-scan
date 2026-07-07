@@ -1,0 +1,62 @@
+name: KB refresh
+
+# Re-harvest every SDK's shipped PrivacyInfo.xcprivacy monthly and open a PR
+# when declarations changed. The PR's normal CI run is the judge: if an SDK
+# changed its declarations enough to break fixture expectations, the PR goes
+# red and a human updates the tests deliberately.
+
+on:
+  schedule:
+    - cron: "0 3 1 * *" # 03:00 UTC on the 1st of every month
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm ci
+      - run: npm run build
+
+      - name: Harvest shipped manifests into the KB
+        run: |
+          node tools/kb-build.mjs --write | tee /tmp/kb-refresh.log
+
+      - name: Summarize changes
+        id: summary
+        run: |
+          {
+            echo 'log<<KBEOF'
+            tail -n 120 /tmp/kb-refresh.log
+            echo 'KBEOF'
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Open PR when the KB changed
+        uses: peter-evans/create-pull-request@v6
+        with:
+          add-paths: src/kb/data.json
+          branch: kb-refresh/auto
+          commit-message: "KB refresh: re-harvest shipped privacy manifests"
+          title: "KB refresh: SDK privacy declarations changed"
+          body: |
+            Automated monthly re-harvest of every SDK's shipped
+            `PrivacyInfo.xcprivacy` (`tools/kb-build.mjs --write`).
+
+            If CI is red, an SDK changed its declarations enough to break
+            fixture expectations — update the tests deliberately, that is
+            the point of this PR.
+
+            <details><summary>kb-build log (tail)</summary>
+
+            ```
+            ${{ steps.summary.outputs.log }}
+            ```
+
+            </details>
