@@ -10,6 +10,9 @@ import {
   capabilityPlayRows,
   generatePlayMarkdown,
 } from "./generate/playDataSafety.js";
+import { generatePlayCsv } from "./generate/playCsv.js";
+import { generateAscAnswers } from "./generate/ascAnswers.js";
+import { mergeAppleTypes } from "./appleData.js";
 import { detectDrift } from "./drift.js";
 import { suggestRequiredReasons } from "./requiredReasons.js";
 import {
@@ -39,7 +42,7 @@ program
     "Scan a React Native or Flutter project for third-party SDKs and generate " +
       "Apple privacy manifest + Google Play Data Safety drafts. Runs fully locally.",
   )
-  .version("0.1.0")
+  .version("0.2.0")
   .argument("[projectDir]", "path to the app project", ".")
   .option("-o, --out <dir>", "output directory for generated drafts", "privacy-out")
   .option(
@@ -105,6 +108,41 @@ program
       generatePlayMarkdown(rows, manualCheck),
     );
 
+    // Importable Play Console CSV (App content → Data safety → Import).
+    const playCsv = generatePlayCsv(rows);
+    writeFileSync(join(outDir, "play-data-safety.csv"), playCsv.csv);
+    if (playCsv.unmapped.length) {
+      console.log(
+        pc.yellow(
+          `  ⚠ not mapped into the CSV (declare by hand): ${playCsv.unmapped.join("; ")}`,
+        ),
+      );
+    }
+
+    // ASC nutrition-label answer sheet (separate deliverable — web form only).
+    const mergedTypes = mergeAppleTypes([
+      ...result.resolved.flatMap((r) => effectiveAppleData(r).apple),
+      ...appCollected,
+    ]);
+    const contributors: Record<string, string[]> = {};
+    for (const r of result.resolved) {
+      for (const t of effectiveAppleData(r).apple) {
+        (contributors[t.type] ??= []).push(r.entry.name);
+      }
+    }
+    for (const h of capabilities) {
+      for (const ty of h.appleTypes) {
+        (contributors[ty] ??= []).push(`your app (${h.evidence.join(", ")})`);
+      }
+    }
+    for (const k of Object.keys(contributors)) {
+      contributors[k] = [...new Set(contributors[k])];
+    }
+    writeFileSync(
+      join(outDir, "app-store-connect-answers.md"),
+      generateAscAnswers(mergedTypes, contributors),
+    );
+
     if (opts.json) {
       writeFileSync(
         join(outDir, "scan.json"),
@@ -125,7 +163,10 @@ program
 
     console.log(
       pc.bold(`\nDrafts written to ${pc.cyan(opts.out + "/")}`) +
-        `\n  • PrivacyInfo.xcprivacy\n  • play-data-safety.md`,
+        `\n  • PrivacyInfo.xcprivacy           (add to your Xcode app target)` +
+        `\n  • app-store-connect-answers.md   (ASC App Privacy questionnaire — web form only)` +
+        `\n  • play-data-safety.csv           (Play Console → Data safety → Import from CSV)` +
+        `\n  • play-data-safety.md            (human-readable summary)`,
     );
 
     printNextSteps(

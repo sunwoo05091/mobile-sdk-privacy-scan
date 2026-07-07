@@ -4,3 +4,4 @@ privacy-out/
 tools/.cache/
 *.tsbuildinfo
 .DS_Store
+docs/superpowers/

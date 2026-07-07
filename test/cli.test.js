@@ -178,6 +178,14 @@ test("harvested manifests drive the aggregate for the RN fixture", (t) => {
   const md = readFileSync(join(out, "play-data-safety.md"), "utf8");
   assert.match(md, /[Cc]heck manually/);
   assert.match(md, /AcmeAnalytics/);
+
+  // Importable Play CSV + ASC answer sheet ship alongside.
+  const csv = readFileSync(join(out, "play-data-safety.csv"), "utf8");
+  assert.match(csv, /^Question ID \(machine readable\)/);
+  assert.match(csv, /PSL_DATA_TYPES_IDENTIFIERS,PSL_DEVICE_ID,TRUE/);
+  const asc = readFileSync(join(out, "app-store-connect-answers.md"), "utf8");
+  assert.match(asc, /### Device ID/);
+  assert.match(asc, /Used for tracking: \*\*Yes\*\*/);
 });
 
 test("output stays inside --out: fixtures are never polluted", (t) => {
