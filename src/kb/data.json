@@ -1171,6 +1171,775 @@
       ],
       "source": "Apple data: PrivacyInfo.xcprivacy from GoogleSignIn 9.2.0. Play data: curated — verify against the Play SDK Index.",
       "lastVerified": "2026-07"
+    },
+    {
+      "id": "datadog",
+      "name": "Datadog",
+      "aliases": {
+        "pub": [
+          "datadog_flutter_plugin"
+        ],
+        "npm": [
+          "@datadog/mobile-react-native"
+        ],
+        "pod": [
+          "DatadogCore",
+          "DatadogRUM",
+          "DatadogCrashReporting"
+        ]
+      },
+      "tracking": false,
+      "trackingDomains": [],
+      "apple": [
+        {
+          "type": "NSPrivacyCollectedDataTypeCrashData",
+          "linked": false,
+          "tracking": false,
+          "purposes": [
+            "NSPrivacyCollectedDataTypePurposeAppFunctionality"
+          ]
+        },
+        {
+          "type": "NSPrivacyCollectedDataTypePerformanceData",
+          "linked": false,
+          "tracking": false,
+          "purposes": [
+            "NSPrivacyCollectedDataTypePurposeAppFunctionality"
+          ]
+        },
+        {
+          "type": "NSPrivacyCollectedDataTypeProductInteraction",
+          "linked": false,
+          "tracking": false,
+          "purposes": [
+            "NSPrivacyCollectedDataTypePurposeAppFunctionality"
+          ]
+        }
+      ],
+      "play": [
+        {
+          "category": "App activity",
+          "type": "Crash logs",
+          "collected": true,
+          "shared": false,
+          "purposes": [
+            "App functionality"
+          ]
+        },
+        {
+          "category": "App activity",
+          "type": "Diagnostics",
+          "collected": true,
+          "shared": false,
+          "purposes": [
+            "App functionality"
+          ]
+        },
+        {
+          "category": "Device or other IDs",
+          "type": "Device or other IDs",
+          "collected": true,
+          "shared": false,
+          "purposes": [
+            "Analytics"
+          ]
+        }
+      ],
+      "source": "Apple data: PrivacyInfo.xcprivacy from DatadogCore 3.13.0, DatadogRUM 3.13.0, DatadogCrashReporting 3.13.0. Play data: curated — verify against the Play SDK Index.",
+      "lastVerified": "2026-07"
+    },
+    {
+      "id": "singular",
+      "name": "Singular",
+      "aliases": {
+        "pub": [
+          "singular_flutter_sdk"
+        ],
+        "npm": [
+          "singular-react-native"
+        ],
+        "pod": [
+          "Singular-SDK"
+        ]
+      },
+      "tracking": true,
+      "trackingDomains": [
+        "safetrack.singular.net"
+      ],
+      "apple": [
+        {
+          "type": "NSPrivacyCollectedDataTypeDeviceID",
+          "linked": true,
+          "tracking": true,
+          "purposes": [
+            "NSPrivacyCollectedDataTypePurposeThirdPartyAdvertising",
+            "NSPrivacyCollectedDataTypePurposeAnalytics",
+            "NSPrivacyCollectedDataTypePurposeDeveloperAdvertising"
+          ]
+        }
+      ],
+      "play": [
+        {
+          "category": "Device or other IDs",
+          "type": "Device or other IDs",
+          "collected": true,
+          "shared": true,
+          "purposes": [
+            "Analytics",
+            "Advertising or marketing"
+          ]
+        },
+        {
+          "category": "App activity",
+          "type": "App interactions",
+          "collected": true,
+          "shared": true,
+          "purposes": [
+            "Analytics"
+          ]
+        }
+      ],
+      "source": "Apple data: PrivacyInfo.xcprivacy from Singular-SDK 12.12.0. Play data: curated — verify against the Play SDK Index.",
+      "lastVerified": "2026-07"
+    },
+    {
+      "id": "clevertap",
+      "name": "CleverTap",
+      "aliases": {
+        "pub": [
+          "clevertap_plugin"
+        ],
+        "npm": [
+          "clevertap-react-native"
+        ],
+        "pod": [
+          "CleverTap-iOS-SDK"
+        ]
+      },
+      "tracking": false,
+      "trackingDomains": [],
+      "apple": [
+        {
+          "type": "NSPrivacyCollectedDataTypeDeviceID",
+          "linked": true,
+          "tracking": false,
+          "purposes": [
+            "NSPrivacyCollectedDataTypePurposeAppFunctionality",
+            "NSPrivacyCollectedDataTypePurposeProductPersonalization"
+          ]
+        },
+        {
+          "type": "NSPrivacyCollectedDataTypePreciseLocation",
+          "linked": true,
+          "tracking": false,
+          "purposes": [
+            "NSPrivacyCollectedDataTypePurposeAppFunctionality"
+          ]
+        },
+        {
+          "type": "NSPrivacyCollectedDataTypeProductInteraction",
+          "linked": true,
+          "tracking": false,
+          "purposes": [
+            "NSPrivacyCollectedDataTypePurposeAnalytics",
+            "NSPrivacyCollectedDataTypePurposeProductPersonalization"
+          ]
+        },
+        {
+          "type": "NSPrivacyCollectedDataTypeUserID",
+          "linked": true,
+          "tracking": false,
+          "purposes": [
+            "NSPrivacyCollectedDataTypePurposeAppFunctionality",
+            "NSPrivacyCollectedDataTypePurposeProductPersonalization"
+          ]
+        }
+      ],
+      "play": [
+        {
+          "category": "Device or other IDs",
+          "type": "Device or other IDs",
+          "collected": true,
+          "shared": false,
+          "purposes": [
+            "Analytics",
+            "Advertising or marketing"
+          ]
+        },
+        {
+          "category": "App activity",
+          "type": "App interactions",
+          "collected": true,
+          "shared": false,
+          "purposes": [
+            "Analytics"
+          ]
+        }
+      ],
+      "source": "Apple data: PrivacyInfo.xcprivacy from CleverTap-iOS-SDK 7.7.1. Play data: curated — verify against the Play SDK Index.",
+      "lastVerified": "2026-07"
+    },
+    {
+      "id": "instabug",
+      "name": "Instabug",
+      "aliases": {
+        "pub": [
+          "instabug_flutter"
+        ],
+        "npm": [
+          "instabug-reactnative"
+        ],
+        "pod": [
+          "Instabug"
+        ]
+      },
+      "tracking": false,
+      "trackingDomains": [],
+      "apple": [
+        {
+          "type": "NSPrivacyCollectedDataTypeAudioData",
+          "linked": false,
+          "tracking": false,
+          "purposes": [
+            "NSPrivacyCollectedDataTypePurposeAppFunctionality"
+          ]
+        },
+        {
+          "type": "NSPrivacyCollectedDataTypeCrashData",
+          "linked": false,
+          "tracking": false,
+          "purposes": [
+            "NSPrivacyCollectedDataTypePurposeAppFunctionality"
+          ]
+        },
+        {
+          "type": "NSPrivacyCollectedDataTypeEmailAddress",
+          "linked": true,
+          "tracking": false,
+          "purposes": [
+            "NSPrivacyCollectedDataTypePurposeAppFunctionality"
+          ]
+        },
+        {
+          "type": "NSPrivacyCollectedDataTypeName",
+          "linked": true,
+          "tracking": false,
+          "purposes": [
+            "NSPrivacyCollectedDataTypePurposeAppFunctionality"
+          ]
+        },
+        {
+          "type": "NSPrivacyCollectedDataTypeOtherDiagnosticData",
+          "linked": false,
+          "tracking": false,
+          "purposes": [
+            "NSPrivacyCollectedDataTypePurposeAppFunctionality"
+          ]
+        },
+        {
+          "type": "NSPrivacyCollectedDataTypePerformanceData",
+          "linked": false,
+          "tracking": false,
+          "purposes": [
+            "NSPrivacyCollectedDataTypePurposeAppFunctionality"
+          ]
+        },
+        {
+          "type": "NSPrivacyCollectedDataTypePhotosorVideos",
+          "linked": false,
+          "tracking": false,
+          "purposes": [
+            "NSPrivacyCollectedDataTypePurposeAppFunctionality"
+          ]
+        },
+        {
+          "type": "NSPrivacyCollectedDataTypeProductInteraction",
+          "linked": false,
+          "tracking": false,
+          "purposes": [
+            "NSPrivacyCollectedDataTypePurposeAppFunctionality"
+          ]
+        },
+        {
+          "type": "NSPrivacyCollectedDataTypeUserID",
+          "linked": true,
+          "tracking": false,
+          "purposes": [
+            "NSPrivacyCollectedDataTypePurposeAppFunctionality"
+          ]
+        }
+      ],
+      "play": [
+        {
+          "category": "App activity",
+          "type": "Crash logs",
+          "collected": true,
+          "shared": false,
+          "purposes": [
+            "App functionality"
+          ]
+        },
+        {
+          "category": "App activity",
+          "type": "Diagnostics",
+          "collected": true,
+          "shared": false,
+          "purposes": [
+            "App functionality"
+          ]
+        },
+        {
+          "category": "Device or other IDs",
+          "type": "Device or other IDs",
+          "collected": true,
+          "shared": false,
+          "purposes": [
+            "Analytics"
+          ]
+        }
+      ],
+      "source": "Apple data: PrivacyInfo.xcprivacy from Instabug 16.0.3. Play data: curated — verify against the Play SDK Index.",
+      "lastVerified": "2026-07"
+    },
+    {
+      "id": "bugsnag",
+      "name": "Bugsnag",
+      "aliases": {
+        "pub": [
+          "bugsnag_flutter"
+        ],
+        "npm": [
+          "@bugsnag/react-native"
+        ],
+        "pod": [
+          "Bugsnag"
+        ]
+      },
+      "tracking": false,
+      "trackingDomains": [],
+      "apple": [
+        {
+          "type": "NSPrivacyCollectedDataTypeCrashData",
+          "linked": false,
+          "tracking": false,
+          "purposes": [
+            "NSPrivacyCollectedDataTypePurposeAppFunctionality"
+          ]
+        },
+        {
+          "type": "NSPrivacyCollectedDataTypeDeviceID",
+          "linked": false,
+          "tracking": false,
+          "purposes": [
+            "NSPrivacyCollectedDataTypePurposeAppFunctionality"
+          ]
+        },
+        {
+          "type": "NSPrivacyCollectedDataTypeOtherDataTypes",
+          "linked": false,
+          "tracking": false,
+          "purposes": [
+            "NSPrivacyCollectedDataTypePurposeAppFunctionality"
+          ]
+        },
+        {
+          "type": "NSPrivacyCollectedDataTypeProductInteraction",
+          "linked": false,
+          "tracking": false,
+          "purposes": [
+            "NSPrivacyCollectedDataTypePurposeAppFunctionality"
+          ]
+        },
+        {
+          "type": "NSPrivacyCollectedDataTypeUserID",
+          "linked": false,
+          "tracking": false,
+          "purposes": [
+            "NSPrivacyCollectedDataTypePurposeAppFunctionality"
+          ]
+        }
+      ],
+      "play": [
+        {
+          "category": "App activity",
+          "type": "Crash logs",
+          "collected": true,
+          "shared": false,
+          "purposes": [
+            "App functionality"
+          ]
+        },
+        {
+          "category": "App activity",
+          "type": "Diagnostics",
+          "collected": true,
+          "shared": false,
+          "purposes": [
+            "App functionality"
+          ]
+        }
+      ],
+      "source": "Apple data: PrivacyInfo.xcprivacy from Bugsnag 6.36.0. Play data: curated — verify against the Play SDK Index.",
+      "lastVerified": "2026-07"
+    },
+    {
+      "id": "newrelic",
+      "name": "New Relic",
+      "aliases": {
+        "pub": [
+          "newrelic_mobile"
+        ],
+        "npm": [
+          "newrelic-react-native-agent"
+        ],
+        "pod": [
+          "NewRelicAgent"
+        ]
+      },
+      "tracking": false,
+      "trackingDomains": [],
+      "apple": [
+        {
+          "type": "NSPrivacyCollectedDataTypeCrashData",
+          "linked": true,
+          "tracking": false,
+          "purposes": [
+            "NSPrivacyCollectedDataTypePurposeAnalytics"
+          ]
+        },
+        {
+          "type": "NSPrivacyCollectedDataTypeOtherDiagnosticData",
+          "linked": true,
+          "tracking": false,
+          "purposes": [
+            "NSPrivacyCollectedDataTypePurposeAnalytics"
+          ]
+        },
+        {
+          "type": "NSPrivacyCollectedDataTypePerformanceData",
+          "linked": true,
+          "tracking": false,
+          "purposes": [
+            "NSPrivacyCollectedDataTypePurposeAnalytics"
+          ]
+        },
+        {
+          "type": "NSPrivacyCollectedDataTypeProductInteraction",
+          "linked": true,
+          "tracking": false,
+          "purposes": [
+            "NSPrivacyCollectedDataTypePurposeAnalytics"
+          ]
+        },
+        {
+          "type": "NSPrivacyCollectedDataTypeUserID",
+          "linked": true,
+          "tracking": false,
+          "purposes": [
+            "NSPrivacyCollectedDataTypePurposeAnalytics"
+          ]
+        }
+      ],
+      "play": [
+        {
+          "category": "App activity",
+          "type": "Crash logs",
+          "collected": true,
+          "shared": false,
+          "purposes": [
+            "App functionality"
+          ]
+        },
+        {
+          "category": "App activity",
+          "type": "Diagnostics",
+          "collected": true,
+          "shared": false,
+          "purposes": [
+            "App functionality"
+          ]
+        },
+        {
+          "category": "Device or other IDs",
+          "type": "Device or other IDs",
+          "collected": true,
+          "shared": false,
+          "purposes": [
+            "Analytics"
+          ]
+        }
+      ],
+      "source": "Apple data: PrivacyInfo.xcprivacy from NewRelicAgent 7.7.3. Play data: curated — verify against the Play SDK Index.",
+      "lastVerified": "2026-07"
+    },
+    {
+      "id": "stripe",
+      "name": "Stripe",
+      "aliases": {
+        "pub": [
+          "flutter_stripe"
+        ],
+        "npm": [
+          "@stripe/stripe-react-native"
+        ],
+        "pod": [
+          "StripeCore",
+          "StripePaymentSheet",
+          "Stripe"
+        ]
+      },
+      "tracking": false,
+      "trackingDomains": [],
+      "apple": [
+        {
+          "type": "NSPrivacyCollectedDataTypePaymentInfo",
+          "linked": true,
+          "tracking": false,
+          "purposes": [
+            "NSPrivacyCollectedDataTypePurposeAppFunctionality"
+          ]
+        },
+        {
+          "type": "NSPrivacyCollectedDataTypeProductInteraction",
+          "linked": true,
+          "tracking": false,
+          "purposes": [
+            "NSPrivacyCollectedDataTypePurposeAnalytics",
+            "NSPrivacyCollectedDataTypePurposeAppFunctionality"
+          ]
+        }
+      ],
+      "play": [
+        {
+          "category": "Financial info",
+          "type": "User payment info",
+          "collected": true,
+          "shared": false,
+          "purposes": [
+            "App functionality"
+          ]
+        },
+        {
+          "category": "Device or other IDs",
+          "type": "Device or other IDs",
+          "collected": true,
+          "shared": false,
+          "purposes": [
+            "Fraud prevention, security, and compliance"
+          ]
+        }
+      ],
+      "source": "Apple data: PrivacyInfo.xcprivacy from StripeCore 26.2.0, StripePaymentSheet 26.2.0, Stripe 26.2.0. Play data: curated — verify against the Play SDK Index.",
+      "lastVerified": "2026-07"
+    },
+    {
+      "id": "applovin",
+      "name": "AppLovin MAX",
+      "aliases": {
+        "pub": [
+          "applovin_max"
+        ],
+        "npm": [
+          "react-native-applovin-max"
+        ],
+        "pod": [
+          "AppLovinSDK"
+        ]
+      },
+      "tracking": false,
+      "trackingDomains": [],
+      "apple": [],
+      "play": [
+        {
+          "category": "Device or other IDs",
+          "type": "Device or other IDs",
+          "collected": true,
+          "shared": true,
+          "purposes": [
+            "Advertising or marketing"
+          ]
+        },
+        {
+          "category": "App activity",
+          "type": "App interactions",
+          "collected": true,
+          "shared": true,
+          "purposes": [
+            "Advertising or marketing"
+          ]
+        }
+      ],
+      "source": "Apple data: PrivacyInfo.xcprivacy from AppLovinSDK 13.6.3. Play data: curated — verify against the Play SDK Index.",
+      "lastVerified": "2026-07"
+    },
+    {
+      "id": "unityads",
+      "name": "Unity Ads",
+      "aliases": {
+        "pub": [
+          "unity_ads_plugin"
+        ],
+        "npm": [],
+        "pod": [
+          "UnityAds"
+        ]
+      },
+      "tracking": false,
+      "trackingDomains": [],
+      "apple": [],
+      "play": [
+        {
+          "category": "Device or other IDs",
+          "type": "Device or other IDs",
+          "collected": true,
+          "shared": true,
+          "purposes": [
+            "Advertising or marketing"
+          ]
+        },
+        {
+          "category": "App activity",
+          "type": "App interactions",
+          "collected": true,
+          "shared": true,
+          "purposes": [
+            "Advertising or marketing"
+          ]
+        }
+      ],
+      "source": "Apple data: PrivacyInfo.xcprivacy from UnityAds 4.19.0. Play data: curated — verify against the Play SDK Index.",
+      "lastVerified": "2026-07"
+    },
+    {
+      "id": "kakao",
+      "name": "Kakao SDK",
+      "aliases": {
+        "pub": [
+          "kakao_flutter_sdk",
+          "kakao_flutter_sdk_user"
+        ],
+        "npm": [
+          "@react-native-seoul/kakao-login"
+        ],
+        "pod": [
+          "KakaoSDKCommon",
+          "KakaoSDKAuth",
+          "KakaoSDKUser"
+        ]
+      },
+      "tracking": false,
+      "trackingDomains": [],
+      "apple": [
+        {
+          "type": "NSPrivacyCollectedDataTypeOtherDataTypes",
+          "linked": true,
+          "tracking": false,
+          "purposes": [
+            "NSPrivacyCollectedDataTypePurposeAppFunctionality"
+          ]
+        }
+      ],
+      "play": [
+        {
+          "category": "Personal info",
+          "type": "Name",
+          "collected": true,
+          "shared": false,
+          "purposes": [
+            "Account management"
+          ]
+        },
+        {
+          "category": "Personal info",
+          "type": "Email address",
+          "collected": true,
+          "shared": false,
+          "purposes": [
+            "Account management"
+          ]
+        },
+        {
+          "category": "Device or other IDs",
+          "type": "Device or other IDs",
+          "collected": true,
+          "shared": false,
+          "purposes": [
+            "App functionality"
+          ]
+        }
+      ],
+      "source": "Apple data: PrivacyInfo.xcprivacy from KakaoSDKCommon 2.22.7, KakaoSDKAuth 2.22.7, KakaoSDKUser 2.22.7. Play data: curated — verify against the Play SDK Index.",
+      "lastVerified": "2026-07"
+    },
+    {
+      "id": "airship",
+      "name": "Airship",
+      "aliases": {
+        "pub": [
+          "airship_flutter"
+        ],
+        "npm": [
+          "@ua/react-native-airship"
+        ],
+        "pod": [
+          "Airship"
+        ]
+      },
+      "tracking": false,
+      "trackingDomains": [],
+      "apple": [
+        {
+          "type": "NSPrivacyCollectedDataTypeOtherDataTypes",
+          "linked": false,
+          "tracking": false,
+          "purposes": [
+            "NSPrivacyCollectedDataTypePurposeAnalytics",
+            "NSPrivacyCollectedDataTypePurposeProductPersonalization"
+          ]
+        },
+        {
+          "type": "NSPrivacyCollectedDataTypeProductInteraction",
+          "linked": false,
+          "tracking": false,
+          "purposes": [
+            "NSPrivacyCollectedDataTypePurposeAnalytics",
+            "NSPrivacyCollectedDataTypePurposeDeveloperAdvertising",
+            "NSPrivacyCollectedDataTypePurposeProductPersonalization"
+          ]
+        },
+        {
+          "type": "NSPrivacyCollectedDataTypeUserID",
+          "linked": false,
+          "tracking": false,
+          "purposes": [
+            "NSPrivacyCollectedDataTypePurposeDeveloperAdvertising",
+            "NSPrivacyCollectedDataTypePurposeAppFunctionality"
+          ]
+        }
+      ],
+      "play": [
+        {
+          "category": "Device or other IDs",
+          "type": "Device or other IDs",
+          "collected": true,
+          "shared": false,
+          "purposes": [
+            "App functionality",
+            "Analytics"
+          ]
+        },
+        {
+          "category": "App activity",
+          "type": "App interactions",
+          "collected": true,
+          "shared": false,
+          "purposes": [
+            "Analytics"
+          ]
+        }
+      ],
+      "source": "Apple data: PrivacyInfo.xcprivacy from Airship 20.9.0. Play data: curated — verify against the Play SDK Index.",
+      "lastVerified": "2026-07"
     }
   ]
 }

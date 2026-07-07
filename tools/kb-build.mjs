@@ -17,6 +17,7 @@ import {
   mkdirSync,
   readdirSync,
   readFileSync,
+  rmSync,
   statSync,
   writeFileSync,
 } from "node:fs";
@@ -59,10 +60,24 @@ async function download(url, dest) {
 function extract(archive, destDir) {
   if (existsSync(destDir)) return;
   mkdirSync(destDir, { recursive: true });
-  if (archive.endsWith(".zip")) {
-    execFileSync("unzip", ["-q", "-o", archive, "-d", destDir]);
-  } else {
-    execFileSync("tar", ["-xf", archive, "-C", destDir]);
+  try {
+    if (archive.endsWith(".zip")) {
+      // Extract ONLY the manifests: repo zips can contain filenames the
+      // filesystem rejects (e.g. stripe-ios ships an emoji-named file).
+      execFileSync(
+        "unzip",
+        ["-q", "-o", archive, "*PrivacyInfo.xcprivacy", "-d", destDir],
+        { stdio: "pipe" },
+      );
+    } else {
+      execFileSync("tar", ["-xf", archive, "-C", destDir], { stdio: "pipe" });
+    }
+  } catch (e) {
+    // unzip exits 11 when no entry matches — a manifest-less artifact is a
+    // valid outcome, not an infrastructure failure.
+    if (e.status === 11) return;
+    rmSync(destDir, { recursive: true, force: true }); // don't poison the cache
+    throw e;
   }
 }
 
