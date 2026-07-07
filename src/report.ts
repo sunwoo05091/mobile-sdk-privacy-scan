@@ -4,6 +4,7 @@ import type { ScanResult } from "./types.js";
 import type { DriftReport } from "./drift.js";
 import type { RequiredReasonSuggestion } from "./requiredReasons.js";
 import type { CapabilityHint } from "./capabilities.js";
+import type { UnusedDependency } from "./unused.js";
 
 export function printScanSummary(result: ScanResult): void {
   const types =
@@ -175,6 +176,30 @@ export function printInsights(result: ScanResult): void {
   if (!lines.length) return;
   console.log(pc.bold("\nReview notes:"));
   for (const l of lines) console.log(`  ${l}`);
+}
+
+export function printUnused(unused: UnusedDependency[]): void {
+  if (!unused.length) return;
+  console.log(
+    pc.bold("\nPossibly unused dependencies") +
+      pc.dim(" (declared, but no import found in your source):"),
+  );
+  for (const u of [...unused].sort((a, b) => Number(b.knownSdk) - Number(a.knownSdk))) {
+    if (u.knownSdk) {
+      console.log(
+        `  ${pc.red("!")} ${u.package} ${pc.red(
+          "— data-collecting SDK: it still ships in your binary and forces privacy declarations. Remove it if truly unused.",
+        )}`,
+      );
+    } else {
+      console.log(`  ${pc.dim("·")} ${u.package} ${pc.dim(`(${u.ecosystem})`)}`);
+    }
+  }
+  console.log(
+    pc.dim(
+      "  Import-scanning has false positives (assets, codegen, native-only use) — verify before removing.",
+    ),
+  );
 }
 
 export function printNextSteps(steps: string[]): void {

@@ -12,6 +12,7 @@ import {
 import { detectDrift } from "./drift.js";
 import { suggestRequiredReasons } from "./requiredReasons.js";
 import { detectCapabilities } from "./capabilities.js";
+import { findUnusedDependencies } from "./unused.js";
 import {
   printScanSummary,
   printDrift,
@@ -19,6 +20,7 @@ import {
   printCapabilities,
   printInsights,
   printNextSteps,
+  printUnused,
 } from "./report.js";
 import { kbMeta } from "./kb/index.js";
 
@@ -50,6 +52,9 @@ program
 
     const capabilities = detectCapabilities(result);
     printCapabilities(capabilities);
+
+    const unused = findUnusedDependencies(root, result);
+    printUnused(unused);
     printInsights(result);
 
     const outDir = resolve(root, opts.out);
@@ -71,7 +76,7 @@ program
       writeFileSync(
         join(outDir, "scan.json"),
         JSON.stringify(
-          { result, playRows: rows, requiredReasons, capabilities },
+          { result, playRows: rows, requiredReasons, capabilities, unused },
           null,
           2,
         ),
@@ -84,7 +89,7 @@ program
     );
 
     printNextSteps(
-      buildNextSteps(root, opts, result, requiredReasons, capabilities),
+      buildNextSteps(root, opts, result, requiredReasons, capabilities, unused),
     );
 
     if (opts.compare) {
@@ -116,6 +121,7 @@ function buildNextSteps(
   result: { projectType: string[]; harvestedManifests: unknown[] },
   requiredReasons: { covered: boolean }[],
   capabilities: unknown[],
+  unused: { package: string; knownSdk: boolean }[] = [],
 ): string[] {
   const steps: string[] = [];
 
@@ -143,6 +149,15 @@ function buildNextSteps(
     steps.push(
       "Declare the app-feature collection listed above (location/camera/…) " +
         "in both stores' forms if your app really collects it.",
+    );
+  }
+
+  const unusedSdks = unused.filter((u) => u.knownSdk);
+  if (unusedSdks.length) {
+    steps.push(
+      `Remove unused data-collecting SDKs if confirmed ` +
+        `(${unusedSdks.map((u) => u.package).join(", ")}) — they inflate your ` +
+        `privacy declarations for nothing.`,
     );
   }
 

@@ -103,7 +103,7 @@ const SHARD_SUFFIXES = [
   "apple", "foundation", "avfoundation", "platform_interface",
 ];
 
-function isPlatformShard(name: string, detectedNames: Set<string>): boolean {
+export function isPlatformShard(name: string, detectedNames: Set<string>): boolean {
   for (const suffix of SHARD_SUFFIXES) {
     if (name.endsWith(`_${suffix}`)) {
       const base = name.slice(0, -(suffix.length + 1));
