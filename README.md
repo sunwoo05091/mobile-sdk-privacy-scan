@@ -17,7 +17,7 @@ Runs **fully locally**: no upload, no backend, no account.
 npx sdk-privacy-scan ./my-app
 ```
 
-![demo](https://raw.githubusercontent.com/sunwoo05091/mobile-sdk-privacy-scan/main/.github/assets/demo.svg?v=2)
+![demo](https://raw.githubusercontent.com/sunwoo05091/mobile-sdk-privacy-scan/main/.github/assets/demo.svg?v=3)
 
 ---
 

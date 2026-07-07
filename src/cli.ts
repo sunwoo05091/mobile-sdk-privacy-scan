@@ -52,7 +52,7 @@ program
     "Scan a React Native or Flutter project for third-party SDKs and generate " +
       "Apple privacy manifest + Google Play Data Safety drafts. Runs fully locally.",
   )
-  .version("0.3.0")
+  .version("0.4.0")
   .argument("[projectDir]", "path to the app project", ".")
   .option("-o, --out <dir>", "output directory for generated drafts", "privacy-out")
   .option(
