@@ -24,7 +24,8 @@
     "dev": "tsc --watch",
     "start": "node dist/cli.js",
     "pretest": "npm run build",
-    "test": "node --test \"test/*.test.js\""
+    "test": "node --test \"test/*.test.js\"",
+    "prepublishOnly": "npm test"
   },
   "engines": {
     "node": ">=18.18.0"
@@ -39,5 +40,23 @@
     "@types/node": "^22.5.0",
     "@types/plist": "^3.0.5",
     "typescript": "^5.6.2"
-  }
+  },
+  "keywords": [
+    "privacy",
+    "privacy-manifest",
+    "xcprivacy",
+    "PrivacyInfo",
+    "app-store",
+    "play-store",
+    "data-safety",
+    "react-native",
+    "flutter",
+    "ios",
+    "android",
+    "compliance",
+    "ITMS-91053",
+    "scanner",
+    "cli"
+  ],
+  "author": "sunwoo05091"
 }
