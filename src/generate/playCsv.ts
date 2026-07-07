@@ -70,6 +70,14 @@ export interface PlayCsvResult {
   csv: string;
   /** Rows whose type or purpose label we could not map — declare by hand. */
   unmapped: string[];
+  /** Questions left blank on purpose — only the developer can answer them. */
+  manualQuestions: ManualQuestion[];
+}
+
+export interface ManualQuestion {
+  id: string;
+  label: string;
+  requirement: string;
 }
 
 export function generatePlayCsv(rows: PlayRow[]): PlayCsvResult {
@@ -128,7 +136,52 @@ export function generatePlayCsv(rows: PlayRow[]): PlayCsvResult {
     return [questionId, responseId, v, requirement, label];
   });
 
-  return { csv: out.map((r) => r.map(csvField).join(",")).join("\r\n") + "\r\n", unmapped };
+  return {
+    csv: out.map((r) => r.map(csvField).join(",")).join("\r\n") + "\r\n",
+    unmapped,
+    manualQuestions: collectManualQuestions(selected),
+  };
+}
+
+/**
+ * The questions we deliberately leave blank: global form judgments
+ * (encryption in transit, account creation, deletion URLs …) plus, for each
+ * data type we marked collected, its user-control and ephemeral questions.
+ */
+function collectManualQuestions(
+  selected: Map<string, unknown>,
+): ManualQuestion[] {
+  const out = new Map<string, ManualQuestion>();
+
+  const questionLabel = (row: TemplateRow): string => {
+    const label = row[4] ?? row[0];
+    // Choice rows append "/ <choice>" — keep only the question part.
+    return row[1] ? label.split(" / ").slice(0, -1).join(" / ") : label;
+  };
+
+  for (const row of template) {
+    const [questionId, , , requirement] = row;
+    if (questionId === "Question ID (machine readable)") continue;
+    if (questionId === "PSL_DATA_COLLECTION_COLLECTS_PERSONAL_DATA") continue;
+    if (questionId.startsWith("PSL_DATA_TYPES_")) continue;
+
+    if (questionId.startsWith("PSL_DATA_USAGE_RESPONSES:")) {
+      const [, typeId, usageQ] = questionId.split(":");
+      if (!selected.has(typeId)) continue; // form hides questions for unselected types
+      if (usageQ !== "DATA_USAGE_USER_CONTROL" && usageQ !== "PSL_DATA_USAGE_EPHEMERAL") {
+        continue; // collection/sharing/purposes: we answered those
+      }
+    }
+
+    if (!out.has(questionId)) {
+      out.set(questionId, {
+        id: questionId,
+        label: questionLabel(row),
+        requirement: requirement ?? "OPTIONAL",
+      });
+    }
+  }
+  return [...out.values()];
 }
 
 function csvField(v: string | null): string {

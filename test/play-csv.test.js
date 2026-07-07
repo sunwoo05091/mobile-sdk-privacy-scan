@@ -65,6 +65,23 @@ test("selected types mark TRUE in their category and usage rows", () => {
   assert.equal(find("PSL_DATA_COLLECTION_ENCRYPTED_IN_TRANSIT")[2], "");
 });
 
+test("manual questions: global judgments + per-SELECTED-type user-control/ephemeral", () => {
+  const { manualQuestions } = generatePlayCsv([
+    row("Device or other IDs", "Device or other IDs", true, true, ["Analytics"]),
+  ]);
+  const ids = manualQuestions.map((q) => q.id);
+  assert.ok(ids.includes("PSL_DATA_COLLECTION_ENCRYPTED_IN_TRANSIT"));
+  assert.ok(ids.includes("PSL_SUPPORTED_ACCOUNT_CREATION_METHODS"));
+  assert.ok(ids.includes("PSL_DATA_USAGE_RESPONSES:PSL_DEVICE_ID:DATA_USAGE_USER_CONTROL"));
+  assert.ok(ids.includes("PSL_DATA_USAGE_RESPONSES:PSL_DEVICE_ID:PSL_DATA_USAGE_EPHEMERAL"));
+  assert.ok(
+    !ids.some((i) => i.includes(":PSL_PRECISE_LOCATION:")),
+    "questions for unselected types are hidden by the form — not the user's job",
+  );
+  const enc = manualQuestions.find((q) => q.id === "PSL_DATA_COLLECTION_ENCRYPTED_IN_TRANSIT");
+  assert.match(enc.label, /encrypted in transit/i);
+});
+
 test("no rows -> collects=FALSE; unknown labels are reported, not guessed", () => {
   const empty = generatePlayCsv([]);
   const rows = parseCsv(empty.csv);

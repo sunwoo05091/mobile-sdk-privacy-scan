@@ -120,11 +120,6 @@ program
     const manualCheck = result.resolved
       .filter((r) => r.entry.play.length === 0)
       .map((r) => r.entry.name);
-    writeFileSync(
-      join(outDir, "play-data-safety.md"),
-      generatePlayMarkdown(rows, manualCheck),
-    );
-
     // Importable Play Console CSV (App content → Data safety → Import).
     const playCsv = generatePlayCsv(rows);
     writeFileSync(join(outDir, "play-data-safety.csv"), playCsv.csv);
@@ -137,6 +132,10 @@ program
         ),
       );
     }
+    writeFileSync(
+      join(outDir, "play-data-safety.md"),
+      generatePlayMarkdown(rows, manualCheck, playCsv.manualQuestions),
+    );
 
     // ASC nutrition-label answer sheet (separate deliverable — web form only).
     const mergedTypes = mergeAppleTypes([
@@ -187,6 +186,16 @@ program
         `\n  • play-data-safety.csv           ${t("(Play Console → Data safety → Import from CSV)")}` +
         `\n  • play-data-safety.md            ${t("(human-readable summary)")}`,
     );
+    if (playCsv.manualQuestions.length) {
+      console.log(
+        pc.yellow(
+          tf(
+            "  ✍ {n} CSV questions are left for YOU to answer — checklist at the bottom of play-data-safety.md",
+            { n: playCsv.manualQuestions.length },
+          ),
+        ),
+      );
+    }
 
     printNextSteps(
       buildNextSteps(

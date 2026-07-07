@@ -61,6 +61,8 @@ export function generatePlayMarkdown(
   rows: PlayRow[],
   /** SDKs (harvested-only) we have no Play data for — the user must check. */
   manualCheck: string[] = [],
+  /** CSV questions left blank on purpose — the developer's checklist. */
+  manualQuestions: { id: string; label: string; requirement: string }[] = [],
 ): string {
   const lines = [
     "# Google Play Data Safety — draft",
@@ -76,6 +78,27 @@ export function generatePlayMarkdown(
       `| ${r.category} | ${r.type} | ${r.collected ? "Yes" : "No"} | ${
         r.shared ? "Yes" : "No"
       } | ${r.purposes.join(", ")} | ${r.from.join(", ")} |`,
+    );
+  }
+  if (manualQuestions.length) {
+    const order = (r: string) =>
+      r === "REQUIRED" ? 0 : r === "MAYBE_REQUIRED" ? 1 : r === "OPTIONAL" ? 3 : 2;
+    lines.push(
+      "",
+      "## ✍️ Answer these yourself — left blank in play-data-safety.csv",
+      "",
+      "The scanner fills only what it can prove. These questions need YOUR",
+      "answer, either in the CSV before importing or in the Play Console form",
+      "after importing:",
+      "",
+      "| Must answer? | Question | Question ID |",
+      "| --- | --- | --- |",
+      ...[...manualQuestions]
+        .sort((a, b) => order(a.requirement) - order(b.requirement))
+        .map(
+          (q) =>
+            `| ${q.requirement === "REQUIRED" ? "**REQUIRED**" : q.requirement} | ${q.label} | \`${q.id}\` |`,
+        ),
     );
   }
   if (manualCheck.length) {

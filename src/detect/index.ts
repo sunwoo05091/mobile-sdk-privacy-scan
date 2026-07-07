@@ -186,6 +186,8 @@ const UTILITY_PACKAGES = new Set([
   // Flutter framework / asset packages (pub) — not third-party SDKs.
   "flutter", "flutter_localizations", "flutter_test", "flutter_driver",
   "flutter_web_plugins", "sky_engine", "integration_test", "cupertino_icons",
+  // Expo framework core (npm) — its expo-* feature packages stay reviewable.
+  "expo",
 ]);
 
 /**

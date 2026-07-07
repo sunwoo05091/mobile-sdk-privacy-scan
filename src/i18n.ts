@@ -148,6 +148,8 @@ const KO: Record<string, string> = {
   "(Play Console → Data safety → Import from CSV)": "(Play Console → 데이터 보안 → CSV 가져오기)",
   "(human-readable summary)": "(사람이 읽는 요약)",
   "  ⚠ not mapped into the CSV (declare by hand): {items}": "  ⚠ CSV에 매핑되지 않음 (직접 신고 필요): {items}",
+  "  ✍ {n} CSV questions are left for YOU to answer — checklist at the bottom of play-data-safety.md":
+    "  ✍ CSV 문항 {n}개는 직접 답해야 합니다 — 체크리스트: play-data-safety.md 하단",
   "Baseline written: ": "베이스라인 저장: ",
   " — commit it; future scans fail CI when collection expands.":
     " — 커밋하세요. 이후 수집이 확대되면 스캔이 CI를 실패시킵니다.",
