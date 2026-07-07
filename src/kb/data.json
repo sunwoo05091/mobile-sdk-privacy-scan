@@ -1940,6 +1940,576 @@
       ],
       "source": "Apple data: PrivacyInfo.xcprivacy from Airship 20.9.0. Play data: curated — verify against the Play SDK Index.",
       "lastVerified": "2026-07"
+    },
+    {
+      "id": "firebase-auth",
+      "name": "Firebase Authentication",
+      "aliases": {
+        "pub": [
+          "firebase_auth"
+        ],
+        "npm": [
+          "@react-native-firebase/auth"
+        ],
+        "pod": [
+          "FirebaseAuth"
+        ]
+      },
+      "tracking": false,
+      "trackingDomains": [],
+      "apple": [
+        {
+          "type": "NSPrivacyCollectedDataTypeOtherDiagnosticData",
+          "linked": false,
+          "tracking": false,
+          "purposes": [
+            "NSPrivacyCollectedDataTypePurposeAnalytics"
+          ]
+        },
+        {
+          "type": "NSPrivacyCollectedDataTypeUserID",
+          "linked": true,
+          "tracking": false,
+          "purposes": [
+            "NSPrivacyCollectedDataTypePurposeAppFunctionality"
+          ]
+        }
+      ],
+      "play": [
+        {
+          "category": "Personal info",
+          "type": "Email address",
+          "collected": true,
+          "shared": false,
+          "purposes": [
+            "Account management"
+          ]
+        },
+        {
+          "category": "Device or other IDs",
+          "type": "Device or other IDs",
+          "collected": true,
+          "shared": false,
+          "purposes": [
+            "App functionality"
+          ]
+        }
+      ],
+      "source": "Apple data: PrivacyInfo.xcprivacy from FirebaseAuth 12.15.0. Play data: curated — verify against the Play SDK Index.",
+      "lastVerified": "2026-07"
+    },
+    {
+      "id": "firebase-firestore",
+      "name": "Cloud Firestore",
+      "aliases": {
+        "pub": [
+          "cloud_firestore"
+        ],
+        "npm": [
+          "@react-native-firebase/firestore"
+        ],
+        "pod": [
+          "FirebaseFirestore"
+        ]
+      },
+      "tracking": false,
+      "trackingDomains": [],
+      "apple": [
+        {
+          "type": "NSPrivacyCollectedDataTypeOtherDiagnosticData",
+          "linked": false,
+          "tracking": false,
+          "purposes": [
+            "NSPrivacyCollectedDataTypePurposeAnalytics"
+          ]
+        }
+      ],
+      "play": [
+        {
+          "category": "Device or other IDs",
+          "type": "Device or other IDs",
+          "collected": true,
+          "shared": false,
+          "purposes": [
+            "App functionality"
+          ]
+        }
+      ],
+      "source": "Apple data: PrivacyInfo.xcprivacy from FirebaseFirestore 12.15.0. Play data: curated — verify against the Play SDK Index.",
+      "lastVerified": "2026-07"
+    },
+    {
+      "id": "firebase-remote-config",
+      "name": "Firebase Remote Config",
+      "aliases": {
+        "pub": [
+          "firebase_remote_config"
+        ],
+        "npm": [
+          "@react-native-firebase/remote-config"
+        ],
+        "pod": [
+          "FirebaseRemoteConfig"
+        ]
+      },
+      "tracking": false,
+      "trackingDomains": [],
+      "apple": [
+        {
+          "type": "NSPrivacyCollectedDataTypeOtherDiagnosticData",
+          "linked": false,
+          "tracking": false,
+          "purposes": [
+            "NSPrivacyCollectedDataTypePurposeAnalytics"
+          ]
+        }
+      ],
+      "play": [
+        {
+          "category": "Device or other IDs",
+          "type": "Device or other IDs",
+          "collected": true,
+          "shared": false,
+          "purposes": [
+            "App functionality"
+          ]
+        }
+      ],
+      "source": "Apple data: PrivacyInfo.xcprivacy from FirebaseRemoteConfig 12.15.0. Play data: curated — verify against the Play SDK Index.",
+      "lastVerified": "2026-07"
+    },
+    {
+      "id": "google-maps",
+      "name": "Google Maps SDK",
+      "aliases": {
+        "pub": [
+          "google_maps_flutter",
+          "google_maps_flutter_ios"
+        ],
+        "npm": [
+          "react-native-maps"
+        ],
+        "pod": [
+          "GoogleMaps"
+        ]
+      },
+      "tracking": false,
+      "trackingDomains": [],
+      "apple": [
+        {
+          "type": "NSPrivacyCollectedDataTypeCrashData",
+          "linked": false,
+          "tracking": false,
+          "purposes": [
+            "NSPrivacyCollectedDataTypePurposeAnalytics"
+          ]
+        },
+        {
+          "type": "NSPrivacyCollectedDataTypeDeviceID",
+          "linked": true,
+          "tracking": false,
+          "purposes": [
+            "NSPrivacyCollectedDataTypePurposeAnalytics",
+            "NSPrivacyCollectedDataTypePurposeAppFunctionality"
+          ]
+        },
+        {
+          "type": "NSPrivacyCollectedDataTypeOtherDataTypes",
+          "linked": true,
+          "tracking": false,
+          "purposes": [
+            "NSPrivacyCollectedDataTypePurposeAnalytics"
+          ]
+        },
+        {
+          "type": "NSPrivacyCollectedDataTypePerformanceData",
+          "linked": false,
+          "tracking": false,
+          "purposes": [
+            "NSPrivacyCollectedDataTypePurposeAnalytics"
+          ]
+        },
+        {
+          "type": "NSPrivacyCollectedDataTypeProductInteraction",
+          "linked": false,
+          "tracking": false,
+          "purposes": [
+            "NSPrivacyCollectedDataTypePurposeAnalytics"
+          ]
+        }
+      ],
+      "play": [
+        {
+          "category": "Location",
+          "type": "Precise location",
+          "collected": true,
+          "shared": false,
+          "purposes": [
+            "App functionality"
+          ]
+        },
+        {
+          "category": "Device or other IDs",
+          "type": "Device or other IDs",
+          "collected": true,
+          "shared": false,
+          "purposes": [
+            "App functionality"
+          ]
+        }
+      ],
+      "source": "Apple data: PrivacyInfo.xcprivacy from GoogleMaps 10.15.0. Play data: curated — verify against the Play SDK Index.",
+      "lastVerified": "2026-07"
+    },
+    {
+      "id": "posthog",
+      "name": "PostHog",
+      "aliases": {
+        "pub": [
+          "posthog_flutter"
+        ],
+        "npm": [
+          "posthog-react-native"
+        ],
+        "pod": [
+          "PostHog"
+        ]
+      },
+      "tracking": false,
+      "trackingDomains": [],
+      "apple": [
+        {
+          "type": "NSPrivacyCollectedDataTypeCrashData",
+          "linked": false,
+          "tracking": false,
+          "purposes": [
+            "NSPrivacyCollectedDataTypePurposeAppFunctionality"
+          ]
+        },
+        {
+          "type": "NSPrivacyCollectedDataTypeOtherDiagnosticData",
+          "linked": false,
+          "tracking": false,
+          "purposes": [
+            "NSPrivacyCollectedDataTypePurposeAppFunctionality"
+          ]
+        },
+        {
+          "type": "NSPrivacyCollectedDataTypeOtherUsageData",
+          "linked": false,
+          "tracking": false,
+          "purposes": [
+            "NSPrivacyCollectedDataTypePurposeAnalytics"
+          ]
+        },
+        {
+          "type": "NSPrivacyCollectedDataTypeProductInteraction",
+          "linked": false,
+          "tracking": false,
+          "purposes": [
+            "NSPrivacyCollectedDataTypePurposeAnalytics"
+          ]
+        }
+      ],
+      "play": [
+        {
+          "category": "Device or other IDs",
+          "type": "Device or other IDs",
+          "collected": true,
+          "shared": false,
+          "purposes": [
+            "Analytics"
+          ]
+        },
+        {
+          "category": "App activity",
+          "type": "App interactions",
+          "collected": true,
+          "shared": false,
+          "purposes": [
+            "Analytics"
+          ]
+        }
+      ],
+      "source": "Apple data: PrivacyInfo.xcprivacy from PostHog 3.64.1. Play data: curated — verify against the Play SDK Index.",
+      "lastVerified": "2026-07"
+    },
+    {
+      "id": "uxcam",
+      "name": "UXCam",
+      "aliases": {
+        "pub": [
+          "flutter_uxcam"
+        ],
+        "npm": [
+          "react-native-ux-cam"
+        ],
+        "pod": [
+          "UXCam"
+        ]
+      },
+      "tracking": false,
+      "trackingDomains": [],
+      "apple": [
+        {
+          "type": "NSPrivacyCollectedDataTypeCoarseLocation",
+          "linked": true,
+          "tracking": false,
+          "purposes": [
+            "NSPrivacyCollectedDataTypePurposeAnalytics"
+          ]
+        },
+        {
+          "type": "NSPrivacyCollectedDataTypeCrashData",
+          "linked": true,
+          "tracking": false,
+          "purposes": [
+            "NSPrivacyCollectedDataTypePurposeAnalytics",
+            "NSPrivacyCollectedDataTypePurposeAppFunctionality"
+          ]
+        },
+        {
+          "type": "NSPrivacyCollectedDataTypeDeviceID",
+          "linked": true,
+          "tracking": false,
+          "purposes": [
+            "NSPrivacyCollectedDataTypePurposeAnalytics"
+          ]
+        },
+        {
+          "type": "NSPrivacyCollectedDataTypePerformanceData",
+          "linked": true,
+          "tracking": false,
+          "purposes": [
+            "NSPrivacyCollectedDataTypePurposeAnalytics",
+            "NSPrivacyCollectedDataTypePurposeAppFunctionality"
+          ]
+        },
+        {
+          "type": "NSPrivacyCollectedDataTypeProductInteraction",
+          "linked": true,
+          "tracking": false,
+          "purposes": [
+            "NSPrivacyCollectedDataTypePurposeAnalytics"
+          ]
+        },
+        {
+          "type": "NSPrivacyCollectedDataTypeUserID",
+          "linked": true,
+          "tracking": false,
+          "purposes": [
+            "NSPrivacyCollectedDataTypePurposeAnalytics"
+          ]
+        }
+      ],
+      "play": [
+        {
+          "category": "App activity",
+          "type": "App interactions",
+          "collected": true,
+          "shared": false,
+          "purposes": [
+            "Analytics"
+          ]
+        },
+        {
+          "category": "Device or other IDs",
+          "type": "Device or other IDs",
+          "collected": true,
+          "shared": false,
+          "purposes": [
+            "Analytics"
+          ]
+        }
+      ],
+      "source": "Apple data: PrivacyInfo.xcprivacy from UXCam 3.8.3. Play data: curated — verify against the Play SDK Index.",
+      "lastVerified": "2026-07"
+    },
+    {
+      "id": "agora",
+      "name": "Agora RTC",
+      "aliases": {
+        "pub": [
+          "agora_rtc_engine"
+        ],
+        "npm": [
+          "react-native-agora"
+        ],
+        "pod": [
+          "AgoraRtcEngine_iOS"
+        ]
+      },
+      "tracking": false,
+      "trackingDomains": [],
+      "apple": [],
+      "play": [
+        {
+          "category": "Device or other IDs",
+          "type": "Device or other IDs",
+          "collected": true,
+          "shared": false,
+          "purposes": [
+            "App functionality"
+          ]
+        },
+        {
+          "category": "App info and performance",
+          "type": "Diagnostics",
+          "collected": true,
+          "shared": false,
+          "purposes": [
+            "App functionality"
+          ]
+        }
+      ],
+      "source": "Apple data: PrivacyInfo.xcprivacy from AgoraRtcEngine_iOS 4.6.2. Play data: curated — verify against the Play SDK Index.",
+      "lastVerified": "2026-07"
+    },
+    {
+      "id": "ironsource",
+      "name": "ironSource (Unity LevelPlay)",
+      "aliases": {
+        "pub": [
+          "ironsource_mediation"
+        ],
+        "npm": [
+          "ironsource-mediation"
+        ],
+        "pod": [
+          "IronSourceSDK"
+        ]
+      },
+      "tracking": false,
+      "trackingDomains": [],
+      "apple": [],
+      "play": [
+        {
+          "category": "Device or other IDs",
+          "type": "Device or other IDs",
+          "collected": true,
+          "shared": true,
+          "purposes": [
+            "Advertising or marketing"
+          ]
+        },
+        {
+          "category": "App activity",
+          "type": "App interactions",
+          "collected": true,
+          "shared": true,
+          "purposes": [
+            "Advertising or marketing"
+          ]
+        }
+      ],
+      "source": "Apple data: PrivacyInfo.xcprivacy from IronSourceSDK 9.5.0.0. Play data: curated — verify against the Play SDK Index.",
+      "lastVerified": "2026-07"
+    },
+    {
+      "id": "facebook-audience-network",
+      "name": "Meta Audience Network",
+      "aliases": {
+        "pub": [
+          "facebook_audience_network"
+        ],
+        "npm": [],
+        "pod": [
+          "FBAudienceNetwork"
+        ]
+      },
+      "tracking": true,
+      "trackingDomains": [
+        "ep1.facebook.com",
+        "ep6.facebook.com"
+      ],
+      "apple": [
+        {
+          "type": "NSPrivacyCollectedDataTypeAdvertisingData",
+          "linked": true,
+          "tracking": true,
+          "purposes": [
+            "NSPrivacyCollectedDataTypePurposeThirdPartyAdvertising",
+            "NSPrivacyCollectedDataTypePurposeAnalytics"
+          ]
+        },
+        {
+          "type": "NSPrivacyCollectedDataTypeCrashData",
+          "linked": false,
+          "tracking": false,
+          "purposes": [
+            "NSPrivacyCollectedDataTypePurposeAnalytics"
+          ]
+        },
+        {
+          "type": "NSPrivacyCollectedDataTypeDeviceID",
+          "linked": true,
+          "tracking": true,
+          "purposes": [
+            "NSPrivacyCollectedDataTypePurposeThirdPartyAdvertising"
+          ]
+        },
+        {
+          "type": "NSPrivacyCollectedDataTypeOtherDiagnosticData",
+          "linked": false,
+          "tracking": false,
+          "purposes": [
+            "NSPrivacyCollectedDataTypePurposeAnalytics"
+          ]
+        }
+      ],
+      "play": [
+        {
+          "category": "Device or other IDs",
+          "type": "Device or other IDs",
+          "collected": true,
+          "shared": true,
+          "purposes": [
+            "Advertising or marketing"
+          ]
+        }
+      ],
+      "source": "Apple data: PrivacyInfo.xcprivacy from FBAudienceNetwork 6.21.1. Play data: curated — verify against the Play SDK Index.",
+      "lastVerified": "2026-07"
+    },
+    {
+      "id": "naver-login",
+      "name": "Naver Login (네이버 아이디로 로그인)",
+      "aliases": {
+        "pub": [
+          "flutter_naver_login"
+        ],
+        "npm": [
+          "@react-native-seoul/naver-login"
+        ],
+        "pod": [
+          "naveridlogin-sdk-ios"
+        ]
+      },
+      "tracking": false,
+      "trackingDomains": [],
+      "apple": [],
+      "play": [
+        {
+          "category": "Personal info",
+          "type": "Name",
+          "collected": true,
+          "shared": false,
+          "purposes": [
+            "Account management"
+          ]
+        },
+        {
+          "category": "Personal info",
+          "type": "Email address",
+          "collected": true,
+          "shared": false,
+          "purposes": [
+            "Account management"
+          ]
+        }
+      ],
+      "source": "Apple data: PrivacyInfo.xcprivacy from naveridlogin-sdk-ios 4.2.3. Play data: curated — verify against the Play SDK Index.",
+      "lastVerified": "2026-07"
     }
   ]
 }
