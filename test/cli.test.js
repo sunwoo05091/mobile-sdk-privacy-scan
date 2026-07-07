@@ -15,7 +15,14 @@ import {
 } from "./_helpers.js";
 
 function runCli(args) {
-  const res = spawnSync(process.execPath, [CLI, ...args], { encoding: "utf8" });
+  // Deterministic output: in a real TTY the node test runner propagates
+  // FORCE_COLOR to children and ANSI codes break the regex assertions.
+  const env = { ...process.env, NO_COLOR: "1" };
+  delete env.FORCE_COLOR;
+  const res = spawnSync(process.execPath, [CLI, ...args], {
+    encoding: "utf8",
+    env,
+  });
   assert.equal(res.error, undefined);
   return res;
 }
