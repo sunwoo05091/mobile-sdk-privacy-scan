@@ -128,6 +128,20 @@ test("malformed manifests are collected as errors, not silently dropped", (t) =>
   assert.deepEqual(manifests.map((m) => m.path), [good]);
 });
 
+test("scheme-prefixed tracking domains are normalized to bare domains", (t) => {
+  const root = tempDir(t);
+  plant(
+    root,
+    "ios/Pods/AdjustLike",
+    VALID_MANIFEST.replace(
+      "<string>sdk.example.com</string>",
+      "<string>https://consent.example.com/path</string>",
+    ),
+  );
+  const [m] = harvestPrivacyManifests(root).manifests;
+  assert.deepEqual(m.trackingDomains, ["consent.example.com"]);
+});
+
 test("missing keys fall back to safe defaults", (t) => {
   const root = tempDir(t);
   plant(

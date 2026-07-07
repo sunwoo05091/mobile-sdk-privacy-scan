@@ -1,7 +1,7 @@
 import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 import { join, relative, sep } from "node:path";
-import plist from "plist";
-import type { AppleCollectedType, Ecosystem, HarvestedManifest } from "../types.js";
+import { parsePrivacyManifest } from "../manifest.js";
+import type { Ecosystem, HarvestedManifest } from "../types.js";
 
 const SEARCH_ROOTS = ["ios/Pods", "ios", "node_modules", ".symlinks"];
 const MAX_DEPTH = 6;
@@ -62,42 +62,10 @@ function walk(dir: string, depth: number, acc: Set<string>): void {
 }
 
 function parseManifest(projectRoot: string, path: string): HarvestedManifest {
-  const doc = plist.parse(readFileSync(path, "utf8"));
-  if (typeof doc !== "object" || doc === null || Array.isArray(doc)) {
-    throw new Error("manifest root is not a dict");
-  }
-  const dict = doc as Record<string, unknown>;
-
-  const apple: AppleCollectedType[] = [];
-  const rawTypes = Array.isArray(dict.NSPrivacyCollectedDataTypes)
-    ? dict.NSPrivacyCollectedDataTypes
-    : [];
-  for (const raw of rawTypes) {
-    if (typeof raw !== "object" || raw === null) continue;
-    const t = raw as Record<string, unknown>;
-    if (typeof t.NSPrivacyCollectedDataType !== "string") continue;
-    apple.push({
-      type: t.NSPrivacyCollectedDataType,
-      linked: Boolean(t.NSPrivacyCollectedDataTypeLinked),
-      tracking: Boolean(t.NSPrivacyCollectedDataTypeTracking),
-      purposes: Array.isArray(t.NSPrivacyCollectedDataTypePurposes)
-        ? t.NSPrivacyCollectedDataTypePurposes.filter(
-            (p): p is string => typeof p === "string",
-          )
-        : [],
-    });
-  }
-
   return {
     path,
     owner: attributeOwner(relative(projectRoot, path).split(sep)),
-    tracking: Boolean(dict.NSPrivacyTracking),
-    trackingDomains: Array.isArray(dict.NSPrivacyTrackingDomains)
-      ? dict.NSPrivacyTrackingDomains.filter(
-          (d): d is string => typeof d === "string",
-        )
-      : [],
-    apple,
+    ...parsePrivacyManifest(readFileSync(path, "utf8")),
   };
 }
 

@@ -65,13 +65,36 @@ src/
 The knowledge base (`src/kb/data.json`) is the heart of the project — and its moat.
 It ships inside the package so the tool works offline. Extend it via pull requests.
 
-## ⚠️ The knowledge base is seed data
+## The knowledge base
 
-Every entry in `data.json` is a **starting example** and must be verified against
-the SDK's own `PrivacyInfo.xcprivacy` and its
-[Google Play SDK Index](https://play.google.com/sdks) entry. Data collection
-varies by SDK version and by how each app configures the SDK. Generated files are
-**drafts to review — not legal advice, not a compliance guarantee.**
+`src/kb/data.json` has two kinds of data with different provenance:
+
+- **Apple side** (`apple`, `tracking`, `trackingDomains`): auto-harvested from
+  each SDK's own shipped `PrivacyInfo.xcprivacy` by `tools/kb-build.mjs`.
+  Each entry's `source` names the exact pod + version it came from and
+  `lastVerified` says when. Entries whose artifacts ship no manifest (e.g.
+  Firebase Analytics 12.x binaries) keep curated seed data and say so.
+- **Play side** (`play`): curated by hand and **must be verified** against the
+  [Google Play SDK Index](https://play.google.com/sdks) — Google has no
+  machine-readable equivalent of privacy manifests.
+
+Data collection varies by SDK version and by how each app configures the SDK.
+Generated files are **drafts to review — not legal advice, not a compliance
+guarantee.**
+
+### Maintaining the KB (maintainers only)
+
+```bash
+node tools/kb-build.mjs                # verify: diff KB vs shipped manifests, exit 1 on drift
+node tools/kb-build.mjs --write        # apply harvested data + stamp lastVerified
+node tools/kb-build.mjs --ids sentry   # limit to specific entry ids
+```
+
+The tool downloads pod artifacts from CocoaPods (network!), extracts them into
+`tools/.cache/`, and reads the privacy manifests they ship. The scanner itself
+never touches the network — only the refreshed `data.json` ships in the package.
+To add an SDK: add a skeleton entry (id, name, aliases, curated `play` rows,
+empty `apple`) and run the tool with `--write`.
 
 ## Roadmap
 

@@ -30,9 +30,15 @@ test("scanning the Flutter fixture writes both drafts and exits 0", (t) => {
   const manifest = plist.parse(
     readFileSync(join(out, "PrivacyInfo.xcprivacy"), "utf8"),
   );
-  // AdMob is in the fixture, so the aggregate must declare tracking.
-  assert.equal(manifest.NSPrivacyTracking, true);
-  assert.ok(manifest.NSPrivacyCollectedDataTypes.length > 0);
+  // AdMob's own shipped manifest declares NSPrivacyTracking=false (Google's
+  // position: tracking depends on how the app configures ads), so the
+  // KB entry harvested from it does too — the aggregate follows the SDKs.
+  assert.equal(manifest.NSPrivacyTracking, false);
+  const types = manifest.NSPrivacyCollectedDataTypes.map(
+    (t) => t.NSPrivacyCollectedDataType,
+  );
+  // Coarse location comes from AdMob's real manifest.
+  assert.ok(types.includes("NSPrivacyCollectedDataTypeCoarseLocation"));
 
   const md = readFileSync(join(out, "play-data-safety.md"), "utf8");
   assert.match(md, /\| Category \| Data type \|/);

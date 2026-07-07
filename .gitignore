@@ -1,5 +1,6 @@
 node_modules/
 dist/
 privacy-out/
+tools/.cache/
 *.tsbuildinfo
 .DS_Store
