@@ -69,6 +69,22 @@ src/
 The knowledge base (`src/kb/data.json`) is the heart of the project — and its moat.
 It ships inside the package so the tool works offline. Extend it via pull requests.
 
+## What this tool guarantees — and what it can't
+
+No scanner can make privacy declarations 100% correct, because the final
+answers depend on runtime configuration and business intent. The tool states
+this boundary explicitly at the end of every scan:
+
+| Tier | What it covers | Trust |
+| --- | --- | --- |
+| ✓ verified | `[manifest]` entries — read from the SDK's own shipped `PrivacyInfo.xcprivacy` | As truthful as the vendor made it (we surface broken/empty declarations) |
+| ~ curated | `[KB seed]` entries and all Play Data Safety rows | Our research — verify against vendor docs and the Play SDK Index |
+| ✗ yours | Linked-to-identity, purposes, tracking intent, ads configuration, backend-collected data (accounts, IDs) | Undecidable by any scanner — the drafts mark these `REVIEW`/`VERIFY` and the CLI tells you exactly what to check |
+
+SDKs whose collection "depends on app configuration" (AdMob, Mixpanel,
+AppLovin, …) get a `CONFIG` review note naming the specific setting that
+changes your answers (e.g. personalized ads ⇒ tracking + ATT prompt).
+
 ## The knowledge base
 
 `src/kb/data.json` has two kinds of data with different provenance:

@@ -70,7 +70,8 @@
         }
       ],
       "source": "SEED example; verify against FirebaseAnalytics PrivacyInfo.xcprivacy + Play SDK Index",
-      "lastVerified": "2026-07"
+      "lastVerified": "2026-07",
+      "configNote": "Collection depends on your Analytics settings: IDFA access, default event logging, and user-ID calls all change what must be declared."
     },
     {
       "id": "google-admob",
@@ -180,7 +181,8 @@
         }
       ],
       "source": "Apple data: PrivacyInfo.xcprivacy from Google-Mobile-Ads-SDK 13.6.0. Play data: curated — verify against the Play SDK Index.",
-      "lastVerified": "2026-07"
+      "lastVerified": "2026-07",
+      "configNote": "Google declares NSPrivacyTracking=false because it depends on YOUR ad setup: if you serve personalized ads, you are tracking — set NSPrivacyTracking=true, add the ATT prompt (NSUserTrackingUsageDescription), and answer the Play ads questions accordingly."
     },
     {
       "id": "sentry",
@@ -664,7 +666,8 @@
         }
       ],
       "source": "Apple data: PrivacyInfo.xcprivacy from Mixpanel 5.0.8. Play data: curated — verify against the Play SDK Index.",
-      "lastVerified": "2026-07"
+      "lastVerified": "2026-07",
+      "configNote": "Mixpanel declares no collected data because it only collects what YOU track. Declare the events/properties you actually send (device IDs, product interaction at minimum for typical setups)."
     },
     {
       "id": "amplitude",
@@ -1770,7 +1773,8 @@
         }
       ],
       "source": "Apple data: PrivacyInfo.xcprivacy from AppLovinSDK 13.6.3. Play data: curated — verify against the Play SDK Index.",
-      "lastVerified": "2026-07"
+      "lastVerified": "2026-07",
+      "configNote": "AppLovin declares no collected data in its manifest. If you serve personalized ads through MAX, declare device ID / advertising data and the ATT prompt yourself."
     },
     {
       "id": "unityads",
@@ -1808,7 +1812,8 @@
         }
       ],
       "source": "Apple data: PrivacyInfo.xcprivacy from UnityAds 4.19.0. Play data: curated — verify against the Play SDK Index.",
-      "lastVerified": "2026-07"
+      "lastVerified": "2026-07",
+      "configNote": "Unity Ads declares no collected data in its manifest. Personalized ads mean device ID collection and tracking — declare according to your mediation setup."
     },
     {
       "id": "kakao",

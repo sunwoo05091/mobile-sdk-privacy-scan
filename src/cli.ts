@@ -21,9 +21,9 @@ import {
   printCapabilities,
   printInsights,
   printNextSteps,
+  printTrustBoundary,
   printUnused,
 } from "./report.js";
-import { kbMeta } from "./kb/index.js";
 
 const program = new Command();
 
@@ -226,7 +226,7 @@ function finish(
   result: { unknown: unknown[] },
   code: number,
 ): never {
-  console.log(pc.dim(`\n${kbMeta().note}`));
+  printTrustBoundary();
   process.exit(code);
 }
 

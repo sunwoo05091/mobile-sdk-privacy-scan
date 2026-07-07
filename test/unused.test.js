@@ -52,6 +52,23 @@ test("directly pinned platform shards are not flagged (never imported by design)
   assert.ok(!names.includes("geolocator"), "imported in fixture main.dart");
 });
 
+test("codegen annotation packages: annotation usage counts as usage", () => {
+  // Real-world false positive (spos_app review): json_annotation had zero
+  // direct imports but @JsonSerializable was used in 57 files — removing it
+  // breaks codegen. Marker search must clear it; a marker-less annotation
+  // package (riverpod_annotation here) must still be flagged.
+  const scan = {
+    detected: [
+      { name: "json_annotation", ecosystem: "pub", direct: true, scope: "main", source: "pubspec.lock" },
+      { name: "riverpod_annotation", ecosystem: "pub", direct: true, scope: "main", source: "pubspec.lock" },
+    ],
+    resolved: [],
+  };
+  const names = findUnusedDependencies(FLUTTER_FIXTURE, scan).map((u) => u.package);
+  assert.ok(!names.includes("json_annotation"), "@JsonSerializable appears in lib/");
+  assert.ok(names.includes("riverpod_annotation"), "no @riverpod anywhere");
+});
+
 test("dev and transitive dependencies are not checked", () => {
   const result = scanProject(FLUTTER_FIXTURE);
   const names = findUnusedDependencies(FLUTTER_FIXTURE, result).map(

@@ -168,6 +168,13 @@ export function printInsights(result: ScanResult): void {
     );
   }
 
+  // "Depends on app configuration" SDKs: say exactly what to check.
+  for (const r of result.resolved) {
+    if (r.entry.configNote) {
+      lines.push(`${pc.cyan("CONFIG")} ${r.entry.name}: ${r.entry.configNote}`);
+    }
+  }
+
   if (result.harvestErrors.length) {
     lines.push(
       `${pc.red("MALFORMED")} ${result.harvestErrors.length} dependency manifest(s) ` +
@@ -199,8 +206,31 @@ export function printUnused(unused: UnusedDependency[]): void {
   }
   console.log(
     pc.dim(
-      "  Import-scanning has false positives (assets, codegen, native-only use) — verify before removing.",
+      "  Import-scanning has false positives (assets, codegen, native-only use).\n" +
+        "  Remove one at a time and prove it: pub get / install -> codegen -> analyze -> build.",
     ),
+  );
+}
+
+/** The explicit trust boundary: what this scan proves vs what only you can decide. */
+export function printTrustBoundary(): void {
+  console.log(pc.bold("\nTrust boundary — read this before submitting:"));
+  console.log(
+    `  ${pc.green("✓ verified")}   ${pc.dim(
+      "[manifest] entries: read from the SDK's own shipped declaration (as truthful as the vendor made it)",
+    )}`,
+  );
+  console.log(
+    `  ${pc.yellow("~ curated")}    ${pc.dim(
+      "[KB seed] entries and all Play rows: our research — verify against vendor docs / Play SDK Index",
+    )}`,
+  );
+  console.log(
+    `  ${pc.red("✗ yours")}      ${pc.dim(
+      "Linked-to-identity, purposes, tracking intent, backend-collected data (login, IDs):",
+    )}\n               ${pc.dim(
+      "no scanner can decide these. Drafts are a reviewed starting point — not legal advice.",
+    )}`,
   );
 }
 

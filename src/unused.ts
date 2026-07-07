@@ -27,6 +27,16 @@ const NEVER_IMPORTED = new Set([
   "expo", // the framework
 ]);
 
+// Codegen annotation packages are used via their annotations, not imports
+// (e.g. @JsonSerializable arrives through freezed's re-exports). If a marker
+// appears anywhere in the source, the package is in use.
+const ANNOTATION_MARKERS: Record<string, string[]> = {
+  json_annotation: ["@JsonSerializable", "@JsonKey", "@JsonValue", "@JsonEnum"],
+  freezed_annotation: ["@freezed", "@Freezed"],
+  riverpod_annotation: ["@riverpod", "@Riverpod"],
+  injectable: ["@injectable", "@Injectable", "@module"],
+};
+
 const MAX_FILES = 5000;
 const MAX_FILE_SIZE = 1024 * 1024;
 
@@ -65,9 +75,10 @@ export function findUnusedDependencies(
     const dartSource = readSources(join(projectRoot, "lib"), [".dart"]);
     if (dartSource !== undefined) {
       for (const dep of pubDeps) {
-        if (!dartSource.includes(`package:${dep.name}/`)) {
-          out.push({ package: dep.name, ecosystem: "pub", knownSdk: isKnown(dep) });
-        }
+        if (dartSource.includes(`package:${dep.name}/`)) continue;
+        const markers = ANNOTATION_MARKERS[dep.name];
+        if (markers && markers.some((m) => dartSource.includes(m))) continue;
+        out.push({ package: dep.name, ecosystem: "pub", knownSdk: isKnown(dep) });
       }
     }
   }

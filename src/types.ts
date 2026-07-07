@@ -47,6 +47,11 @@ export interface KbEntry {
   /** Provenance note. SEED entries must be verified before shipping. */
   source: string;
   lastVerified?: string;
+  /**
+   * What the developer must check when this SDK's data collection depends on
+   * how the app configures it (the "depends on app configuration" cases).
+   */
+  configNote?: string;
 }
 
 /** A parsed PrivacyInfo.xcprivacy that an SDK ships inside its own package. */

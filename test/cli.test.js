@@ -53,6 +53,14 @@ test("scanning the Flutter fixture writes both drafts and exits 0", (t) => {
   assert.match(res.stdout, /Next steps/i);
   assert.match(res.stdout, /No app privacy manifest found/i);
 
+  // The trust boundary is always stated explicitly.
+  assert.match(res.stdout, /Trust boundary/);
+  assert.match(res.stdout, /not legal advice/);
+
+  // Config-dependent SDKs say exactly what to check (AdMob in this fixture).
+  assert.match(res.stdout, /CONFIG Google AdMob/);
+  assert.match(res.stdout, /personalized ads/);
+
   // App-feature collection lands IN the draft (location via package+plist,
   // camera via Info.plist only), marked for review.
   const xml = readFileSync(join(out, "PrivacyInfo.xcprivacy"), "utf8");
