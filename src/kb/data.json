@@ -1,0 +1,116 @@
+{
+  "_meta": {
+    "note": "SEED DATA. Every entry below is a starting example and MUST be verified against the SDK's own PrivacyInfo.xcprivacy and its Google Play SDK Index / Data Safety guidance before you rely on it. Data collection varies by SDK version and by how the app configures the SDK.",
+    "schemaVersion": 1,
+    "generatedFor": "2026-07"
+  },
+  "entries": [
+    {
+      "id": "firebase-analytics",
+      "name": "Firebase Analytics",
+      "aliases": {
+        "pub": ["firebase_analytics"],
+        "npm": ["@react-native-firebase/analytics"],
+        "pod": ["Firebase/Analytics", "FirebaseAnalytics", "GoogleAppMeasurement"]
+      },
+      "tracking": false,
+      "trackingDomains": [],
+      "apple": [
+        { "type": "NSPrivacyCollectedDataTypeProductInteraction", "linked": false, "tracking": false, "purposes": ["NSPrivacyCollectedDataTypePurposeAnalytics"] },
+        { "type": "NSPrivacyCollectedDataTypeDeviceID", "linked": false, "tracking": false, "purposes": ["NSPrivacyCollectedDataTypePurposeAnalytics"] },
+        { "type": "NSPrivacyCollectedDataTypeCrashData", "linked": false, "tracking": false, "purposes": ["NSPrivacyCollectedDataTypePurposeAppFunctionality"] }
+      ],
+      "play": [
+        { "category": "App activity", "type": "App interactions", "collected": true, "shared": false, "purposes": ["Analytics"] },
+        { "category": "Device or other IDs", "type": "Device or other IDs", "collected": true, "shared": false, "purposes": ["Analytics"] }
+      ],
+      "source": "SEED example; verify against FirebaseAnalytics PrivacyInfo.xcprivacy + Play SDK Index",
+      "lastVerified": "2026-07"
+    },
+    {
+      "id": "google-admob",
+      "name": "Google AdMob (Google Mobile Ads)",
+      "aliases": {
+        "pub": ["google_mobile_ads"],
+        "npm": ["react-native-google-mobile-ads"],
+        "pod": ["Google-Mobile-Ads-SDK", "GoogleMobileAds"]
+      },
+      "tracking": true,
+      "trackingDomains": ["googleadservices.com", "googlesyndication.com"],
+      "apple": [
+        { "type": "NSPrivacyCollectedDataTypeDeviceID", "linked": true, "tracking": true, "purposes": ["NSPrivacyCollectedDataTypePurposeThirdPartyAdvertising"] },
+        { "type": "NSPrivacyCollectedDataTypeAdvertisingData", "linked": true, "tracking": true, "purposes": ["NSPrivacyCollectedDataTypePurposeThirdPartyAdvertising"] },
+        { "type": "NSPrivacyCollectedDataTypeCoarseLocation", "linked": false, "tracking": true, "purposes": ["NSPrivacyCollectedDataTypePurposeThirdPartyAdvertising"] }
+      ],
+      "play": [
+        { "category": "Device or other IDs", "type": "Device or other IDs", "collected": true, "shared": true, "purposes": ["Advertising or marketing"] },
+        { "category": "Location", "type": "Approximate location", "collected": true, "shared": true, "purposes": ["Advertising or marketing"] }
+      ],
+      "source": "SEED example; verify against Google Mobile Ads PrivacyInfo.xcprivacy + Play SDK Index",
+      "lastVerified": "2026-07"
+    },
+    {
+      "id": "sentry",
+      "name": "Sentry",
+      "aliases": {
+        "pub": ["sentry_flutter", "sentry"],
+        "npm": ["@sentry/react-native"],
+        "pod": ["Sentry", "Sentry-Dynamic"]
+      },
+      "tracking": false,
+      "trackingDomains": [],
+      "apple": [
+        { "type": "NSPrivacyCollectedDataTypeCrashData", "linked": false, "tracking": false, "purposes": ["NSPrivacyCollectedDataTypePurposeAppFunctionality"] },
+        { "type": "NSPrivacyCollectedDataTypePerformanceData", "linked": false, "tracking": false, "purposes": ["NSPrivacyCollectedDataTypePurposeAppFunctionality"] }
+      ],
+      "play": [
+        { "category": "App activity", "type": "Crash logs", "collected": true, "shared": false, "purposes": ["App functionality"] },
+        { "category": "App activity", "type": "Diagnostics", "collected": true, "shared": false, "purposes": ["App functionality"] }
+      ],
+      "source": "SEED example; verify against Sentry PrivacyInfo.xcprivacy + Play SDK Index",
+      "lastVerified": "2026-07"
+    },
+    {
+      "id": "appsflyer",
+      "name": "AppsFlyer",
+      "aliases": {
+        "pub": ["appsflyer_sdk"],
+        "npm": ["react-native-appsflyer"],
+        "pod": ["AppsFlyerFramework"]
+      },
+      "tracking": true,
+      "trackingDomains": ["appsflyer.com"],
+      "apple": [
+        { "type": "NSPrivacyCollectedDataTypeDeviceID", "linked": true, "tracking": true, "purposes": ["NSPrivacyCollectedDataTypePurposeAnalytics", "NSPrivacyCollectedDataTypePurposeThirdPartyAdvertising"] },
+        { "type": "NSPrivacyCollectedDataTypeProductInteraction", "linked": true, "tracking": true, "purposes": ["NSPrivacyCollectedDataTypePurposeAnalytics"] }
+      ],
+      "play": [
+        { "category": "Device or other IDs", "type": "Device or other IDs", "collected": true, "shared": true, "purposes": ["Analytics", "Advertising or marketing"] },
+        { "category": "App activity", "type": "App interactions", "collected": true, "shared": true, "purposes": ["Analytics"] }
+      ],
+      "source": "SEED example; verify against AppsFlyer PrivacyInfo.xcprivacy + Play SDK Index",
+      "lastVerified": "2026-07"
+    },
+    {
+      "id": "facebook-sdk",
+      "name": "Meta / Facebook SDK",
+      "aliases": {
+        "pub": ["flutter_facebook_auth", "facebook_app_events"],
+        "npm": ["react-native-fbsdk-next"],
+        "pod": ["FBSDKCoreKit", "FBSDKLoginKit", "FBAEMKit"]
+      },
+      "tracking": true,
+      "trackingDomains": ["facebook.com", "fbcdn.net"],
+      "apple": [
+        { "type": "NSPrivacyCollectedDataTypeDeviceID", "linked": true, "tracking": true, "purposes": ["NSPrivacyCollectedDataTypePurposeThirdPartyAdvertising"] },
+        { "type": "NSPrivacyCollectedDataTypeProductInteraction", "linked": true, "tracking": true, "purposes": ["NSPrivacyCollectedDataTypePurposeThirdPartyAdvertising", "NSPrivacyCollectedDataTypePurposeAnalytics"] }
+      ],
+      "play": [
+        { "category": "Device or other IDs", "type": "Device or other IDs", "collected": true, "shared": true, "purposes": ["Advertising or marketing"] },
+        { "category": "App activity", "type": "App interactions", "collected": true, "shared": true, "purposes": ["Advertising or marketing", "Analytics"] }
+      ],
+      "source": "SEED example; verify against FBSDKCoreKit PrivacyInfo.xcprivacy + Play SDK Index",
+      "lastVerified": "2026-07"
+    }
+  ]
+}

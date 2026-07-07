@@ -1,0 +1,110 @@
+// End-to-end tests: run the built CLI exactly the way npx users will.
+// Output always goes to a temp dir (absolute --out) so fixtures stay pristine.
+import { test } from "node:test";
+import assert from "node:assert/strict";
+import { spawnSync } from "node:child_process";
+import { existsSync, readFileSync } from "node:fs";
+import { join } from "node:path";
+import plist from "plist";
+import {
+  CLI,
+  FLUTTER_FIXTURE,
+  RN_FIXTURE,
+  INCOMPLETE_MANIFEST,
+  tempDir,
+} from "./_helpers.js";
+
+function runCli(args) {
+  const res = spawnSync(process.execPath, [CLI, ...args], { encoding: "utf8" });
+  assert.equal(res.error, undefined);
+  return res;
+}
+
+test("scanning the Flutter fixture writes both drafts and exits 0", (t) => {
+  const out = tempDir(t);
+  const res = runCli([FLUTTER_FIXTURE, "--out", out]);
+
+  assert.equal(res.status, 0, res.stdout + res.stderr);
+  assert.match(res.stdout, /Project type: .*flutter/);
+
+  const manifest = plist.parse(
+    readFileSync(join(out, "PrivacyInfo.xcprivacy"), "utf8"),
+  );
+  // AdMob is in the fixture, so the aggregate must declare tracking.
+  assert.equal(manifest.NSPrivacyTracking, true);
+  assert.ok(manifest.NSPrivacyCollectedDataTypes.length > 0);
+
+  const md = readFileSync(join(out, "play-data-safety.md"), "utf8");
+  assert.match(md, /\| Category \| Data type \|/);
+});
+
+test("--compare against an incomplete manifest reports drift and exits 1", (t) => {
+  const out = tempDir(t);
+  const res = runCli([RN_FIXTURE, "--out", out, "--compare", INCOMPLETE_MANIFEST]);
+
+  assert.equal(res.status, 1, "undeclared data types must fail the CI gate");
+  assert.match(res.stdout, /MISSING NSPrivacyCollectedDataTypeDeviceID/);
+  assert.match(res.stdout, /TRACKING declared=false detected=true/);
+});
+
+test("--compare against the manifest we just generated exits 0 (self-consistency)", (t) => {
+  const out = tempDir(t);
+  runCli([RN_FIXTURE, "--out", out]);
+
+  const res = runCli([
+    RN_FIXTURE,
+    "--out", out,
+    "--compare", join(out, "PrivacyInfo.xcprivacy"),
+  ]);
+  assert.equal(res.status, 0, res.stdout + res.stderr);
+  assert.match(res.stdout, /No drift detected/);
+});
+
+test("--json writes a machine-readable scan.json", (t) => {
+  const out = tempDir(t);
+  const res = runCli([RN_FIXTURE, "--out", out, "--json"]);
+  assert.equal(res.status, 0);
+
+  const scan = JSON.parse(readFileSync(join(out, "scan.json"), "utf8"));
+  const ids = scan.result.resolved.map((r) => r.entry.id).sort();
+  assert.deepEqual(ids, [
+    "appsflyer",
+    "facebook-sdk",
+    "firebase-analytics",
+    "harvested:Mixpanel",
+  ]);
+  assert.ok(Array.isArray(scan.playRows) && scan.playRows.length > 0);
+});
+
+test("harvested manifests drive the aggregate for the RN fixture", (t) => {
+  const out = tempDir(t);
+  const res = runCli([RN_FIXTURE, "--out", out]);
+  assert.equal(res.status, 0, res.stdout + res.stderr);
+
+  // Provenance is visible in the report.
+  assert.match(res.stdout, /\[manifest\]/);
+  assert.match(res.stdout, /\[KB seed\]/);
+
+  const xml = readFileSync(join(out, "PrivacyInfo.xcprivacy"), "utf8");
+  const doc = plist.parse(xml);
+  const types = doc.NSPrivacyCollectedDataTypes.map((d) => d.NSPrivacyCollectedDataType);
+
+  // OtherUsageData exists ONLY in the harvested FBSDKCoreKit manifest —
+  // its presence proves harvested data replaced the KB seed.
+  assert.ok(types.includes("NSPrivacyCollectedDataTypeOtherUsageData"));
+  assert.ok(doc.NSPrivacyTrackingDomains.includes("graph.facebook.com"));
+
+  // The warning comment about the app's own required-reason APIs survives.
+  assert.match(xml, /ITMS-91053/);
+
+  // Mixpanel (harvested-only) lands in the Play draft's manual-check section.
+  const md = readFileSync(join(out, "play-data-safety.md"), "utf8");
+  assert.match(md, /[Cc]heck manually/);
+  assert.match(md, /Mixpanel/);
+});
+
+test("output stays inside --out: fixtures are never polluted", (t) => {
+  const out = tempDir(t);
+  runCli([FLUTTER_FIXTURE, "--out", out]);
+  assert.ok(!existsSync(join(FLUTTER_FIXTURE, "privacy-out")));
+});

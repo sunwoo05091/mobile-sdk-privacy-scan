@@ -1,0 +1,48 @@
+import { test } from "node:test";
+import assert from "node:assert/strict";
+import { writeFileSync } from "node:fs";
+import { join } from "node:path";
+import { detectFlutter, isFlutterProject } from "../dist/detect/flutter.js";
+import { FLUTTER_FIXTURE, RN_FIXTURE, tempDir } from "./_helpers.js";
+
+test("detectFlutter parses every package in pubspec.lock", () => {
+  const deps = detectFlutter(FLUTTER_FIXTURE);
+  const names = deps.map((d) => d.name).sort();
+  assert.deepEqual(names, [
+    "collection",
+    "firebase_analytics",
+    "google_mobile_ads",
+    "http",
+    "sentry_flutter",
+  ]);
+  for (const d of deps) {
+    assert.equal(d.ecosystem, "pub");
+    assert.equal(d.source, "pubspec.lock");
+  }
+});
+
+test("detectFlutter reads version and direct/transitive flags", () => {
+  const deps = detectFlutter(FLUTTER_FIXTURE);
+  const firebase = deps.find((d) => d.name === "firebase_analytics");
+  assert.equal(firebase.version, "10.8.0");
+  assert.equal(firebase.direct, true);
+
+  const transitive = deps.find((d) => d.name === "collection");
+  assert.equal(transitive.direct, false);
+});
+
+test("detectFlutter returns [] when there is no pubspec.lock", () => {
+  assert.deepEqual(detectFlutter(RN_FIXTURE), []);
+  assert.deepEqual(detectFlutter("/nonexistent/path"), []);
+});
+
+test("detectFlutter returns [] on malformed YAML instead of throwing", (t) => {
+  const dir = tempDir(t);
+  writeFileSync(join(dir, "pubspec.lock"), "packages:\n\tbad: [unclosed");
+  assert.deepEqual(detectFlutter(dir), []);
+});
+
+test("isFlutterProject keys off pubspec.yaml", () => {
+  assert.equal(isFlutterProject(FLUTTER_FIXTURE), true);
+  assert.equal(isFlutterProject(RN_FIXTURE), false);
+});
