@@ -1,5 +1,6 @@
 import pc from "picocolors";
 import { effectiveAppleData } from "./appleData.js";
+import { t, tf } from "./i18n.js";
 import type { ScanResult } from "./types.js";
 import type { DriftReport } from "./drift.js";
 import type { RequiredReasonSuggestion } from "./requiredReasons.js";
@@ -10,40 +11,42 @@ export function printScanSummary(result: ScanResult): void {
   const types =
     result.projectType.length > 0
       ? result.projectType.join(" + ")
-      : "unknown (no Flutter/RN markers found)";
-  console.log(pc.bold(`\nProject type: ${pc.cyan(types)}`));
+      : t("unknown (no Flutter/RN markers found)");
+  console.log(pc.bold(`\n${t("Project type: ")}${pc.cyan(types)}`));
   console.log(
-    `Dependencies scanned: ${pc.bold(String(result.detected.length))}  ` +
-      `| Known SDKs: ${pc.bold(pc.green(String(result.resolved.length)))}  ` +
-      `| Unrecognized: ${pc.bold(pc.yellow(String(result.unknown.length)))}`,
+    `${t("Dependencies scanned: ")}${pc.bold(String(result.detected.length))}  ` +
+      `| ${t("Known SDKs: ")}${pc.bold(pc.green(String(result.resolved.length)))}  ` +
+      `| ${t("Unrecognized: ")}${pc.bold(pc.yellow(String(result.unknown.length)))}`,
   );
 
   // Never be silently blind: say which layers could actually be scanned.
   if (result.coverage.length) {
     const blind = result.coverage.filter((c) => !c.ok);
-    console.log(pc.bold("\nCoverage:"));
+    console.log(pc.bold(`\n${t("Coverage:")}`));
     for (const c of result.coverage) {
       if (c.ok) {
-        console.log(`  ${pc.green("✓")} ${pc.dim(c.layer)}`);
+        console.log(`  ${pc.green("✓")} ${pc.dim(t(c.layer))}`);
       } else {
         console.log(
-          `  ${pc.red("✗")} ${c.layer} ${pc.red(pc.bold("— NOT SCANNED"))}` +
-            (c.hint ? pc.dim(`: ${c.hint}`) : ""),
+          `  ${pc.red("✗")} ${t(c.layer)} ${pc.red(pc.bold(t("— NOT SCANNED")))}` +
+            (c.hint ? pc.dim(`: ${t(c.hint)}`) : ""),
         );
       }
     }
     if (blind.length) {
       console.log(
         pc.red(
-          `  ⚠ Results are PARTIAL — ${blind.length} layer(s) invisible to this scan. ` +
-            "SDKs living there are missing from everything below.",
+          tf(
+            "  ⚠ Results are PARTIAL — {n} layer(s) invisible to this scan. SDKs living there are missing from everything below.",
+            { n: blind.length },
+          ),
         ),
       );
     }
   }
 
   if (result.resolved.length) {
-    console.log(pc.bold("\nRecognized SDKs (data-collecting):"));
+    console.log(pc.bold(`\n${t("Recognized SDKs (data-collecting):")}`));
     for (const r of result.resolved) {
       const eff = effectiveAppleData(r);
       const provenance =
@@ -53,7 +56,7 @@ export function printScanSummary(result: ScanResult): void {
       const tracking = eff.tracking ? pc.red(" [tracking]") : "";
       const playGap =
         r.entry.play.length === 0
-          ? pc.yellow(" — Play data unknown, check manually")
+          ? pc.yellow(t(" — Play data unknown, check manually"))
           : "";
       console.log(
         `  ${pc.green("•")} ${r.entry.name} ${provenance}${tracking} ${pc.dim(
@@ -68,21 +71,26 @@ export function printScanSummary(result: ScanResult): void {
     const orphans = result.harvestedManifests.filter((m) => !m.owner);
     console.log(
       pc.bold(
-        `\nPrivacy manifests shipped by dependencies: ${result.harvestedManifests.length} parsed`,
+        "\n" +
+          tf("Privacy manifests shipped by dependencies: {n} parsed", {
+            n: result.harvestedManifests.length,
+          }),
       ) +
         pc.dim(
-          ` (${attributed.length} attributed, ${orphans.length} unattributed` +
-            (result.harvestErrors.length
-              ? `, ${result.harvestErrors.length} unparseable`
-              : "") +
-            ")",
+          tf(" ({a} attributed, {o} unattributed{e})", {
+            a: attributed.length,
+            o: orphans.length,
+            e: result.harvestErrors.length
+              ? tf(", {n} unparseable", { n: result.harvestErrors.length })
+              : "",
+          }),
         ),
     );
     for (const m of orphans.slice(0, 5)) {
-      console.log(`  ${pc.blue("·")} ${pc.dim(`unattributed: ${m.path}`)}`);
+      console.log(`  ${pc.blue("·")} ${pc.dim(`${t("unattributed: ")}${m.path}`)}`);
     }
     if (orphans.length > 5) {
-      console.log(pc.dim(`  … and ${orphans.length - 5} more`));
+      console.log(pc.dim(tf("  … and {n} more", { n: orphans.length - 5 })));
     }
   }
 
@@ -90,7 +98,10 @@ export function printScanSummary(result: ScanResult): void {
     console.log(
       pc.bold(
         pc.yellow(
-          `\nUnrecognized direct dependencies — review these by hand (${result.unknown.length}):`,
+          "\n" +
+            tf("Unrecognized direct dependencies — review these by hand ({n}):", {
+              n: result.unknown.length,
+            }),
         ),
       ),
     );
@@ -98,7 +109,7 @@ export function printScanSummary(result: ScanResult): void {
       console.log(`  ${pc.yellow("?")} ${dep.name} ${pc.dim(`(${dep.ecosystem})`)}`);
     }
     if (result.unknown.length > 25) {
-      console.log(pc.dim(`  … and ${result.unknown.length - 25} more`));
+      console.log(pc.dim(tf("  … and {n} more", { n: result.unknown.length - 25 })));
     }
   }
 
@@ -107,9 +118,10 @@ export function printScanSummary(result: ScanResult): void {
   if (suppressedTotal > 0) {
     console.log(
       pc.dim(
-        `  suppressed ${suppressedTotal} noise packages: ${s.transitive} transitive, ` +
-          `${s.dev} dev-only, ${s.shards} platform shards, ${s.utilities} known utilities ` +
-          `(SDKs among them are still matched via the KB and shipped manifests)`,
+        tf(
+          "  suppressed {t} noise packages: {a} transitive, {b} dev-only, {c} platform shards, {d} known utilities (SDKs among them are still matched via the KB and shipped manifests)",
+          { t: suppressedTotal, a: s.transitive, b: s.dev, c: s.shards, d: s.utilities },
+        ),
       ),
     );
   }
@@ -120,17 +132,19 @@ export function printRequiredReasons(
 ): void {
   if (!suggestions.length) return;
   console.log(
-    pc.bold("\nRequired-reason APIs (ITMS-91053) used by your dependencies:"),
+    pc.bold(`\n${t("Required-reason APIs (ITMS-91053) used by your dependencies:")}`),
   );
-  for (const s of suggestions) {
-    const status = s.covered
-      ? pc.green("✓ covered by the package's own manifest")
+  for (const sug of suggestions) {
+    const status = sug.covered
+      ? pc.green(t("✓ covered by the package's own manifest"))
       : pc.yellow(
-          `⚠ no shipped manifest declares it — update the package, or declare ` +
-            `${s.category} (${s.reasons.join(", ")}) in YOUR PrivacyInfo.xcprivacy`,
+          tf(
+            "⚠ no shipped manifest declares it — update the package, or declare {cat} ({reasons}) in YOUR PrivacyInfo.xcprivacy",
+            { cat: sug.category, reasons: sug.reasons.join(", ") },
+          ),
         );
     console.log(
-      `  ${pc.cyan("•")} ${s.package} ${pc.dim(`(${s.note})`)}\n    ${status}`,
+      `  ${pc.cyan("•")} ${sug.package} ${pc.dim(`(${sug.note})`)}\n    ${status}`,
     );
   }
 }
@@ -138,7 +152,7 @@ export function printRequiredReasons(
 export function printCapabilities(hints: CapabilityHint[]): void {
   if (!hints.length) return;
   console.log(
-    pc.bold("\nYour app's own data collection (app features, not SDKs):"),
+    pc.bold(`\n${t("Your app's own data collection (app features, not SDKs):")}`),
   );
   for (const h of hints) {
     console.log(
@@ -149,8 +163,9 @@ export function printCapabilities(hints: CapabilityHint[]): void {
   }
   console.log(
     pc.dim(
-      "  Added to both drafts with Linked=false + AppFunctionality — REVIEW them:\n" +
-        "  set Linked=true if tied to user identity, and fix purposes/shared.",
+      t(
+        "  Added to both drafts with Linked=false + AppFunctionality — REVIEW them:\n  set Linked=true if tied to user identity, and fix purposes/shared.",
+      ),
     ),
   );
 }
@@ -163,9 +178,9 @@ export function printInsights(result: ScanResult): void {
   if (trackers.length) {
     lines.push(
       `${pc.red("TRACKING")} ${trackers.map((r) => r.entry.name).join(", ")} ` +
-        `declare cross-app tracking: iOS requires the ATT prompt ` +
-        `(NSUserTrackingUsageDescription) before any tracking, and their tracking ` +
-        `domains are blocked until the user consents.`,
+        t(
+          "declare cross-app tracking: iOS requires the ATT prompt (NSUserTrackingUsageDescription) before any tracking, and their tracking domains are blocked until the user consents.",
+        ),
     );
   }
 
@@ -176,8 +191,9 @@ export function printInsights(result: ScanResult): void {
   if (silent.length) {
     lines.push(
       `${pc.yellow("CONSERVATIVE")} ${silent.map((r) => r.entry.name).join(", ")} ` +
-        `ship a manifest that declares NO data collection. Vendors often under-declare ` +
-        `("depends on app configuration") — review what your configuration actually sends.`,
+        t(
+          'ship a manifest that declares NO data collection. Vendors often under-declare ("depends on app configuration") — review what your configuration actually sends.',
+        ),
     );
   }
 
@@ -187,8 +203,9 @@ export function printInsights(result: ScanResult): void {
   if (seeded.length) {
     lines.push(
       `${pc.yellow("UNVERIFIED")} ${seeded.map((r) => r.entry.name).join(", ")}: ` +
-        `no shipped manifest was readable here — data comes from our knowledge base. ` +
-        `Re-scan after \`pod install\` to read the SDK's own declaration.`,
+        t(
+          "no shipped manifest was readable here — data comes from our knowledge base. Re-scan after `pod install` to read the SDK's own declaration.",
+        ),
     );
   }
 
@@ -201,25 +218,28 @@ export function printInsights(result: ScanResult): void {
 
   if (result.harvestErrors.length) {
     lines.push(
-      `${pc.red("MALFORMED")} ${result.harvestErrors.length} dependency manifest(s) ` +
-        `could not be parsed — those SDKs' declarations are effectively missing.`,
+      `${pc.red("MALFORMED")} ` +
+        tf(
+          "{n} dependency manifest(s) could not be parsed — those SDKs' declarations are effectively missing.",
+          { n: result.harvestErrors.length },
+        ),
     );
   }
 
   if (!lines.length) return;
-  console.log(pc.bold("\nReview notes:"));
+  console.log(pc.bold(`\n${t("Review notes:")}`));
   for (const l of lines) console.log(`  ${l}`);
 }
 
 export function printPermissionWarnings(warnings: PermissionWarning[]): void {
   if (!warnings.length) return;
   console.log(
-    pc.bold(pc.red("\nMissing iOS permission strings (crash / rejection risk):")),
+    pc.bold(pc.red(`\n${t("Missing iOS permission strings (crash / rejection risk):")}`)),
   );
   for (const w of warnings) {
     console.log(
       `  ${pc.red("✗")} ${pc.bold(w.missingKey)} ${pc.dim(
-        `required by ${w.because.join("; ")}`,
+        tf("required by {x}", { x: w.because.join("; ") }),
       )}`,
     );
   }
@@ -228,14 +248,16 @@ export function printPermissionWarnings(warnings: PermissionWarning[]): void {
 export function printUnused(unused: UnusedDependency[]): void {
   if (!unused.length) return;
   console.log(
-    pc.bold("\nPossibly unused dependencies") +
-      pc.dim(" (declared, but no import found in your source):"),
+    pc.bold(`\n${t("Possibly unused dependencies")}`) +
+      pc.dim(t(" (declared, but no import found in your source):")),
   );
   for (const u of [...unused].sort((a, b) => Number(b.knownSdk) - Number(a.knownSdk))) {
     if (u.knownSdk) {
       console.log(
         `  ${pc.red("!")} ${u.package} ${pc.red(
-          "— data-collecting SDK: it still ships in your binary and forces privacy declarations. Remove it if truly unused.",
+          t(
+            "— data-collecting SDK: it still ships in your binary and forces privacy declarations. Remove it if truly unused.",
+          ),
         )}`,
       );
     } else {
@@ -244,8 +266,9 @@ export function printUnused(unused: UnusedDependency[]): void {
   }
   console.log(
     pc.dim(
-      "  Import-scanning has false positives (assets, codegen, native-only use).\n" +
-        "  Remove one at a time and prove it: pub get / install -> codegen -> analyze -> build.",
+      t(
+        "  Import-scanning has false positives (assets, codegen, native-only use).\n  Remove one at a time and prove it: pub get / install -> codegen -> analyze -> build.",
+      ),
     ),
   );
 }
@@ -258,48 +281,27 @@ export function printBaselineDelta(
   if (delta.removedSdks.length) changes.push(`${pc.green("-")} SDKs: ${delta.removedSdks.join(", ")}`);
   if (delta.addedTypes.length) changes.push(`${pc.red("+")} data types: ${delta.addedTypes.join(", ")}`);
   if (delta.removedTypes.length) changes.push(`${pc.green("-")} data types: ${delta.removedTypes.join(", ")}`);
-  if (delta.trackingTurnedOn) changes.push(pc.red("+ tracking turned ON"));
-  if (delta.trackingTurnedOff) changes.push(pc.green("- tracking turned off"));
+  if (delta.trackingTurnedOn) changes.push(pc.red(t("+ tracking turned ON")));
+  if (delta.trackingTurnedOff) changes.push(pc.green(t("- tracking turned off")));
   if (delta.newUncoveredReasons.length) {
     changes.push(`${pc.red("+")} uncovered required-reason APIs: ${delta.newUncoveredReasons.join(", ")}`);
   }
 
-  console.log(pc.bold("\nPrivacy delta vs committed baseline (.privacy-baseline.json):"));
+  console.log(pc.bold(`\n${t("Privacy delta vs committed baseline (.privacy-baseline.json):")}`));
   if (!changes.length) {
-    console.log(pc.green("  ✓ no change in privacy posture"));
+    console.log(pc.green(t("  ✓ no change in privacy posture")));
     return;
   }
   for (const c of changes) console.log(`  ${c}`);
   if (delta.expanded) {
     console.log(
       pc.red(
-        "  ⚠ Collection EXPANDED. Update your store declarations, then re-baseline\n" +
-          "    with --update-baseline to acknowledge. (exit 1)",
+        t(
+          "  ⚠ Collection EXPANDED. Update your store declarations, then re-baseline\n    with --update-baseline to acknowledge. (exit 1)",
+        ),
       ),
     );
   }
-}
-
-/** The explicit trust boundary: what this scan proves vs what only you can decide. */
-export function printTrustBoundary(): void {
-  console.log(pc.bold("\nTrust boundary — read this before submitting:"));
-  console.log(
-    `  ${pc.green("✓ verified")}   ${pc.dim(
-      "[manifest] entries: read from the SDK's own shipped declaration (as truthful as the vendor made it)",
-    )}`,
-  );
-  console.log(
-    `  ${pc.yellow("~ curated")}    ${pc.dim(
-      "[KB seed] entries and all Play rows: our research — verify against vendor docs / Play SDK Index",
-    )}`,
-  );
-  console.log(
-    `  ${pc.red("✗ yours")}      ${pc.dim(
-      "Linked-to-identity, purposes, tracking intent, backend-collected data (login, IDs):",
-    )}\n               ${pc.dim(
-      "no scanner can decide these. Drafts are a reviewed starting point — not legal advice.",
-    )}`,
-  );
 }
 
 export function printExplanation(
@@ -309,8 +311,9 @@ export function printExplanation(
   if (e.empty) {
     console.log(
       pc.yellow(
-        "No stable codes found in that text. Paste the full rejection mail — " +
-          "the useful parts look like ITMS-91053 and NSPrivacyAccessedAPICategory…",
+        t(
+          "No stable codes found in that text. Paste the full rejection mail — the useful parts look like ITMS-91053 and NSPrivacyAccessedAPICategory…",
+        ),
       ),
     );
     return;
@@ -322,27 +325,31 @@ export function printExplanation(
 
   for (const c of e.categories) {
     console.log(pc.bold(`${pc.cyan(c.category)} (${c.label})`));
-    console.log(`  Triggered by: ${pc.dim(c.trigger)}`);
+    console.log(`${t("  Triggered by: ")}${pc.dim(c.trigger)}`);
     if (c.culprits.length) {
-      console.log(pc.bold("  In YOUR project this likely comes from:"));
+      console.log(pc.bold(t("  In YOUR project this likely comes from:")));
       for (const culprit of c.culprits) {
         console.log(
           culprit.covered
-            ? `    ${pc.green("✓")} ${culprit.package} — its own manifest declares this; ` +
-                `if the error persists, YOUR app code also uses the API: declare it app-side.`
-            : `    ${pc.red("✗")} ${culprit.package} — no shipped manifest covers it. Fix: update ` +
-                `the package, or declare ${c.category} (${culprit.reasons.join(", ")}) in your PrivacyInfo.xcprivacy.`,
+            ? `    ${pc.green("✓")} ${culprit.package} ${t(
+                "— its own manifest declares this; if the error persists, YOUR app code also uses the API: declare it app-side.",
+              )}`
+            : `    ${pc.red("✗")} ${culprit.package} ${tf(
+                "— no shipped manifest covers it. Fix: update the package, or declare {cat} ({reasons}) in your PrivacyInfo.xcprivacy.",
+                { cat: c.category, reasons: culprit.reasons.join(", ") },
+              )}`,
         );
       }
     } else if (hasProject) {
       console.log(
         pc.yellow(
-          "  No known package in this project maps to it — your own native/app " +
-            "code (or an SDK we don't know) calls the API. Declare the reason app-side.",
+          t(
+            "  No known package in this project maps to it — your own native/app code (or an SDK we don't know) calls the API. Declare the reason app-side.",
+          ),
         ),
       );
     }
-    console.log(pc.bold("  Approved reasons:"));
+    console.log(pc.bold(t("  Approved reasons:")));
     for (const [code, desc] of Object.entries(c.reasons)) {
       console.log(`    ${pc.green(code)} ${pc.dim(desc)}`);
     }
@@ -351,35 +358,70 @@ export function printExplanation(
 
   if (e.collectedTypes.length) {
     console.log(
-      pc.bold("Collected data types mentioned: ") + e.collectedTypes.join(", "),
+      pc.bold(t("Collected data types mentioned: ")) + e.collectedTypes.join(", "),
     );
     console.log(
       pc.dim(
-        "  These belong in NSPrivacyCollectedDataTypes. Run a scan with " +
-          "--compare against your manifest to see exactly what's missing.\n",
+        t(
+          "  These belong in NSPrivacyCollectedDataTypes. Run a scan with --compare against your manifest to see exactly what's missing.\n",
+        ),
       ),
     );
   }
 
-  console.log(pc.dim(`Reason definitions: ${e.docsUrl}`));
+  console.log(pc.dim(`${t("Reason definitions: ")}${e.docsUrl}`));
 }
 
 export function printNextSteps(steps: string[]): void {
   if (!steps.length) return;
-  console.log(pc.bold(pc.cyan("\nNext steps:")));
+  console.log(pc.bold(pc.cyan(`\n${t("Next steps:")}`)));
   steps.forEach((step, i) => console.log(`  ${i + 1}. ${step}`));
 }
 
+/** The explicit trust boundary: what this scan proves vs what only you can decide. */
+export function printTrustBoundary(): void {
+  console.log(pc.bold(`\n${t("Trust boundary — read this before submitting:")}`));
+  console.log(
+    `  ${pc.green(t("✓ verified"))}   ${pc.dim(
+      t(
+        "[manifest] entries: read from the SDK's own shipped declaration (as truthful as the vendor made it)",
+      ),
+    )}`,
+  );
+  console.log(
+    `  ${pc.yellow(t("~ curated"))}    ${pc.dim(
+      t(
+        "[KB seed] entries and all Play rows: our research — verify against vendor docs / Play SDK Index",
+      ),
+    )}`,
+  );
+  console.log(
+    `  ${pc.red(t("✗ yours"))}      ${pc.dim(
+      t(
+        "Linked-to-identity, purposes, tracking intent, backend-collected data (login, IDs):",
+      ),
+    )}\n               ${pc.dim(
+      t(
+        "no scanner can decide these. Drafts are a reviewed starting point — not legal advice.",
+      ),
+    )}`,
+  );
+}
+
 export function printDrift(drift: DriftReport): void {
-  console.log(pc.bold("\nDrift vs your existing PrivacyInfo.xcprivacy:"));
+  console.log(pc.bold(`\n${t("Drift vs your existing PrivacyInfo.xcprivacy:")}`));
   if (drift.missing.length === 0 && drift.extra.length === 0) {
-    console.log(pc.green("  ✓ No drift detected."));
+    console.log(pc.green(t("  ✓ No drift detected.")));
   }
-  for (const t of drift.missing) {
-    console.log(`  ${pc.red("MISSING")} ${t} ${pc.dim("(collected but not declared)")}`);
+  for (const type of drift.missing) {
+    console.log(
+      `  ${pc.red("MISSING")} ${type} ${pc.dim(t("(collected but not declared)"))}`,
+    );
   }
-  for (const t of drift.extra) {
-    console.log(`  ${pc.yellow("EXTRA")}   ${t} ${pc.dim("(declared but no SDK found)")}`);
+  for (const type of drift.extra) {
+    console.log(
+      `  ${pc.yellow("EXTRA")}   ${type} ${pc.dim(t("(declared but no SDK found)"))}`,
+    );
   }
   if (drift.trackingMismatch) {
     console.log(

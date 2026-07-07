@@ -100,6 +100,39 @@ for privacy.
     args: --compare ios/Runner/PrivacyInfo.xcprivacy
 ```
 
+## Rejected anyway? Paste the mail
+
+Apple's rejection mails (`ITMS-91053` …) are cryptic. `explain` decodes them —
+keyed on the **stable category codes only**, never the mail wording — and,
+given your project, names the culprit and the fix:
+
+```bash
+npx sdk-privacy-scan explain "…ITMS-91053: Missing API declaration …
+NSPrivacyAccessedAPICategoryFileTimestamp…" --project .
+```
+
+```
+ITMS-91053 — Missing API declaration: your app calls a required-reason API …
+
+NSPrivacyAccessedAPICategoryFileTimestamp (File timestamps)
+  In YOUR project this likely comes from:
+    ✗ react-native-fs — no shipped manifest covers it. Fix: update the
+      package, or declare …FileTimestamp (C617.1) in your PrivacyInfo.xcprivacy.
+  Approved reasons:
+    C617.1  Timestamps of files inside the app's own container (the common case)
+```
+
+Piping works too: `pbpaste | npx sdk-privacy-scan explain -p .`
+
+## Korean output
+
+```bash
+npx sdk-privacy-scan ./my-app --lang ko    # 모든 안내 문구가 한국어로 출력됩니다
+```
+
+Default is English; technical identifiers (`NSPrivacy…`, reason codes) stay
+English in both languages so they always match Apple/Google docs.
+
 ## Trust boundary
 
 No scanner can make privacy declarations 100% correct — the tool says so
@@ -136,6 +169,7 @@ npx sdk-privacy-scan [dir]                     # scan, write drafts to ./privacy
   --compare <PrivacyInfo.xcprivacy>            # drift gate: exit 1 on undeclared collection
   --update-baseline                            # write .privacy-baseline.json (commit it)
   --json                                       # machine-readable scan.json
+  --lang <en|ko>                               # output language (default: en)
 
 npx sdk-privacy-scan explain "<rejection mail>" -p .   # decode ITMS-91053 etc.
   # names the API category, the culprit package in YOUR project, and the fix

@@ -29,6 +29,7 @@ import {
 } from "./capabilities.js";
 import { effectiveAppleData } from "./appleData.js";
 import { findUnusedDependencies } from "./unused.js";
+import { setLang, t, tf } from "./i18n.js";
 import {
   printScanSummary,
   printDrift,
@@ -59,14 +60,16 @@ program
     "existing PrivacyInfo.xcprivacy to check for drift",
   )
   .option("--json", "also write a machine-readable scan.json", false)
+  .option("--lang <lang>", "output language: en | ko", "en")
   .option(
     "--update-baseline",
     "write .privacy-baseline.json (commit it): acknowledges the current privacy posture",
     false,
   )
   .action((projectDir: string, opts) => {
+    setLang(opts.lang);
     const root = resolve(projectDir);
-    console.log(pc.dim(`Scanning ${root} …`));
+    console.log(pc.dim(tf("Scanning {dir} …", { dir: root })));
 
     const result = scanProject(root);
     printScanSummary(result);
@@ -128,7 +131,9 @@ program
     if (playCsv.unmapped.length) {
       console.log(
         pc.yellow(
-          `  ⚠ not mapped into the CSV (declare by hand): ${playCsv.unmapped.join("; ")}`,
+          tf("  ⚠ not mapped into the CSV (declare by hand): {items}", {
+            items: playCsv.unmapped.join("; "),
+          }),
         ),
       );
     }
@@ -176,11 +181,11 @@ program
     }
 
     console.log(
-      pc.bold(`\nDrafts written to ${pc.cyan(opts.out + "/")}`) +
-        `\n  • PrivacyInfo.xcprivacy           (add to your Xcode app target)` +
-        `\n  • app-store-connect-answers.md   (ASC App Privacy questionnaire — web form only)` +
-        `\n  • play-data-safety.csv           (Play Console → Data safety → Import from CSV)` +
-        `\n  • play-data-safety.md            (human-readable summary)`,
+      pc.bold("\n" + tf("Drafts written to {dir}", { dir: pc.cyan(opts.out + "/") })) +
+        `\n  • PrivacyInfo.xcprivacy           ${t("(add to your Xcode app target)")}` +
+        `\n  • app-store-connect-answers.md   ${t("(ASC App Privacy questionnaire — web form only)")}` +
+        `\n  • play-data-safety.csv           ${t("(Play Console → Data safety → Import from CSV)")}` +
+        `\n  • play-data-safety.md            ${t("(human-readable summary)")}`,
     );
 
     printNextSteps(
@@ -201,9 +206,9 @@ program
     if (opts.updateBaseline) {
       writeBaseline(baselinePath, currentBaseline);
       console.log(
-        pc.bold(pc.green("\nBaseline written: ")) +
+        pc.bold(pc.green("\n" + t("Baseline written: "))) +
           pc.cyan(".privacy-baseline.json") +
-          pc.dim(" — commit it; future scans fail CI when collection expands."),
+          pc.dim(t(" — commit it; future scans fail CI when collection expands.")),
       );
     } else {
       const previous = readBaseline(baselinePath);
@@ -229,9 +234,7 @@ program
         !drift.trackingMismatch.declared;
       if (drift.missing.length > 0 || underDeclaredTracking) {
         console.log(
-          pc.red(
-            "\n✗ Undeclared collection found — this would likely be rejected. (exit 1)",
-          ),
+          pc.red(t("\n✗ Undeclared collection found — this would likely be rejected. (exit 1)")),
         );
         finish(result, 1);
       }
@@ -255,53 +258,50 @@ function buildNextSteps(
   const appManifest = findAppManifest(root);
   if (!appManifest) {
     steps.push(
-      `No app privacy manifest found — add ${opts.out}/PrivacyInfo.xcprivacy ` +
-        `to your Xcode app target as a starting point.`,
+      tf("No app privacy manifest found — add {file} to your Xcode app target as a starting point.", {
+        file: `${opts.out}/PrivacyInfo.xcprivacy`,
+      }),
     );
   } else if (!opts.compare) {
     steps.push(
-      `Existing manifest found (${relative(root, appManifest)}) — re-run with ` +
-        `--compare ${relative(root, appManifest)} to gate drift in CI.`,
+      tf("Existing manifest found ({file}) — re-run with --compare {file} to gate drift in CI.", {
+        file: relative(root, appManifest),
+      }),
     );
   }
 
   if (requiredReasons.some((s) => !s.covered)) {
     steps.push(
-      "Resolve the ⚠ required-reason warnings above — missing declarations " +
-        "trigger ITMS-91053 at upload.",
+      t("Resolve the ⚠ required-reason warnings above — missing declarations trigger ITMS-91053 at upload."),
     );
   }
 
   if (permissionWarnings.length) {
     steps.push(
-      `Add the missing Info.plist permission strings ` +
-        `(${permissionWarnings.map((w) => w.missingKey).join(", ")}) — ` +
-        `apps crash at runtime and App Review rejects without them.`,
+      tf("Add the missing Info.plist permission strings ({keys}) — apps crash at runtime and App Review rejects without them.", {
+        keys: permissionWarnings.map((w) => w.missingKey).join(", "),
+      }),
     );
   }
 
   if (capabilities.length) {
     steps.push(
-      "Review the app-feature entries added to both drafts: set Linked=true " +
-        "where data ties to user identity, fix purposes, and mark Shared if " +
-        "sent to third parties.",
+      t("Review the app-feature entries added to both drafts: set Linked=true where data ties to user identity, fix purposes, and mark Shared if sent to third parties."),
     );
   }
 
   if (result.projectType.length > 0) {
     steps.push(
-      "Data collected through your own backend (accounts, login, identity " +
-        "verification — names, phone numbers, national IDs) is invisible to " +
-        "scanning: add it to both forms yourself.",
+      t("Data collected through your own backend (accounts, login, identity verification — names, phone numbers, national IDs) is invisible to scanning: add it to both forms yourself."),
     );
   }
 
   const unusedSdks = unused.filter((u) => u.knownSdk);
   if (unusedSdks.length) {
     steps.push(
-      `Remove unused data-collecting SDKs if confirmed ` +
-        `(${unusedSdks.map((u) => u.package).join(", ")}) — they inflate your ` +
-        `privacy declarations for nothing.`,
+      tf("Remove unused data-collecting SDKs if confirmed ({pkgs}) — they inflate your privacy declarations for nothing.", {
+        pkgs: unusedSdks.map((u) => u.package).join(", "),
+      }),
     );
   }
 
@@ -311,8 +311,7 @@ function buildNextSteps(
     !existsSync(join(root, "ios", "Pods"))
   ) {
     steps.push(
-      "ios/Pods is missing — run `pod install` and re-scan so SDK-shipped " +
-        "privacy manifests can be read directly.",
+      t("ios/Pods is missing — run `pod install` and re-scan so SDK-shipped privacy manifests can be read directly."),
     );
   }
 
@@ -351,7 +350,9 @@ program
       "and, with --project, which dependency caused it and how to fix it",
   )
   .option("-p, --project <dir>", "project to cross-reference for culprits")
-  .action((textParts: string[], opts: { project?: string }) => {
+  .option("--lang <lang>", "output language: en | ko", "en")
+  .action((textParts: string[], opts: { project?: string; lang?: string }) => {
+    setLang(opts.lang ?? "en");
     let text = (textParts ?? []).join(" ");
     if (!text && !process.stdin.isTTY) {
       text = readFileSync(0, "utf8"); // piped mail: pbpaste | sdk-privacy-scan explain
