@@ -2,7 +2,7 @@
   "_meta": {
     "note": "Apple-side data is auto-harvested from each SDK's own shipped PrivacyInfo.xcprivacy (see tools/kb-build.mjs; per-entry `source` and `lastVerified` say when). Play-side data is curated and MUST be verified against the Google Play SDK Index. Data collection varies by SDK version and by how the app configures the SDK.",
     "schemaVersion": 1,
-    "generatedFor": "2026-07"
+    "generatedFor": "2026-10"
   },
   "entries": [
     {
@@ -180,8 +180,8 @@
           ]
         }
       ],
-      "source": "Apple data: PrivacyInfo.xcprivacy from Google-Mobile-Ads-SDK 13.6.0. Play data: curated — verify against the Play SDK Index.",
-      "lastVerified": "2026-07",
+      "source": "Apple data: PrivacyInfo.xcprivacy from Google-Mobile-Ads-SDK 13.11.0. Play data: curated — verify against the Play SDK Index.",
+      "lastVerified": "2026-10",
       "configNote": "Google declares NSPrivacyTracking=false because it depends on YOUR ad setup: if you serve personalized ads, you are tracking — set NSPrivacyTracking=true, add the ATT prompt (NSUserTrackingUsageDescription), and answer the Play ads questions accordingly."
     },
     {
@@ -249,7 +249,7 @@
         }
       ],
       "source": "Apple data: PrivacyInfo.xcprivacy from Sentry 9.19.1. Play data: curated — verify against the Play SDK Index.",
-      "lastVerified": "2026-07"
+      "lastVerified": "2026-10"
     },
     {
       "id": "appsflyer",
@@ -323,8 +323,8 @@
           ]
         }
       ],
-      "source": "Apple data: PrivacyInfo.xcprivacy from AppsFlyerFramework 7.0.0. Play data: curated — verify against the Play SDK Index.",
-      "lastVerified": "2026-07"
+      "source": "Apple data: PrivacyInfo.xcprivacy from AppsFlyerFramework 7.0.2. Play data: curated — verify against the Play SDK Index.",
+      "lastVerified": "2026-10"
     },
     {
       "id": "facebook-sdk",
@@ -417,8 +417,8 @@
           ]
         }
       ],
-      "source": "Apple data: PrivacyInfo.xcprivacy from FBSDKCoreKit 18.1.0, FBSDKLoginKit 18.1.0, FBAEMKit 18.1.0. Play data: curated — verify against the Play SDK Index.",
-      "lastVerified": "2026-07"
+      "source": "Apple data: PrivacyInfo.xcprivacy from FBSDKCoreKit 18.1.1, FBSDKLoginKit 18.1.1, FBAEMKit 18.1.1. Play data: curated — verify against the Play SDK Index.",
+      "lastVerified": "2026-10"
     },
     {
       "id": "firebase-crashlytics",
@@ -474,8 +474,8 @@
           ]
         }
       ],
-      "source": "Apple data: PrivacyInfo.xcprivacy from FirebaseCrashlytics 12.15.0. Play data: curated — verify against the Play SDK Index.",
-      "lastVerified": "2026-07"
+      "source": "Apple data: PrivacyInfo.xcprivacy from FirebaseCrashlytics 12.19.0. Play data: curated — verify against the Play SDK Index.",
+      "lastVerified": "2026-10"
     },
     {
       "id": "adjust",
@@ -551,8 +551,8 @@
           ]
         }
       ],
-      "source": "Apple data: PrivacyInfo.xcprivacy from Adjust 5.7.0. Play data: curated — verify against the Play SDK Index.",
-      "lastVerified": "2026-07"
+      "source": "Apple data: PrivacyInfo.xcprivacy from Adjust 5.8.0. Play data: curated — verify against the Play SDK Index.",
+      "lastVerified": "2026-10"
     },
     {
       "id": "onesignal",
@@ -625,8 +625,8 @@
           ]
         }
       ],
-      "source": "Apple data: PrivacyInfo.xcprivacy from OneSignalXCFramework 5.5.3, OneSignal 5.5.3. Play data: curated — verify against the Play SDK Index.",
-      "lastVerified": "2026-07"
+      "source": "Apple data: PrivacyInfo.xcprivacy from OneSignalXCFramework 5.7.0, OneSignal 5.7.0. Play data: curated — verify against the Play SDK Index.",
+      "lastVerified": "2026-10"
     },
     {
       "id": "mixpanel",
@@ -666,7 +666,7 @@
         }
       ],
       "source": "Apple data: PrivacyInfo.xcprivacy from Mixpanel 5.0.8. Play data: curated — verify against the Play SDK Index.",
-      "lastVerified": "2026-07",
+      "lastVerified": "2026-10",
       "configNote": "Mixpanel declares no collected data because it only collects what YOU track. Declare the events/properties you actually send (device IDs, product interaction at minimum for typical setups)."
     },
     {
@@ -732,8 +732,8 @@
           ]
         }
       ],
-      "source": "Apple data: PrivacyInfo.xcprivacy from AmplitudeSwift 1.18.5, Amplitude 8.22.2. Play data: curated — verify against the Play SDK Index.",
-      "lastVerified": "2026-07"
+      "source": "Apple data: PrivacyInfo.xcprivacy from AmplitudeSwift 1.19.2, Amplitude 8.22.2. Play data: curated — verify against the Play SDK Index.",
+      "lastVerified": "2026-10"
     },
     {
       "id": "revenuecat",
@@ -783,8 +783,8 @@
           ]
         }
       ],
-      "source": "Apple data: PrivacyInfo.xcprivacy from RevenueCat 5.80.2, PurchasesHybridCommon 18.19.0. Play data: curated — verify against the Play SDK Index.",
-      "lastVerified": "2026-07"
+      "source": "Apple data: PrivacyInfo.xcprivacy from RevenueCat 5.92.0, PurchasesHybridCommon 19.5.0. Play data: curated — verify against the Play SDK Index.",
+      "lastVerified": "2026-10"
     },
     {
       "id": "branch",
@@ -854,8 +854,8 @@
           ]
         }
       ],
-      "source": "Apple data: PrivacyInfo.xcprivacy from BranchSDK 3.14.1. Play data: curated — verify against the Play SDK Index.",
-      "lastVerified": "2026-07"
+      "source": "Apple data: PrivacyInfo.xcprivacy from BranchSDK 3.14.2. Play data: curated — verify against the Play SDK Index.",
+      "lastVerified": "2026-10"
     },
     {
       "id": "intercom",
@@ -944,8 +944,8 @@
           ]
         }
       ],
-      "source": "Apple data: PrivacyInfo.xcprivacy from Intercom 19.6.5. Play data: curated — verify against the Play SDK Index.",
-      "lastVerified": "2026-07"
+      "source": "Apple data: PrivacyInfo.xcprivacy from Intercom 19.8.3. Play data: curated — verify against the Play SDK Index.",
+      "lastVerified": "2026-10"
     },
     {
       "id": "firebase-messaging",
@@ -1000,8 +1000,8 @@
           ]
         }
       ],
-      "source": "Apple data: PrivacyInfo.xcprivacy from FirebaseMessaging 12.15.0. Play data: curated — verify against the Play SDK Index.",
-      "lastVerified": "2026-07"
+      "source": "Apple data: PrivacyInfo.xcprivacy from FirebaseMessaging 12.19.0. Play data: curated — verify against the Play SDK Index.",
+      "lastVerified": "2026-10"
     },
     {
       "id": "braze",
@@ -1072,8 +1072,8 @@
           ]
         }
       ],
-      "source": "Apple data: PrivacyInfo.xcprivacy from BrazeKit 17.0.0. Play data: curated — verify against the Play SDK Index.",
-      "lastVerified": "2026-07"
+      "source": "Apple data: PrivacyInfo.xcprivacy from BrazeKit 19.0.0. Play data: curated — verify against the Play SDK Index.",
+      "lastVerified": "2026-10"
     },
     {
       "id": "google-signin",
@@ -1172,8 +1172,8 @@
           ]
         }
       ],
-      "source": "Apple data: PrivacyInfo.xcprivacy from GoogleSignIn 9.2.0. Play data: curated — verify against the Play SDK Index.",
-      "lastVerified": "2026-07"
+      "source": "Apple data: PrivacyInfo.xcprivacy from GoogleSignIn 10.0.0. Play data: curated — verify against the Play SDK Index.",
+      "lastVerified": "2026-10"
     },
     {
       "id": "datadog",
@@ -1248,8 +1248,8 @@
           ]
         }
       ],
-      "source": "Apple data: PrivacyInfo.xcprivacy from DatadogCore 3.13.0, DatadogRUM 3.13.0, DatadogCrashReporting 3.13.0. Play data: curated — verify against the Play SDK Index.",
-      "lastVerified": "2026-07"
+      "source": "Apple data: PrivacyInfo.xcprivacy from DatadogCore 3.18.0, DatadogRUM 3.18.0, DatadogCrashReporting 3.18.0. Play data: curated — verify against the Play SDK Index.",
+      "lastVerified": "2026-10"
     },
     {
       "id": "singular",
@@ -1302,8 +1302,8 @@
           ]
         }
       ],
-      "source": "Apple data: PrivacyInfo.xcprivacy from Singular-SDK 12.12.0. Play data: curated — verify against the Play SDK Index.",
-      "lastVerified": "2026-07"
+      "source": "Apple data: PrivacyInfo.xcprivacy from Singular-SDK 12.14.2. Play data: curated — verify against the Play SDK Index.",
+      "lastVerified": "2026-10"
     },
     {
       "id": "clevertap",
@@ -1379,8 +1379,8 @@
           ]
         }
       ],
-      "source": "Apple data: PrivacyInfo.xcprivacy from CleverTap-iOS-SDK 7.7.1. Play data: curated — verify against the Play SDK Index.",
-      "lastVerified": "2026-07"
+      "source": "Apple data: PrivacyInfo.xcprivacy from CleverTap-iOS-SDK 7.8.2. Play data: curated — verify against the Play SDK Index.",
+      "lastVerified": "2026-10"
     },
     {
       "id": "instabug",
@@ -1502,7 +1502,7 @@
         }
       ],
       "source": "Apple data: PrivacyInfo.xcprivacy from Instabug 16.0.3. Play data: curated — verify against the Play SDK Index.",
-      "lastVerified": "2026-07"
+      "lastVerified": "2026-10"
     },
     {
       "id": "bugsnag",
@@ -1582,8 +1582,8 @@
           ]
         }
       ],
-      "source": "Apple data: PrivacyInfo.xcprivacy from Bugsnag 6.36.0. Play data: curated — verify against the Play SDK Index.",
-      "lastVerified": "2026-07"
+      "source": "Apple data: PrivacyInfo.xcprivacy from Bugsnag 6.38.0. Play data: curated — verify against the Play SDK Index.",
+      "lastVerified": "2026-10"
     },
     {
       "id": "newrelic",
@@ -1672,8 +1672,8 @@
           ]
         }
       ],
-      "source": "Apple data: PrivacyInfo.xcprivacy from NewRelicAgent 7.7.3. Play data: curated — verify against the Play SDK Index.",
-      "lastVerified": "2026-07"
+      "source": "Apple data: PrivacyInfo.xcprivacy from NewRelicAgent 7.7.7. Play data: curated — verify against the Play SDK Index.",
+      "lastVerified": "2026-10"
     },
     {
       "id": "stripe",
@@ -1732,8 +1732,8 @@
           ]
         }
       ],
-      "source": "Apple data: PrivacyInfo.xcprivacy from StripeCore 26.2.0, StripePaymentSheet 26.2.0, Stripe 26.2.0. Play data: curated — verify against the Play SDK Index.",
-      "lastVerified": "2026-07"
+      "source": "Apple data: PrivacyInfo.xcprivacy from StripeCore 26.12.1, StripePaymentSheet 26.12.1, Stripe 26.12.1. Play data: curated — verify against the Play SDK Index.",
+      "lastVerified": "2026-10"
     },
     {
       "id": "applovin",
@@ -1772,8 +1772,8 @@
           ]
         }
       ],
-      "source": "Apple data: PrivacyInfo.xcprivacy from AppLovinSDK 13.6.3. Play data: curated — verify against the Play SDK Index.",
-      "lastVerified": "2026-07",
+      "source": "Apple data: PrivacyInfo.xcprivacy from AppLovinSDK 13.6.4. Play data: curated — verify against the Play SDK Index.",
+      "lastVerified": "2026-10",
       "configNote": "AppLovin declares no collected data in its manifest. If you serve personalized ads through MAX, declare device ID / advertising data and the ATT prompt yourself."
     },
     {
@@ -1811,8 +1811,8 @@
           ]
         }
       ],
-      "source": "Apple data: PrivacyInfo.xcprivacy from UnityAds 4.19.0. Play data: curated — verify against the Play SDK Index.",
-      "lastVerified": "2026-07",
+      "source": "Apple data: PrivacyInfo.xcprivacy from UnityAds 4.20.1. Play data: curated — verify against the Play SDK Index.",
+      "lastVerified": "2026-10",
       "configNote": "Unity Ads declares no collected data in its manifest. Personalized ads mean device ID collection and tracking — declare according to your mediation setup."
     },
     {
@@ -1874,7 +1874,7 @@
         }
       ],
       "source": "Apple data: PrivacyInfo.xcprivacy from KakaoSDKCommon 2.22.7, KakaoSDKAuth 2.22.7, KakaoSDKUser 2.22.7. Play data: curated — verify against the Play SDK Index.",
-      "lastVerified": "2026-07"
+      "lastVerified": "2026-10"
     },
     {
       "id": "airship",
@@ -1943,8 +1943,8 @@
           ]
         }
       ],
-      "source": "Apple data: PrivacyInfo.xcprivacy from Airship 20.9.0. Play data: curated — verify against the Play SDK Index.",
-      "lastVerified": "2026-07"
+      "source": "Apple data: PrivacyInfo.xcprivacy from Airship 20.12.1. Play data: curated — verify against the Play SDK Index.",
+      "lastVerified": "2026-10"
     },
     {
       "id": "firebase-auth",
@@ -2000,8 +2000,8 @@
           ]
         }
       ],
-      "source": "Apple data: PrivacyInfo.xcprivacy from FirebaseAuth 12.15.0. Play data: curated — verify against the Play SDK Index.",
-      "lastVerified": "2026-07"
+      "source": "Apple data: PrivacyInfo.xcprivacy from FirebaseAuth 12.19.0. Play data: curated — verify against the Play SDK Index.",
+      "lastVerified": "2026-10"
     },
     {
       "id": "firebase-firestore",
@@ -2040,8 +2040,8 @@
           ]
         }
       ],
-      "source": "Apple data: PrivacyInfo.xcprivacy from FirebaseFirestore 12.15.0. Play data: curated — verify against the Play SDK Index.",
-      "lastVerified": "2026-07"
+      "source": "Apple data: PrivacyInfo.xcprivacy from FirebaseFirestore 12.19.0. Play data: curated — verify against the Play SDK Index.",
+      "lastVerified": "2026-10"
     },
     {
       "id": "firebase-remote-config",
@@ -2080,8 +2080,8 @@
           ]
         }
       ],
-      "source": "Apple data: PrivacyInfo.xcprivacy from FirebaseRemoteConfig 12.15.0. Play data: curated — verify against the Play SDK Index.",
-      "lastVerified": "2026-07"
+      "source": "Apple data: PrivacyInfo.xcprivacy from FirebaseRemoteConfig 12.19.0. Play data: curated — verify against the Play SDK Index.",
+      "lastVerified": "2026-10"
     },
     {
       "id": "google-maps",
@@ -2164,7 +2164,7 @@
         }
       ],
       "source": "Apple data: PrivacyInfo.xcprivacy from GoogleMaps 10.15.0. Play data: curated — verify against the Play SDK Index.",
-      "lastVerified": "2026-07"
+      "lastVerified": "2026-10"
     },
     {
       "id": "posthog",
@@ -2236,8 +2236,8 @@
           ]
         }
       ],
-      "source": "Apple data: PrivacyInfo.xcprivacy from PostHog 3.64.1. Play data: curated — verify against the Play SDK Index.",
-      "lastVerified": "2026-07"
+      "source": "Apple data: PrivacyInfo.xcprivacy from PostHog 3.86.1. Play data: curated — verify against the Play SDK Index.",
+      "lastVerified": "2026-10"
     },
     {
       "id": "uxcam",
@@ -2327,8 +2327,8 @@
           ]
         }
       ],
-      "source": "Apple data: PrivacyInfo.xcprivacy from UXCam 3.8.3. Play data: curated — verify against the Play SDK Index.",
-      "lastVerified": "2026-07"
+      "source": "Apple data: PrivacyInfo.xcprivacy from UXCam 3.11.0. Play data: curated — verify against the Play SDK Index.",
+      "lastVerified": "2026-10"
     },
     {
       "id": "agora",
@@ -2367,8 +2367,8 @@
           ]
         }
       ],
-      "source": "Apple data: PrivacyInfo.xcprivacy from AgoraRtcEngine_iOS 4.6.2. Play data: curated — verify against the Play SDK Index.",
-      "lastVerified": "2026-07"
+      "source": "Apple data: PrivacyInfo.xcprivacy from AgoraRtcEngine_iOS 4.7.0. Play data: curated — verify against the Play SDK Index.",
+      "lastVerified": "2026-10"
     },
     {
       "id": "ironsource",
@@ -2407,8 +2407,8 @@
           ]
         }
       ],
-      "source": "Apple data: PrivacyInfo.xcprivacy from IronSourceSDK 9.5.0.0. Play data: curated — verify against the Play SDK Index.",
-      "lastVerified": "2026-07"
+      "source": "Apple data: PrivacyInfo.xcprivacy from IronSourceSDK 9.6.1.0. Play data: curated — verify against the Play SDK Index.",
+      "lastVerified": "2026-10"
     },
     {
       "id": "facebook-audience-network",
@@ -2473,8 +2473,8 @@
           ]
         }
       ],
-      "source": "Apple data: PrivacyInfo.xcprivacy from FBAudienceNetwork 6.21.1. Play data: curated — verify against the Play SDK Index.",
-      "lastVerified": "2026-07"
+      "source": "Apple data: PrivacyInfo.xcprivacy from FBAudienceNetwork 6.22.0. Play data: curated — verify against the Play SDK Index.",
+      "lastVerified": "2026-10"
     },
     {
       "id": "naver-login",
@@ -2514,7 +2514,7 @@
         }
       ],
       "source": "Apple data: PrivacyInfo.xcprivacy from naveridlogin-sdk-ios 4.2.3. Play data: curated — verify against the Play SDK Index.",
-      "lastVerified": "2026-07"
+      "lastVerified": "2026-10"
     },
     {
       "id": "braintree",
@@ -2531,14 +2531,6 @@
       "tracking": false,
       "trackingDomains": [],
       "apple": [
-        {
-          "type": "NSPrivacyCollectedDataTypeCoarseLocation",
-          "linked": true,
-          "tracking": false,
-          "purposes": [
-            "NSPrivacyCollectedDataTypePurposeAppFunctionality"
-          ]
-        },
         {
           "type": "NSPrivacyCollectedDataTypeCrashData",
           "linked": false,
@@ -2581,14 +2573,6 @@
           ]
         },
         {
-          "type": "NSPrivacyCollectedDataTypePerformanceData",
-          "linked": true,
-          "tracking": false,
-          "purposes": [
-            "NSPrivacyCollectedDataTypePurposeAppFunctionality"
-          ]
-        },
-        {
           "type": "NSPrivacyCollectedDataTypePhoneNumber",
           "linked": false,
           "tracking": false,
@@ -2606,11 +2590,10 @@
         },
         {
           "type": "NSPrivacyCollectedDataTypePreciseLocation",
-          "linked": true,
+          "linked": false,
           "tracking": false,
           "purposes": [
-            "NSPrivacyCollectedDataTypePurposeAnalytics",
-            "NSPrivacyCollectedDataTypePurposeAppFunctionality"
+            "NSPrivacyCollectedDataTypePurposeAnalytics"
           ]
         },
         {
@@ -2641,8 +2624,8 @@
           ]
         }
       ],
-      "source": "Apple data: PrivacyInfo.xcprivacy from Braintree 7.8.0. Play data: curated — verify against the Play SDK Index.",
-      "lastVerified": "2026-07"
+      "source": "Apple data: PrivacyInfo.xcprivacy from Braintree 7.13.0. Play data: curated — verify against the Play SDK Index.",
+      "lastVerified": "2026-10"
     },
     {
       "id": "tiktok-business",
@@ -2678,8 +2661,8 @@
           ]
         }
       ],
-      "source": "Apple data: PrivacyInfo.xcprivacy from TikTokBusinessSDK 1.6.1. Play data: curated — verify against the Play SDK Index.",
-      "lastVerified": "2026-07"
+      "source": "Apple data: PrivacyInfo.xcprivacy from TikTokBusinessSDK 1.7.2. Play data: curated — verify against the Play SDK Index.",
+      "lastVerified": "2026-10"
     },
     {
       "id": "vungle",
@@ -2705,8 +2688,8 @@
           ]
         }
       ],
-      "source": "Apple data: PrivacyInfo.xcprivacy from VungleAds 7.7.4. Play data: curated — verify against the Play SDK Index.",
-      "lastVerified": "2026-07"
+      "source": "Apple data: PrivacyInfo.xcprivacy from VungleAds 7.7.8. Play data: curated — verify against the Play SDK Index.",
+      "lastVerified": "2026-10"
     },
     {
       "id": "smartlook",
@@ -2822,8 +2805,8 @@
           ]
         }
       ],
-      "source": "Apple data: PrivacyInfo.xcprivacy from FullStory 1.72.1. Play data: curated — verify against the Play SDK Index.",
-      "lastVerified": "2026-07"
+      "source": "Apple data: PrivacyInfo.xcprivacy from FullStory 1.75.1. Play data: curated — verify against the Play SDK Index.",
+      "lastVerified": "2026-10"
     },
     {
       "id": "launchdarkly",
@@ -2882,8 +2865,8 @@
           ]
         }
       ],
-      "source": "Apple data: PrivacyInfo.xcprivacy from LaunchDarkly 11.2.0. Play data: curated — verify against the Play SDK Index.",
-      "lastVerified": "2026-07"
+      "source": "Apple data: PrivacyInfo.xcprivacy from LaunchDarkly 11.6.2. Play data: curated — verify against the Play SDK Index.",
+      "lastVerified": "2026-10"
     },
     {
       "id": "adapty",
@@ -2932,8 +2915,8 @@
           ]
         }
       ],
-      "source": "Apple data: PrivacyInfo.xcprivacy from Adapty 3.17.2. Play data: curated — verify against the Play SDK Index.",
-      "lastVerified": "2026-07"
+      "source": "Apple data: PrivacyInfo.xcprivacy from Adapty 3.17.3. Play data: curated — verify against the Play SDK Index.",
+      "lastVerified": "2026-10"
     },
     {
       "id": "qonversion",
@@ -2982,8 +2965,8 @@
           ]
         }
       ],
-      "source": "Apple data: PrivacyInfo.xcprivacy from Qonversion 6.12.0. Play data: curated — verify against the Play SDK Index.",
-      "lastVerified": "2026-07"
+      "source": "Apple data: PrivacyInfo.xcprivacy from Qonversion 6.18.0. Play data: curated — verify against the Play SDK Index.",
+      "lastVerified": "2026-10"
     },
     {
       "id": "superwall",
@@ -3032,8 +3015,8 @@
           ]
         }
       ],
-      "source": "Apple data: PrivacyInfo.xcprivacy from SuperwallKit 4.16.1. Play data: curated — verify against the Play SDK Index.",
-      "lastVerified": "2026-07"
+      "source": "Apple data: PrivacyInfo.xcprivacy from SuperwallKit 4.17.0. Play data: curated — verify against the Play SDK Index.",
+      "lastVerified": "2026-10"
     },
     {
       "id": "chartboost",
@@ -3133,8 +3116,8 @@
           ]
         }
       ],
-      "source": "Apple data: PrivacyInfo.xcprivacy from ChartboostSDK 9.12.0. Play data: curated — verify against the Play SDK Index.",
-      "lastVerified": "2026-07"
+      "source": "Apple data: PrivacyInfo.xcprivacy from ChartboostSDK 9.14.2. Play data: curated — verify against the Play SDK Index.",
+      "lastVerified": "2026-10"
     },
     {
       "id": "inmobi",
@@ -3160,8 +3143,8 @@
           ]
         }
       ],
-      "source": "Apple data: PrivacyInfo.xcprivacy from InMobiSDK 11.3.0. Play data: curated — verify against the Play SDK Index.",
-      "lastVerified": "2026-07"
+      "source": "Apple data: PrivacyInfo.xcprivacy from InMobiSDK 11.5.0. Play data: curated — verify against the Play SDK Index.",
+      "lastVerified": "2026-10"
     },
     {
       "id": "tenjin",
@@ -3219,8 +3202,8 @@
           ]
         }
       ],
-      "source": "Apple data: PrivacyInfo.xcprivacy from TenjinSDK 1.17.2. Play data: curated — verify against the Play SDK Index.",
-      "lastVerified": "2026-07"
+      "source": "Apple data: PrivacyInfo.xcprivacy from TenjinSDK 1.19.1. Play data: curated — verify against the Play SDK Index.",
+      "lastVerified": "2026-10"
     },
     {
       "id": "pusher",
